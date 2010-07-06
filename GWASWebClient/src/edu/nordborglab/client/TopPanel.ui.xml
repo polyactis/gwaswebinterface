@@ -1,0 +1,32 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	>
+	<ui:style>
+	
+	.statusDiv {
+    	text-align: right;
+    	margin: 1em;
+  	}
+
+  	.linksDiv {
+    	text-align: right;
+  	}
+
+  
+  
+	</ui:style>
+	<g:HTMLPanel>
+    
+
+    <div class="{style.statusDiv}">
+      <div>
+        <b>Welcome back,  <span ui:field='userSpan'/></b>
+      </div>
+
+      <div class='{style.linksDiv}'>
+        <g:Anchor href='javascript:;' ui:field='actionLink'><span ui:field='actionSpan'/></g:Anchor>
+      </div>
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder> 

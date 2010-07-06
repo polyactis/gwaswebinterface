@@ -1,0 +1,2 @@
+recursive-include gwaswebserver/public *
+recursive-include gwaswebserver/templates *

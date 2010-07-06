@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<%inherit file="/base.html"/>
+<%def name="title()">Comparision-Chart Page</%def>
+<%!
+import simplejson
+from webhelpers.html import literal
+%>
+ 
+<%def name="head()">
+    <script type="text/javascript" language="javascript" src="Comparison.nocache.js"></script>
+</%def>
+
+<%def name="body()">
+<script type="text/javascript">
+		google.load("visualization", "1", {'packages' : ["table","corechart"] });
+		var call_method_id = "${c.call_method_id}";
+		var call_method_ls_json = ${literal(c.call_method_ls_json)};
+		var analysis_method_ls_json = ${literal(c.analysis_method_ls_json)};
+		var phenotype_method_id = "${c.phenotype_method_id}";
+		var getAnalysisMethodLsURL = "${c.getAnalysisMethodLsURL}";
+		var gwas_files = ${literal(c.gwas_files)};
+	</script>
+	
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+</%def>

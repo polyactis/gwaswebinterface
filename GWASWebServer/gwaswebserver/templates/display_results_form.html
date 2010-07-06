@@ -1,0 +1,133 @@
+<%inherit file="/base.html"/>
+
+<%def name="title()">Select Genome-Wide Association</%def>
+
+<%
+GWABaseURL=h.url_for(controller='DisplayResults', action='fetchOne', id=None)
+CallInfoBaseURL=h.url_for(controller='DisplayResults', action='fetchCallInfoData', id=None)
+PhenotypeHistImageBaseURL=h.url_for(controller='DisplayResults', action='getPhenotypeHistImage', id=None)
+CallPhenotypeQQImageBaseURL = h.url_for(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None)
+getOneResultRawBaseURL = h.url_for(controller='DisplayResults', action='getOneResultRaw', id=None)
+%>
+
+${h.form(h.url_for(), method='get', onsubmit="return handleResponse('%s')"%(GWABaseURL))}
+<!-- 2009-3-4 onsubmit argument above is never used cuz this form doesn't have a submit button anymore. -->
+<!-- ${h.checkbox('remove_old_plots')} Remove Old Plots<br />	<!-- 2009-1-29 Note: no way to set checkbox default to checked here. do it in the controller's defaults. --> 
+Call Method: ${h.select('call_method_id', selected_values=[], options=c.call_method_ls, 
+	onchange="SelectChange('%s', ['call_method_id'], 'phenotype_method_id'); return false;"%
+		(h.url_for(controller="DisplayResults", action="getPhenotypeMethodLsJson", id=None)),
+	required=True )}  <br/>
+
+Phenotype Method: ${h.select('phenotype_method_id', selected_values=[], options=[], 
+	onchange="SelectChange('%s', ['call_method_id', 'phenotype_method_id'], 'analysis_method_id'); return false;"%
+		(h.url_for(controller="DisplayResults", action="getAnalysisMethodLsJson", id=None)),
+	required=True)}  <br />
+
+Analysis Method: ${h.select('analysis_method_id', selected_values=[], options=[], 
+	onchange="return handleResponse(['%s', '%s', '%s', '%s', '%s', '%s'], ['call_method_id', 'phenotype_method_id', 'analysis_method_id'])"%
+		(GWABaseURL, CallInfoBaseURL, PhenotypeHistImageBaseURL, CallPhenotypeQQImageBaseURL, config['app_conf']['GBrowseURLJS'], getOneResultRawBaseURL),
+	required=True)}<br />
+
+
+${h.hidden('results_id', id='results_id')}
+<!-- ${h.submit('submit', 'Submit')} -->
+${h.end_form()}
+
+<div id="display_general" style="display:none"></div>
+
+<table border=0>
+	<tr>
+	<td>
+	<div name="menu"><a href="javascript:showone('display_static_plots')">Phenotype</a></div>
+	</td>
+	<td>
+    <div name="menu"><a href="javascript:showone('display_gwa')">GWA</a></div>
+	</td>
+	<td>
+    <div name="menu"><a href="javascript:showone('therest')">Accession</a> </div>
+	</td>
+	</tr>
+</table>
+
+<div name="display_static_plots" id='display_static_plots' >
+<ul id="menu_display_general">
+<table border=0>
+	<tr>
+		<td>
+  		<div name="display_static_plots" id="display_hist_thumb" style="display:none"></div>
+  		</td>
+  		<td>
+		<div  name="display_static_plots" id="display_hist_log_thumb" style="display:none"></div>
+		</td>
+  		<td>
+		<div  name="display_static_plots" id="display_qq_thumb" style="display:none"></div>
+		</td>
+  		<td>
+		<div  name="display_static_plots" id="display_qq_log_thumb" style="display:none"></div>
+		</td>
+	</tr>
+</table>
+</div>
+
+
+<div name="display_gwa" id='display_gwa' style="display:none">
+<div id="linkToDownloadGWAS" name="display_gwa" style="display:none"></div>
+<table border=0>
+	<tr>
+		<td>
+		<table border=0>
+			% for i in range(5):
+					<tr>
+						<td><div name="display_gwa" id="${"display_chr%s"%(i+1)}" style="display:none"></div></td>
+					</tr>
+			% endfor
+		</table>
+		</td>
+		
+		<td style="width: 50%;">
+		</td>
+		
+	</tr>
+</table>
+</div>
+
+<div name = "therest" id = "therest" style="display:block">
+<div name="therest" id="strain_motion_chart_div"></div>
+<table border=0>
+	<tr><td>
+	<div name ="therest" id="phenotype_hist_div" ></div>
+	</td></tr>
+	<tr><td>
+	<div name="therest" id="pca_select_div" ></div>
+	</td></tr>
+	<tr><td>
+	<div name="therest" id="strain_pca_div" ></div>
+	</td><td>
+	<div name="therest" id="strain_map_div" style="width: 500px; height: 300px;" ></div>
+	</td></tr>
+</table>
+</div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/yui/2.6.0/build/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/yui/2.6.0/build/connection/connection-min.js" type="text/javascript"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/yui/2.6.0/build/json/json-min.js" type="text/javascript"></script>
+<script src="/scripts/form.js"></script>
+<script src="/scripts/common.js" type="text/javascript"></script>
+<script src="/scripts/display_results_form.js" type="text/javascript"></script>
+<script>
+function showone(theone) {
+	var newboxes = document.getElementsByTagName("div");
+	for(var x=0; x<newboxes.length; x++)
+	{
+	       name = newboxes[x].getAttribute("name");
+	       if (name == theone) {
+	             newboxes[x].style.display = 'block';
+	       }
+	       else if (name!='menu'){
+	             newboxes[x].style.display = 'none';
+	       }
+	}
+}
+
+</script>
