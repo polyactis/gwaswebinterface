@@ -1,4 +1,0 @@
-2010-07-06 11:59:36,789 INFO  [paste.httpserver.ThreadPool] [shutdown LineNo 921] Shutting down threadpool
-2010-07-06 11:59:36,792 INFO  [paste.httpserver.ThreadPool] [shutdown LineNo 970] All workers stopped
-2010-07-06 11:59:36,792 INFO  [paste.httpserver.ThreadPool] [shutdown LineNo 921] Shutting down threadpool
-2010-07-06 11:59:36,793 INFO  [paste.httpserver.ThreadPool] [shutdown LineNo 970] All workers stopped
