@@ -120,7 +120,7 @@ def load_environment(global_conf, app_conf):
 	sys.stderr.write("%s pairs. Done.\n"%(len(model.CandidateGeneTopSNPTestRMType_id_min_distance2ScoreRankHistogramType_id)))
 	
 	# 2009-4-10 takes too long in individual request, put here. used in Accession.py
-	"""from variation.src.common import map_perlegen_ecotype_name2accession_id, fillInPhenotypeMethodID2ecotype_id_set
+	from variation.src.common import map_perlegen_ecotype_name2accession_id, fillInPhenotypeMethodID2ecotype_id_set
 	model.ecotype_name2accession_id = map_perlegen_ecotype_name2accession_id(model.db.metadata.bind)
 	# 2009-11-17
 	model.PhenotypeMethodID2ecotype_id_set = fillInPhenotypeMethodID2ecotype_id_set(model.Stock_250kDB.PhenotypeAvg)
@@ -128,4 +128,3 @@ def load_environment(global_conf, app_conf):
 	from variation.src.common import fillInCallMethodID2ecotype_id_set
 	
 	model.CallMethodID2ecotype_id_set = fillInCallMethodID2ecotype_id_set(model.Stock_250kDB.CallInfo)
-	"""
