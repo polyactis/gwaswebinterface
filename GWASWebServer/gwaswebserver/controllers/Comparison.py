@@ -14,7 +14,7 @@ import simplejson
 from variation.src.Stock_250kDB import Stock_250kDB, CallMethod
 from variation.src.Stock_250kDB import ResultsMethod,AnalysisMethod,CallMethod,PhenotypeMethod
 from pylons.decorators import jsonify
-from pymodule_bjarni import analyzeSNPResult
+from variation.src import analyzeSNPResult
 
 
 log = logging.getLogger(__name__)
