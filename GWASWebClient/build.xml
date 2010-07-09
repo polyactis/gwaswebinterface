@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="GWAWeb" default="build" basedir=".">
 	<!-- Configure path to GWT SDK -->
-	<property name="gwt.sdk" location="/home/uemit/eclipse_workspaces/arabidopsis_current/GWTSDK/gwt-2.0.3" />
-	<property name="common.path" location="/home/uemit/eclipse_workspaces/arabidopsis_current/GWTSDK" />
+	<property name="gwt.sdk" location="/srv/gwtsdk/gwt-2.0.3" />
+	<property name="common.path" location="/srv/gwtsdk" />
 
 	<!-- SWT on Mac requires the -XstartOFirstThreadFlag. -->
 	<condition property="XstartOnFirstThreadFlag" value="-XstartOnFirstThread"
@@ -72,6 +72,7 @@
 			<arg value="edu.nordborglab.SearchGWAS"/>
 			<arg value="edu.nordborglab.SNP"/>
 			<arg value="edu.nordborglab.Utils"/>
+			<arg value="edu.nordborglab.Comparison"/>
 		</java>
 	</target>
 	
@@ -129,6 +130,7 @@
 		<delete dir="war/SearchGWAS" failonerror="false" />
 		<delete dir="war/SNP" failonerror="false" />
 		<delete dir="war/Utils" failonerror="false" />
+		<delete dir="war/Comparison" failonerror="false" />
 	</target>
 
 </project>
