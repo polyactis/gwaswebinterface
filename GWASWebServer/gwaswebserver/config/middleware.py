@@ -44,7 +44,7 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
     # Routing/Session Middleware
     app = make_who_with_config(app,global_conf,app_conf['who.config_file'],app_conf['who.log_file'],app_conf['who.log_level'])
 
-    app = RoutesMiddleware(app, config['routes.map'])
+    app = RoutesMiddleware(app, config['routes.map'], singleton=False)
     app = SessionMiddleware(app, config)
 
     # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
