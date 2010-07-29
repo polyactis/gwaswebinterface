@@ -6,21 +6,26 @@ except ImportError:
     from setuptools import setup, find_packages
 
 setup(
-    name='gwaswebserver',
-    version="",
-    #description='',
-    #author='',
-    #author_email='',
-    #url='',
-    install_requires=["Pylons>=0.9.6.1"],
+    name='GWASWebServer',
+    version='0.1',
+    description='',
+    author='',
+    author_email='',
+    url='',
+    install_requires=[
+        "Pylons>=0.10",
+    ],
+    setup_requires=["PasteScript>=1.6.3"],
     packages=find_packages(exclude=['ez_setup']),
     include_package_data=True,
     test_suite='nose.collector',
     package_data={'gwaswebserver': ['i18n/*/LC_MESSAGES/*.mo']},
-    #message_extractors = {'gwaswebserver': [
+    #message_extractors={'gwaswebserver': [
     #        ('**.py', 'python', None),
-    #        ('templates/**.mako', 'mako', None),
+    #        ('templates/**.mako', 'mako', {'input_encoding': 'utf-8'}),
     #        ('public/**', 'ignore', None)]},
+    zip_safe=False,
+    paster_plugins=['PasteScript', 'Pylons'],
     entry_points="""
     [paste.app_factory]
     main = gwaswebserver.config.middleware:make_app
