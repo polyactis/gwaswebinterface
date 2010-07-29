@@ -22,5 +22,12 @@
 	<gwas:ComparisonHistogram>
 	</gwas:ComparisonHistogram>
 	</g:tab>
+	<g:tab>
+	<g:header>
+	BioHeatMap
+	</g:header>
+	<gwas:ComparisonHeatMap>
+	</gwas:ComparisonHeatMap>
+	</g:tab>
    	</g:TabLayoutPanel>
 </ui:UiBinder> 

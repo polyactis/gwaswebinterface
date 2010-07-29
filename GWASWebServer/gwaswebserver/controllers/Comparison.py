@@ -1,4 +1,5 @@
 import logging
+import math
 
 from pylons import request, response, session, tmpl_context as c
 from pylons.controllers.util import abort, redirect_to
@@ -33,6 +34,9 @@ class ComparisonController(BaseController):
         
         gwas_files = HelpothercontrollersController.getTemporaryGWASResults()
         gwas_files['files'].insert(0,'Select Temporary GWAS File')
+        heatmap_files = HelpothercontrollersController.getHeatMapFiles()
+        heatmap_files['files'].insert(0,'Select Temporary GWAS File')
+        c.heatmap_files = simplejson.dumps(heatmap_files)
         c.gwas_files = simplejson.dumps(gwas_files)
         return render('/Comparison.html')
     
@@ -59,7 +63,7 @@ class ComparisonController(BaseController):
     def getGWASForComparision(self):
         x_results_method_id = request.params.get('x_results_method_id',None)
         y_results_method_id = request.params.get('y_results_method_id',None)
-        path = "/Network/Data/250k/tmp-data/";
+        path = "/Network/Data/250k/tmp-data/gwas/";
         x_filename = request.params.get('x_results_file',None)
         y_filename = request.params.get('y_results_file',None)
         min_MAF_x = None
@@ -81,9 +85,9 @@ class ComparisonController(BaseController):
                 min_MAF_y = rm_y.analysis_method.min_maf
         else:
             y_filename = path+y_filename  
-        
+        #0.002
         #return '[ {"x_value":5.4948500216800937,"y_value":3.6986661045512061,"chr":1,"pos":30204930},{"x_value":2.4948500216800937,"y_value":6.6986661045512061,"chr":2,"pos":50204930}]';
-        json_data = analyzeSNPResult.get_comparison_lists(result_file_1=x_filename, result_file_2=y_filename, type='fraction', top_fraction=0.002,min_MAF_x=min_MAF_x ,min_MAF_y=min_MAF_y)
+        json_data = analyzeSNPResult.get_comparison_lists(result_file_1=x_filename, result_file_2=y_filename, type='fraction', top_fraction=1,min_MAF_x=min_MAF_x ,min_MAF_y=min_MAF_y)
         del(json_data['results'])
         #json_data = self.getGWASForComparisionJsonData(rm_x,rm_y)
         json_data['overlap_count'] = 1
@@ -92,7 +96,7 @@ class ComparisonController(BaseController):
         if rm_y is not None:
             json_data['y_analysis_method_id'] = rm_y.analysis_method_id
         return json_data
-        
+    
     @classmethod
     def getGWASForComparisionJsonData(cls, rm_x, rm_y):
         log.info("Getting Comparison Data from result %s and %s... \n"%(rm_x.id,rm_y.id))
@@ -150,6 +154,35 @@ class ComparisonController(BaseController):
         retval['snps_data'] = self.getDataArrayFromOccurencesData(snps_result)
         retval['genes_data'] = self.getDataArrayFromOccurencesData(genes_result)
         return retval
+    
+    @jsonify
+    def getBioHeatMapData(self):
+        heatmap_file = request.params.get('heatmap_file',None)
+        path = "/Network/Data/250k/tmp-data/heatmap/";
+        heatmap_file = path + heatmap_file
+        f = open(heatmap_file)
+        
+        data = []
+        header = f.next().replace('"','')
+        header = header.split("\t")[1:]
+        description = (map(lambda snp: (snp,"number"),header))
+        description.insert(0,("snps","string"))
+        line_lists = []
+        i = 0
+        for line in f:
+            
+            line_splits = line.split("\t")
+            values = [-math.log(float(v),10) for v in line_splits[1:]]
+            values.insert(0,line_splits[0].replace('"',''))
+            #[-math.log(v,10) for v in line_splits[1:19]]
+            data.append(values)
+            i=i+1
+            #if i == 31: break
+        
+        dataTable = gviz_api.DataTable(description)
+        dataTable.LoadData(data)
+        return dataTable.ToJSon()
+    
     
     @classmethod
     def getDataArrayFromOccurencesData(cls,data):
