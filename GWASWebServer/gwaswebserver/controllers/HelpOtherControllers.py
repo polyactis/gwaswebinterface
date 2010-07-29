@@ -365,8 +365,18 @@ class HelpothercontrollersController(BaseController):
 		user = h.user()
 		#if user is None: 
 			#return None
-		dirname = "/Network/Data/250k/tmp-data"
+		dirname = "/Network/Data/250k/tmp-data/gwas"
+		return cls.getFilesFromDirectory(dirname)
+	
+	@classmethod
+	def	getHeatMapFiles(cls):
+		dirname = "/Network/Data/250k/tmp-data/heatmap"
+		return cls.getFilesFromDirectory(dirname)
+	
+	@classmethod 
+	def getFilesFromDirectory(cls,dirname):
 		files =[]
 		files = [f for f in os.listdir(dirname)  if os.path.isfile(os.path.join(dirname, f))]
 		result = {"path":dirname,"files":files}
 		return result
+		

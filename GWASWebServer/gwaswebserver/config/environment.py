@@ -47,7 +47,7 @@ def load_environment(global_conf, app_conf):
 
     # CONFIGURATION OPTIONS HERE (note: all config options will override
     # any Pylons config options)
-	
+
     
 
     #2008-10-05 setup the database connection
@@ -111,11 +111,11 @@ def load_environment(global_conf, app_conf):
 				s.allow_two_sample_overlapping=c.allow_two_sample_overlapping and \
 				s.null_distribution_type_id=1 and s.results_type=1"%\
 				(ScoreRankHistogramType.table.name, CandidateGeneTopSNPTestRMType.table.name))
-				# 2008-1-8 temporarily set call_method_id=17 cuz CandidateGeneTopSNPTestRMType doesn't include call_method_id
-				# 2010-2-25 remove "s.null_distribution_type_id=c.null_distribution_type_id and  s.results_type=c.results_type"
-				#	and set s.null_distribution_type_id=1 and s.results_type=1
-				#	because null_distribution_type_id=2/3 or results_type=3 (2 means different but deprecated) in 
-				#	CandidateGeneTopSNPTestRMType doesn't matter	for DisplayResultsGene.
+                # 2008-1-8 temporarily set call_method_id=17 cuz CandidateGeneTopSNPTestRMType doesn't include call_method_id
+                # 2010-2-25 remove "s.null_distribution_type_id=c.null_distribution_type_id and  s.results_type=c.results_type"
+                #	and set s.null_distribution_type_id=1 and s.results_type=1
+                #	because null_distribution_type_id=2/3 or results_type=3 (2 means different but deprecated) in 
+                #	CandidateGeneTopSNPTestRMType doesn't matter	for DisplayResultsGene.
     for row in rows:
         key_tuple = (row.cid, row.min_distance, row.call_method_id)
         model.CandidateGeneTopSNPTestRMType_id_min_distance2ScoreRankHistogramType_id[key_tuple] = row.sid
