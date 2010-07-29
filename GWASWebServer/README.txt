@@ -1,16 +1,16 @@
-This file is for you to describe the helloworld application. Typically
+This file is for you to describe the GWASWebServer application. Typically
 you would include information such as the information below:
 
 Installation and Setup
 ======================
 
-Install ``helloworld`` using easy_install::
+Install ``GWASWebServer`` using easy_install::
 
-    easy_install helloworld
+    easy_install GWASWebServer
 
 Make a config file as follows::
 
-    paster make-config helloworld config.ini
+    paster make-config GWASWebServer config.ini
 
 Tweak the config file as appropriate and then setup the application::
 
