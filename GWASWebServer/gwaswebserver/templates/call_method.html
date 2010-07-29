@@ -7,7 +7,7 @@
 <table border=1>
 
 <tr>
-% for table_field in c.call_methods[0].c.keys():
+% for table_field in c.call_methods[0].table.columns.keys():
 		<th>${table_field.replace('_', ' ')}</th>
 		% if table_field=='short_name':
 			<th>No of arrays</th>
@@ -18,7 +18,7 @@
 </tr>
 % for call_method in c.call_methods:
 <tr>
-	% for table_field in call_method.c.keys():
+	% for table_field in call_method.table.columns.keys():
 			% if table_field=='id':
 				<td><a href=${h.url_for(controller='CallInfo', action='call_method', id=call_method.id)}>${call_method.id}</a></td>
 			% elif table_field=='short_name':
