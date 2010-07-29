@@ -6,7 +6,7 @@
 	<table border=1>
 	
 	<tr>	
-	% for table_field in c.snp_region_plot_type_ls[0].c.keys():
+	% for table_field in c.snp_region_plot_type_ls[0].table.columns.keys():
 		
 		<th>${table_field}</th>
 	% endfor
@@ -15,7 +15,7 @@
 	
 	% for snp_region_plot_type in c.snp_region_plot_type_ls:
 		<tr>
-		% for table_field in snp_region_plot_type.c.keys():
+		% for table_field in snp_region_plot_type.table.columns.keys():
 			<td>
 			% if table_field=='id':
 				<a href=${h.url_for(controller='SNPRegionPlot', action='type', id=snp_region_plot_type.id)}>${getattr(snp_region_plot_type, table_field, '')}</a>
