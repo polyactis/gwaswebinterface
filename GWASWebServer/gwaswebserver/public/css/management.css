@@ -1,0 +1,122 @@
+/* ------------------
+ styling for the tables 
+   ------------------   */
+
+
+body
+{
+        font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+        font-size: 12px;
+	line-height: 1.6em;
+        color: #039;
+}
+
+h2
+{
+        color: #039;
+}
+
+#ftpaccounts
+{
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	font-size: 12px;
+	background: #fff;
+	margin: 20px;
+	border-collapse: collapse;
+	text-align: left;
+}
+#ftpaccounts th
+{
+	font-size: 14px;
+	font-weight: normal;
+	color: #039;
+	padding: 10px 8px;
+	border-bottom: 2px solid #6678b1;
+	white-space:nowrap;
+}
+#ftpaccounts td
+{
+	border-bottom: 1px solid #ccc;
+	color: #669;
+	padding: 6px 8px;
+	white-space:nowrap;
+}
+#ftpaccounts tbody tr:hover td
+{
+	color: #009;
+}
+
+
+label
+{
+  float: left;
+  width: 120px;
+  font-weight: bold;
+}
+
+input, textarea
+{
+  width: 180px;
+  margin-bottom: 5px;
+}
+
+textarea
+{
+  width: 250px;
+  height: 150px;
+}
+
+.boxes
+{
+  width: 1em;
+}
+
+#submitbutton
+{
+  margin-left: 120px;
+  margin-top: 5px;
+  width: 90px;
+}
+
+br
+{
+  clear: left;
+}
+
+#tablist{
+padding: 3px 0;
+margin-left: 0;
+margin-bottom: 0;
+margin-top: 0.1em;
+font: bold 12px Verdana;
+border-bottom: 1px solid gray;
+}
+
+#tablist li{
+list-style: none;
+display: inline;
+margin: 0;
+}
+
+#tablist li a{
+text-decoration: none;
+padding: 3px 0.5em;
+margin-right: 3px;
+border: 1px solid #778;
+border-bottom: none;
+background: white;
+}
+
+#tablist li a:link, #tablist li a:visited{
+color: navy;
+}
+
+#tablist li a:hover{
+color: black;
+background: lightblue;
+border-color: navy;
+}
+
+#tablist li a.current{
+background: lightblue;
+}

@@ -1,0 +1,51 @@
+<%inherit file="/base.html"/>
+
+<%def name="title()">Top SNP Over-representation </%def>
+results partitioned based on whether a SNP is associated with a candidate gene or not.
+
+<p>
+There are different ways of associating a SNP to a certain gene. 
+</p>
+
+% if len(c.rows)>0:
+	<table border=1>
+	
+	<tr>	
+	% for table_field in c.rows[0].to_dict():	# 2010-2-24 c.rows[0] doesn't have the 'c' field anymore
+		<th>
+		% if table_field=='null_distribution_type_id':
+			Null distribution type
+		% elif table_field=='test_type_id':
+			Test type
+		% else:
+			${table_field}
+		% endif
+		</th>
+	% endfor
+	
+	</tr>
+	
+	% for row in c.rows:
+		<tr>
+		% for table_field in row.to_dict():
+			<td>
+			% if table_field=='id':
+				<a href=${h.url_for(controller='DisplayTopSNPTestRM', action='type', id=row.id)}>${getattr(row, table_field, '')}</a>
+				<a href=${h.url_for(controller='DisplayTopSNPTestRM', action='form', id=row.id)}>view by form</a>
+			% elif table_field=='null_distribution_type_id':
+				${row.null_distribution_type.short_name}
+			% elif table_field=='test_type_id':
+				${row.test_type.short_name}
+			% else:
+				${getattr(row, table_field, '')}
+			% endif
+			</td>
+		% endfor
+		</tr>
+	% endfor
+	
+	
+	</table>
+% else:
+	<p>Nothing in table.</p>
+% endif

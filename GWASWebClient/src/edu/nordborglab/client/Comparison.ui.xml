@@ -1,0 +1,33 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:gwas="urn:import:edu.nordborglab.client">
+	<ui:style>
+		.important {
+			font-weight: bold;
+		}
+	</ui:style>
+	<g:TabLayoutPanel  barHeight="2" barUnit="EM">
+	<g:tab>
+	<g:header>
+	Pair-Wise
+	</g:header>
+	<gwas:ComparisonScatterChart>
+   	</gwas:ComparisonScatterChart>
+	</g:tab>
+	<g:tab>
+	<g:header>
+	Histogram
+	</g:header>
+	<gwas:ComparisonHistogram>
+	</gwas:ComparisonHistogram>
+	</g:tab>
+	<g:tab>
+	<g:header>
+	BioHeatMap
+	</g:header>
+	<gwas:ComparisonHeatMap>
+	</gwas:ComparisonHeatMap>
+	</g:tab>
+   	</g:TabLayoutPanel>
+</ui:UiBinder> 

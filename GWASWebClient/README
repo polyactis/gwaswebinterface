@@ -1,0 +1,15 @@
+2010-3-31 yh
+	README for GWAWeb
+
+commands (as directed in build.xml)
+===================================
+
+ant build: build all apps. It will find build.xml to compile all apps.
+
+ant clean: clean up everything in war/.
+
+ant hosted: run the server end for testing the client
+
+ant buildone: only build a few apps (check build.xml for which apps are included) for fast testing
+
+ant war: build a war file.

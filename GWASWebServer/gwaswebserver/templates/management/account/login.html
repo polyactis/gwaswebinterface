@@ -1,0 +1,14 @@
+<%inherit file="/management/base.html"/>
+<%def name="title()">Login</%def>
+
+
+<h2> Login</h2>
+${h.form(h.url_for(controller='/management/account',action='dologin'), method='post')}
+<label for="login">Email</label>
+${h.text('login')} <BR />
+<label for="password">Password</label>
+${h.password('password')} <BR />
+
+
+${h.submit('submit','Login')}
+${h.end_form()}

@@ -1,0 +1,74 @@
+<%inherit file="/base.html"/>\
+<%def name="title()">Greetings</%def>
+
+<h1>Greetings</h1>
+
+<p><b>${c.greeting}</b> 
+% if h.user():
+	${h.user().realname} 
+    <a href="${h.url_for("logout")}" target="showframe">Logout</a>
+% else:
+Visitor
+<a href="${h.url_for("login")}" target="showframe">Login</a>
+% endif
+<p>
+<a href=${h.url_for(controller='Accession', id=None)} target ="showframe">Accession</a>
+</p>
+
+
+<p>
+<a href=${h.url_for(controller='CallInfo', id=None)} target ="showframe">Check all call methods.</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='SNPRegionPlot', id=None)} target ="showframe">View SNP region plots</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='ScoreRankHistogram', id=None)} target ="showframe">View Histograms of Score/Rank</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='MAFVsScorePlot', id=None)} target ="showframe">View MAF vs Score Plots</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='DisplayResults', id=None)} target ="showframe">GWAS for all Phenotypes</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='DisplayResults', action='form', id=None)} target ="showframe">GWAS Form</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='DisplayTopSNPTestRM', id=None)} target ="showframe">Display Candidate-Gene Enrichment Data</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='DisplayTopSNPTestRM', action='form', id=None)} target ="showframe">Form to Display Candidate-Gene Enrichment Data</a>
+</p>
+
+
+<p>
+<a href=${h.url_for(controller='DisplayResultsGene', action='form', id=None)} target ="showframe">Form to Display Top SNP&Genes from GWAS</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='DisplayResultsGene', action='geneForm', id=None)} target ="showframe">Search GWAS Results by Gene Name</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='Phenotype', action='trend', id=None)} target ="showframe">Contrast Phenotypes</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='utils', action='', id=None)} target ="showframe">View any data by MotionChart</a>
+</p>
+
+<p>
+<a href=${h.url_for(controller='Comparison', action='', id=None)} target ="showframe">Charts for Comparison</a>
+</p>
+
+<p>
+<a href=https://dl324b-1.cmb.usc.edu/projects/hapmap/newticket target ="showframe">Feature Request/Bug Report</a>
+</p>
