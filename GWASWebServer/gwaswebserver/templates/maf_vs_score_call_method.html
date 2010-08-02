@@ -25,7 +25,7 @@
 	% for j in range(c.data_matrix.shape[1]):
 		<td>
 		% if c.data_matrix[i][j]>0:
-			<a href=${h.url_for(controller='MAFVsScorePlot', action='getImage', id=c.data_matrix[i][j])}>${c.data_matrix[i][j]}</a>
+			<a href=${h.url(controller='MAFVsScorePlot', action='getImage', id=c.data_matrix[i][j])}>${c.data_matrix[i][j]}</a>
 		% endif
 		</td>
 	% endfor

@@ -18,10 +18,10 @@
 		% for table_field in maf_vs_score_summary.__dict__:
 			<td>
 			% if table_field=='no_of_plots':
-				<a href=${h.url_for(controller='MAFVsScorePlot', action='call_method', id=maf_vs_score_summary.call_method_id)}>\
+				<a href=${h.url(controller='MAFVsScorePlot', action='call_method', id=maf_vs_score_summary.call_method_id)}>\
 				${maf_vs_score_summary.no_of_plots} plots</a>
 			% elif table_field=='call_method_id':
-				<a href=${h.url_for(controller='CallInfo', action='call_method', id=maf_vs_score_summary.call_method_id)}>${maf_vs_score_summary.call_method_id}</a>
+				<a href=${h.url(controller='CallInfo', action='call_method', id=maf_vs_score_summary.call_method_id)}>${maf_vs_score_summary.call_method_id}</a>
 			% else:
 				${getattr(maf_vs_score_summary, table_field, '')}
 			% endif

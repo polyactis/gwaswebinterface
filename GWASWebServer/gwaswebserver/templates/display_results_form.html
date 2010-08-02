@@ -3,24 +3,24 @@
 <%def name="title()">Select Genome-Wide Association</%def>
 
 <%
-GWABaseURL=h.url_for(controller='DisplayResults', action='fetchOne', id=None)
-CallInfoBaseURL=h.url_for(controller='DisplayResults', action='fetchCallInfoData', id=None)
-PhenotypeHistImageBaseURL=h.url_for(controller='DisplayResults', action='getPhenotypeHistImage', id=None)
-CallPhenotypeQQImageBaseURL = h.url_for(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None)
-getOneResultRawBaseURL = h.url_for(controller='DisplayResults', action='getOneResultRaw', id=None)
+GWABaseURL=h.url(controller='DisplayResults', action='fetchOne', id=None)
+CallInfoBaseURL=h.url(controller='DisplayResults', action='fetchCallInfoData', id=None)
+PhenotypeHistImageBaseURL=h.url(controller='DisplayResults', action='getPhenotypeHistImage', id=None)
+CallPhenotypeQQImageBaseURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None)
+getOneResultRawBaseURL = h.url(controller='DisplayResults', action='getOneResultRaw', id=None)
 %>
 
-${h.form(h.url_for(), method='get', onsubmit="return handleResponse('%s')"%(GWABaseURL))}
+${h.form(h.url(), method='get', onsubmit="return handleResponse('%s')"%(GWABaseURL))}
 <!-- 2009-3-4 onsubmit argument above is never used cuz this form doesn't have a submit button anymore. -->
 <!-- ${h.checkbox('remove_old_plots')} Remove Old Plots<br />	<!-- 2009-1-29 Note: no way to set checkbox default to checked here. do it in the controller's defaults. --> 
 Call Method: ${h.select('call_method_id', selected_values=[], options=c.call_method_ls, 
 	onchange="SelectChange('%s', ['call_method_id'], 'phenotype_method_id'); return false;"%
-		(h.url_for(controller="DisplayResults", action="getPhenotypeMethodLsJson", id=None)),
+		(h.url(controller="DisplayResults", action="getPhenotypeMethodLsJson", id=None)),
 	required=True )}  <br/>
 
 Phenotype Method: ${h.select('phenotype_method_id', selected_values=[], options=[], 
 	onchange="SelectChange('%s', ['call_method_id', 'phenotype_method_id'], 'analysis_method_id'); return false;"%
-		(h.url_for(controller="DisplayResults", action="getAnalysisMethodLsJson", id=None)),
+		(h.url(controller="DisplayResults", action="getAnalysisMethodLsJson", id=None)),
 	required=True)}  <br />
 
 Analysis Method: ${h.select('analysis_method_id', selected_values=[], options=[], 

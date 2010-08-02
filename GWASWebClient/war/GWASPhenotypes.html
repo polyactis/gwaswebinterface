@@ -12,14 +12,14 @@
 
 <%def name="head()">
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" type="text/css" href="${h.url_for('/style/style.css')}" />
+	<link rel="stylesheet" type="text/css" href="${h.url('/style/style.css')}" />
 	<link rel="stylesheet" type="text/css" href="/GWASPhenotypes/GWASPhenotypes.css" />
 	<script type="text/javascript" language="javascript" src="/GWASPhenotypes/GWASPhenotypes.nocache.js"></script>
 </%def>
 
 <%
-getOneResultRawURL = h.url_for(controller='DisplayResults', action='getOneResultRaw', id=None)
-requestCallAndAnalysisMethodURL = h.url_for(controller='DisplayResults', action='getGWASGivenPhenotypeIDJson', id=None)
+getOneResultRawURL = h.url(controller='DisplayResults', action='getOneResultRaw', id=None)
+requestCallAndAnalysisMethodURL = h.url(controller='DisplayResults', action='getGWASGivenPhenotypeIDJson', id=None)
 %>
 
 <%def name="body()">

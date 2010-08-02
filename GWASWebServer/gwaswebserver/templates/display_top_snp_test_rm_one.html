@@ -17,7 +17,7 @@
 	
 	<th>
 	% if srh_type_id:
-		<a href=${h.url_for(controller='ScoreRankHistogram', action='showHistogramByQuery', id=c.result.id, type_id=srh_type_id, list_type_id=c.list_type.id)}>
+		<a href=${h.url(controller='ScoreRankHistogram', action='showHistogramByQuery', id=c.result.id, type_id=srh_type_id, list_type_id=c.list_type.id)}>
 		${c.min_distance_info.label_ls[i]}</a>
 	% else:
 		${c.min_distance_info.label_ls[i]}
@@ -39,7 +39,7 @@
 		%>
 		% if data_matrix[i][j]>=0:
 			% if srh_type_id:
-				<a href=${h.url_for(controller='DisplayResultsGene', action='showTopCandidateGenesFromOneResultOneGeneList', id=c.result.id, \
+				<a href=${h.url(controller='DisplayResultsGene', action='showTopCandidateGenesFromOneResultOneGeneList', id=c.result.id, \
 				type_id=srh_type_id, list_type_id=c.list_type.id, max_rank=c.no_of_top_snps_info.id_ls[i])}>
 			% endif
 			
@@ -80,14 +80,14 @@ Candidate gene list is ${c.list_type.short_name} with ${len(c.list_type.gene_lis
 
 
 <%
-pvalue_png_url = h.url_for(controller='DisplayTopSNPTestRM', action='getImage', id=c.pvalue_png_fname)
-## curve_url = h.url_for(controller='DisplayTopSNPTestRM', action='queryImage', id=c.result.id, type_id=int(c.type_id), list_type_id=c.list_type.id, img_type='png_data')
-## svg_curve_url = h.url_for(controller='DisplayTopSNPTestRM', action='queryImage', id=c.result.id, type_id=int(c.type_id), list_type_id=c.list_type.id, img_type='svg_data')
+pvalue_png_url = h.url(controller='DisplayTopSNPTestRM', action='getImage', id=c.pvalue_png_fname)
+## curve_url = h.url(controller='DisplayTopSNPTestRM', action='queryImage', id=c.result.id, type_id=int(c.type_id), list_type_id=c.list_type.id, img_type='png_data')
+## svg_curve_url = h.url(controller='DisplayTopSNPTestRM', action='queryImage', id=c.result.id, type_id=int(c.type_id), list_type_id=c.list_type.id, img_type='svg_data')
 
-candidate_sample_url = h.url_for(controller='DisplayTopSNPTestRM', action='getImage', id=c.candidate_sample_png_fname)
-non_candidate_sample_url = h.url_for(controller='DisplayTopSNPTestRM', action='getImage', id=c.non_candidate_sample_png_fname)
-curve_url = h.url_for(controller='DisplayTopSNPTestRM', action='getImage', id=c.curve_fname)
-svg_curve_url = h.url_for(controller='DisplayTopSNPTestRM', action='getImage', id=c.curve_svg_fname)
+candidate_sample_url = h.url(controller='DisplayTopSNPTestRM', action='getImage', id=c.candidate_sample_png_fname)
+non_candidate_sample_url = h.url(controller='DisplayTopSNPTestRM', action='getImage', id=c.non_candidate_sample_png_fname)
+curve_url = h.url(controller='DisplayTopSNPTestRM', action='getImage', id=c.curve_fname)
+svg_curve_url = h.url(controller='DisplayTopSNPTestRM', action='getImage', id=c.curve_svg_fname)
 %>
 
 <a href=${curve_url}><img width="800" src=${curve_url}></a>

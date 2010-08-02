@@ -159,7 +159,7 @@ public class PhenotypeTablePopup extends DialogBox implements ClickHandler{
 		jsonTree.clear();
 		setIntoWaitState();
 		//DOM.getElementById("title").setInnerText(TITLE_WAITING_TEXT);
-		String url = URL.encode(this.requestCallAndAnalysisMethodURL + "?phenotype_method_id="+phenotypeMethodID);
+		String url = URL.encode(this.requestCallAndAnalysisMethodURL + "&phenotype_method_id="+phenotypeMethodID);
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
 		try {
 			requestBuilder.sendRequest(null, new JSONResponseTextHandler(phenotypeMethodID, phenotypeMethodName));

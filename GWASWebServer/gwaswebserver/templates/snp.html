@@ -34,13 +34,13 @@
 	var snpSpace = {};
 	var url_query = "chromosome="+"${c.chromosome}"+"&position="+"${c.position}"+"&call_method_id="+"${c.call_method_id}"+"&phenotype_method_id="+"${c.phenotype_method_id}"+"&analysis_method_id="+"${c.analysis_method_id}"+"&score="+"${c.score}";		
 	
-	snpSpace.snpSummaryQueryURL = "${h.url_for(controller='SNP', action='getSNPSummaryInfo', id=None)}"+'?'+url_query;
+	snpSpace.snpSummaryQueryURL = "${h.url(controller='SNP', action='getSNPSummaryInfo', id=None)}"+'?'+url_query;
 	loadTable(snpSpace.snpSummaryQueryURL, "SNPSummary");
 	
-	snpSpace.snpSignificantHitsQueryURL = "${h.url_for(controller='SNP', action='getSignificantHits', id=None)}"+'?'+url_query;
+	snpSpace.snpSignificantHitsQueryURL = "${h.url(controller='SNP', action='getSignificantHits', id=None)}"+'?'+url_query;
 	loadTable(snpSpace.snpSignificantHitsQueryURL, "SignificantHitsInAllPhenotype");
 	
-	snpSpace.ecotypeAllelePhenotypeURL = "${h.url_for(controller='SNP', action='getEcotypeAllelePhenotype', id=None)}"+'?'+url_query;
+	snpSpace.ecotypeAllelePhenotypeURL = "${h.url(controller='SNP', action='getEcotypeAllelePhenotype', id=None)}"+'?'+url_query;
 	loadTable(snpSpace.ecotypeAllelePhenotypeURL, "EcotypeAlleleTable", [4,5,2,3,6,7,8,9,10], 'EcotypeAlleleMotionChart');
 	
 </script>

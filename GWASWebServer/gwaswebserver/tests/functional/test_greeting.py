@@ -3,5 +3,5 @@ from gwaswebserver.tests import *
 class TestGreetingController(TestController):
 
     def test_index(self):
-        response = self.app.get(url_for(controller='greeting'))
+        response = self.app.get(url(controller='greeting'))
         # Test response...

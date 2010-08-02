@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 
 from gwaswebserver.lib.base import BaseController, render, config, h, model
 #from gwaswebserver import model
@@ -31,20 +31,20 @@ class DisplayresultsController(BaseController):
 		2009-10-8
 			first try to get the call_method_id from the URL parameters. if it's null, use the published_call_method_id instead.
 		2009-7-2
-			update c.displayResultsGeneURL to h.url_for(controller="DisplayResultsGene", action='showResultsGeneForOnePhenotype')
+			update c.displayResultsGeneURL to h.url(controller="DisplayResultsGene", action='showResultsGeneForOnePhenotype')
 		"""
 		# Return a rendered template
 		#   return render('/template.mako')
 		# or, Return a response
 		c.call_method_id = request.params.get('call_method_id', config['app_conf']['published_call_method_id'])
-		c.getPhenotypeCategoryLsURL = h.url_for(controller="DisplayResults", action="getPhenotypeCategoryLs")
-		c.getPhenotypeTableDataURL = h.url_for(controller="DisplayResults", action="getPhenotypeTableData")
-		c.getGWAURL = h.url_for(controller="DisplayResults", action="showGWA")
-		c.getPhenotypeURL = h.url_for(controller='Phenotype')
-		c.displayResultsGeneURL = h.url_for(controller="DisplayResultsGene", action='showResultsGeneForOnePhenotype')
+		c.getPhenotypeCategoryLsURL = h.url(controller="DisplayResults", action="getPhenotypeCategoryLs")
+		c.getPhenotypeTableDataURL = h.url(controller="DisplayResults", action="getPhenotypeTableData")
+		c.getGWAURL = h.url(controller="DisplayResults", action="showGWA")
+		c.getPhenotypeURL = h.url(controller='Phenotype')
+		c.displayResultsGeneURL = h.url(controller="DisplayResultsGene", action='showResultsGeneForOnePhenotype')
 		# 2010-3-11
-		c.getOneResultRawURL = h.url_for(controller='DisplayResults', action='getOneResultRaw', id=None)
-		c.requestCallAndAnalysisMethodURL = h.url_for(controller='DisplayResults', action='getGWASGivenPhenotypeIDJson', id=None)
+		c.getOneResultRawURL = h.url(controller='DisplayResults', action='getOneResultRaw', id=None)
+		c.requestCallAndAnalysisMethodURL = h.url(controller='DisplayResults', action='getGWASGivenPhenotypeIDJson', id=None)
 		return render("GWASPhenotypes.html")
 	
 	@jsonify
@@ -170,10 +170,10 @@ class DisplayresultsController(BaseController):
 		if analysis_method_id is not None:
 			analysis_method_id = int(analysis_method_id)
 		
-		c.phenotypeSummaryURL = h.url_for(controller="Phenotype", action=None, phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.GWABaseURL = h.url_for(controller='DisplayResults', action='fetchOne', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.SNPBaseURL = h.url_for(controller='SNP', action=None, phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.getAnalysisMethodLsURL = h.url_for(controller='DisplayResults', action='getAnalysisMethodLsJson', phenotype_method_id=c.phenotype_method_id, \
+		c.phenotypeSummaryURL = h.url(controller='Phenotype', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
+		c.GWABaseURL = h.url(controller='DisplayResults', action='fetchOne', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
+		c.SNPBaseURL = h.url(controller='SNP', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
+		c.getAnalysisMethodLsURL = h.url(controller='DisplayResults', action='getAnalysisMethodLsJson', phenotype_method_id=c.phenotype_method_id, \
 											call_method_id=c.call_method_id, analysis_method_id=analysis_method_id)
 		"""
 		# 2009-4-25 no way to pass this 2D (int, string) array to the template! 
@@ -196,15 +196,15 @@ class DisplayresultsController(BaseController):
 		c.phenotype_method_short_name = pm.short_name
 		c.phenotype_method_description = pm.method_description
 		
-		c.callInfoURL = h.url_for(controller='DisplayResults', action='fetchCallInfoData', id=None,\
+		c.callInfoURL = h.url(controller='DisplayResults', action='fetchCallInfoData', id=None,\
 							phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistImageURL = h.url_for(controller='DisplayResults', action='getPhenotypeHistImage', id=None, \
+		c.phenotypeHistImageURL = h.url(controller='DisplayResults', action='getPhenotypeHistImage', id=None, \
 										phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.callPhenotypeQQImageURL = h.url_for(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None,\
+		c.callPhenotypeQQImageURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None,\
 											phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistogramDataURL = h.url_for(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id)
+		c.phenotypeHistogramDataURL = h.url(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id)
 		# 2010-3-11
-		c.getOneResultRawURL = h.url_for(controller='DisplayResults', action='getOneResultRaw', id=None,\
+		c.getOneResultRawURL = h.url(controller='DisplayResults', action='getOneResultRaw', id=None,\
 										call_method_id=c.call_method_id, phenotype_method_id=c.phenotype_method_id)
 		return render('/GWASOnePhenotype.html')
 	

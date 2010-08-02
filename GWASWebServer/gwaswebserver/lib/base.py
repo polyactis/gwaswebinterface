@@ -5,8 +5,8 @@ utilized by Controllers.
 """
 from pylons.controllers import WSGIController
 from pylons.templating import render_mako as render
-from pylons import tmpl_context as c, cache, config, g, request, response, session
-from pylons.controllers.util import abort, etag_cache, redirect_to
+from pylons import tmpl_context as c, cache, config, app_globals, request, response, session
+from pylons.controllers.util import abort, etag_cache, redirect
 from pylons.decorators import jsonify, validate
 from pylons.i18n import _, ungettext, N_
 

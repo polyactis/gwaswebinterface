@@ -4,13 +4,13 @@
 % if len(c.snp_region_plot_ls)>0:
 	% for snp_region_plot in c.snp_region_plot_ls:
 		<%
-		snp_region_plot_url = h.url_for(controller='SNPRegionPlot', action='getImage', id=snp_region_plot.id)
+		snp_region_plot_url = h.url(controller='SNPRegionPlot', action='getImage', id=snp_region_plot.id)
 		%>
 		<a href=${snp_region_plot_url}><img width="1024" src=${snp_region_plot_url}></a>
 	% endfor
 % else:
 	<%
-	snp_region_plot_url = h.url_for(controller='SNPRegionPlot', action='getImage', id=c.snp_region_plot.id)
+	snp_region_plot_url = h.url(controller='SNPRegionPlot', action='getImage', id=c.snp_region_plot.id)
 	%>
 	<a href=${snp_region_plot_url}><img width="1024" src=${snp_region_plot_url}></a>
 % endif

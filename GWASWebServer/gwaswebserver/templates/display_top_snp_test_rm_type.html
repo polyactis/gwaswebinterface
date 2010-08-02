@@ -63,10 +63,10 @@
 			% if c.data_matrix[i][j] is not None:
 				% for results_id in c.data_matrix[i][j]:
 					<%
-					thumbnail_url = h.url_for(controller='DisplayTopSNPTestRM', action='queryImage', id=results_id[0], type_id=int(c.type.id), list_type_id=c.list_info.list_type_id_ls[i], img_type='png_thumbnail')
-					table_url = h.url_for(controller=controller, action=action, id=results_id[0], type_id=c.type.id, list_type_id=c.list_info.list_type_id_ls[i])
-					pvalue_for_enrichment_stat_plot_url = h.url_for(controller='DisplayTopSNPTestRM', action='queryImage', id=results_id[0], type_id=int(c.type.id), list_type_id=c.list_info.list_type_id_ls[i], img_type='pvalue2D')
-					enrichment_stat_curve_plot_url = h.url_for(controller='DisplayTopSNPTestRM', action='queryImage', id=results_id[0], type_id=int(c.type.id), list_type_id=c.list_info.list_type_id_ls[i], img_type='png_data')
+					thumbnail_url = h.url(controller='DisplayTopSNPTestRM', action='queryImage', id=results_id[0], type_id=int(c.type.id), list_type_id=c.list_info.list_type_id_ls[i], img_type='png_thumbnail')
+					table_url = h.url(controller=controller, action=action, id=results_id[0], type_id=c.type.id, list_type_id=c.list_info.list_type_id_ls[i])
+					pvalue_for_enrichment_stat_plot_url = h.url(controller='DisplayTopSNPTestRM', action='queryImage', id=results_id[0], type_id=int(c.type.id), list_type_id=c.list_info.list_type_id_ls[i], img_type='pvalue2D')
+					enrichment_stat_curve_plot_url = h.url(controller='DisplayTopSNPTestRM', action='queryImage', id=results_id[0], type_id=int(c.type.id), list_type_id=c.list_info.list_type_id_ls[i], img_type='png_data')
 					%>
 					<p><a href=${table_url}>${results_id[1]}-${results_id[0]},</a></p>
 					
