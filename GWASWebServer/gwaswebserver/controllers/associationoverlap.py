@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 
 from gwaswebserver.lib.base import BaseController, render, config, h, model
 #from gwaswebserver import model
@@ -20,9 +20,9 @@ class AssociationoverlapController(BaseController):
 		# Return a rendered template
 		#   return render('/template.mako')
 		# or, Return a response
-		c.getCallMethodLsJsonURL = h.url_for(controller="associationoverlap", action="getCallMethodLsJson")
-		c.getOverlappingDataAcrossPhenotypesURL = h.url_for(controller="associationoverlap", action="getOverlappingDataAcrossPhenotypes")
-		c.getNoOfTopSNPsLsJsonURL = h.url_for(controller="associationoverlap", action="getNoOfTopSNPsLsJson")
+		c.getCallMethodLsJsonURL = h.url(controller="associationoverlap", action="getCallMethodLsJson")
+		c.getOverlappingDataAcrossPhenotypesURL = h.url(controller="associationoverlap", action="getOverlappingDataAcrossPhenotypes")
+		c.getNoOfTopSNPsLsJsonURL = h.url(controller="associationoverlap", action="getNoOfTopSNPsLsJson")
 		return render("AssociationOverlap.html")
 	
 	def getCallMethodLsJson(self):

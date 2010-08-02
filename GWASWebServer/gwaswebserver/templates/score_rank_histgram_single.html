@@ -2,10 +2,10 @@
 <%def name="title()">Score Rank Histogram for ${c.score_rank_histgram.id}</%def>
 
 <%
-score_hist_url = h.url_for(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='score_hist')
-score_hist_svg_url = h.url_for(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='score_hist_svg')
-rank_hist_url = h.url_for(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='rank_hist')
-rank_hist_svg_url = h.url_for(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='rank_hist_svg')
+score_hist_url = h.url(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='score_hist')
+score_hist_svg_url = h.url(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='score_hist_svg')
+rank_hist_url = h.url(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='rank_hist')
+rank_hist_svg_url = h.url(controller='ScoreRankHistogram', action='getImage', id=c.score_rank_histgram.id, img_type='rank_hist_svg')
 %>
 
 <a href=${score_hist_url}>

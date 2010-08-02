@@ -5,7 +5,7 @@
 
 
 <!-- 2008-12-30 onsubmit="return handleResponse()" added to intercept "action='submit'" -->
-${h.form(h.url_for(action='submit'), method='get', onsubmit="return handleResponse()")}
+${h.form(h.url(action='submit'), method='get', onsubmit="return handleResponse()")}
 % if getattr(c, 'email_msg', None):
     <span class="error-message">${c.email_msg}</span><br />
 % endif

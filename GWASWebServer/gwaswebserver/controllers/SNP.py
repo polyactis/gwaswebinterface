@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 
 from gwaswebserver.lib.base import BaseController, render, config
 from gwaswebserver import model
@@ -165,8 +165,8 @@ class SnpController(BaseController):
 		description = dict(column_name_type_ls)
 		
 		snp = Snps.query.filter_by(chromosome=int(c.chromosome)).filter_by(position=int(c.position)).filter(Snps.end_position==None).first()
-		
-		rows = Results.query.filter_by(snps_id=snp.id).filter(Results.result.has(call_method_id=c.call_method_id)).all()
+		rows = Results.getResultsForACL(snp,c.call_method_id,h.user()).all()
+		#rows = Results.query.filter_by(snps_id=snp.id).filter(Results.result.has(call_method_id=c.call_method_id)).all()
 		return_ls =[]
 		start_pos = c.position-40000
 		stop_pos = c.position+40000
@@ -176,7 +176,7 @@ class SnpController(BaseController):
 			
 			analysis = '%s %s'%(analysis_method.id, analysis_method.short_name)
 			track_id = '%s_%s_%s'%(row.result.call_method.id, phenotype_method.id, analysis_method.id)
-			SNPURL = h.url_for(controller='SNP', action=None, phenotype_method_id=phenotype_method.id, \
+			SNPURL = h.url(controller='SNP', action=None, phenotype_method_id=phenotype_method.id, \
 									call_method_id=row.result.call_method.id, analysis_method_id=analysis_method.id,\
 									chromosome=c.chromosome, position=c.position, score=row.score)
 			gbrowseLink = "<a href=%s target='_blank'>%s</a>"%(SNPURL, row.result.id)

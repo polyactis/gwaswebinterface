@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 
 from gwaswebserver.lib.base import BaseController, render
 from gwaswebserver import model
@@ -21,7 +21,7 @@ class AccessionController(BaseController):
 		#   return render('/template.mako')
 		# or, Return a response
 		# return 'Hello World'
-		c.find250kAccessionsURL = h.url_for(controller="Accession", action="find250kAccessions", id=None)
+		c.find250kAccessionsURL = h.url(controller="Accession", action="find250kAccessions", id=None)
 		return render('/Accession.html')
 	
 	@jsonify
@@ -155,7 +155,7 @@ class AccessionController(BaseController):
 					column_value = getattr(row, column_name, default_value)
 					#haplo_group_name = model.Stock.HaploGroup.get(column_value).short_name
 					if column_value:
-						column_value = "<a href=%s target='_blank'>%s</a>"%(h.url_for(controller="Accession", action='haploGroup', id=column_value), column_value)
+						column_value = "<a href=%s target='_blank'>%s</a>"%(h.url(controller="Accession", action='haploGroup', id=column_value), column_value)
 				else:
 					column_value = getattr(row, column_name, default_value)
 				entry[column_name] = column_value
@@ -209,7 +209,7 @@ class AccessionController(BaseController):
 		if id is None:
 			id = 1
 		c.haplo_group_id = id
-		c.getHaploGroupURL = h.url_for(controller="Accession", action="getHaploGroup", id=id)
+		c.getHaploGroupURL = h.url(controller="Accession", action="getHaploGroup", id=id)
 		return render('/HaploGroup.html')
 	
 	def getHaploGroup(self, id=None):

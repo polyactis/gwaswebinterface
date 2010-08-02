@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 
 from gwaswebserver.lib.base import *	#BaseController, render, h, config, os , etc.
 from gwaswebserver import model
@@ -20,11 +20,11 @@ class HaplotypeviewController(BaseController):
 
 	def index(self):
 		#c.call_method_ls = DisplayresultsController.getCallMethodLsJson()		
-		c.callMethodLsURL = h.url_for(controller="DisplayResults", action="getCallMethodLsJson", id=None)
+		c.callMethodLsURL = h.url(controller="DisplayResults", action="getCallMethodLsJson", id=None)
 		#c.gene_list_ls = DisplayresultsgeneController.getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson()
-		c.geneListLsURL = h.url_for(controller="DisplayResultsGene", action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson", id=None)
-		c.callMethodOnChangeURL = h.url_for(controller="DisplayResults", action="getPhenotypeMethodLsJson", id=None)
-		c.haplotypeImgURL = h.url_for(controller='HaplotypeView', action='getPlot', id=None)
+		c.geneListLsURL = h.url(controller="DisplayResultsGene", action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson", id=None)
+		c.callMethodOnChangeURL = h.url(controller="DisplayResults", action="getPhenotypeMethodLsJson", id=None)
+		c.haplotypeImgURL = h.url(controller='HaplotypeView', action='getPlot', id=None)
 		return render('/HaplotypeView.html')
 	
 	def getPlot(self):

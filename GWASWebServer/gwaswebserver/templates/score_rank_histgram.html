@@ -28,7 +28,7 @@ There are different ways of associating a SNP to a certain gene. The histograms 
 		% for table_field in score_rank_hist_type.c.keys():
 			<td>
 			% if table_field=='id':
-				<a href=${h.url_for(controller='ScoreRankHistogram', action='type', id=score_rank_hist_type.id)}>${getattr(score_rank_hist_type, table_field, '')}</a>
+				<a href=${h.url(controller='ScoreRankHistogram', action='type', id=score_rank_hist_type.id)}>${getattr(score_rank_hist_type, table_field, '')}</a>
 				## (${len(score_rank_hist_type.score_rank_hist_ls)} plots)
 			% elif table_field=='null_distribution_type_id':
 				${score_rank_hist_type.null_distribution_type.short_name}

@@ -3,7 +3,7 @@
 
 
 <h2> Login</h2>
-${h.form(h.url_for(controller='/management/account',action='dologin'), method='post')}
+${h.form(h.url(controller='management/account',action='dologin'), method='post')}
 <label for="login">Email</label>
 ${h.text('login')} <BR />
 <label for="password">Password</label>

@@ -1,7 +1,7 @@
 import logging
 
 from pylons import request, response, session, tmpl_context as c
-from pylons.controllers.util import abort, redirect_to
+from pylons.controllers.util import abort, redirect
 
 from gwaswebserver.lib.base import BaseController, render, config, h
 from gwaswebserver import model
@@ -28,13 +28,13 @@ class PhenotypeController(BaseController):
 		c.phenotype_method_description = pm.method_description
 		
 		c.call_method_id = request.params.get('call_method_id', int(config['app_conf']['published_call_method_id']))
-		c.callInfoURL = h.url_for(controller='DisplayResults', action='fetchCallInfoData', id=None,\
+		c.callInfoURL = h.url(controller='DisplayResults', action='fetchCallInfoData', id=None,\
 							phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistImageURL = h.url_for(controller='DisplayResults', action='getPhenotypeHistImage', id=None, \
+		c.phenotypeHistImageURL = h.url(controller='DisplayResults', action='getPhenotypeHistImage', id=None, \
 										phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.callPhenotypeQQImageURL = h.url_for(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None,\
+		c.callPhenotypeQQImageURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None,\
 											phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistogramDataURL = h.url_for(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id)
+		c.phenotypeHistogramDataURL = h.url(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id)
 		return render('/OnePhenotype.html')
 	
 	@jsonify
@@ -182,9 +182,9 @@ class PhenotypeController(BaseController):
 		2009-5-3
 			
 		"""
-		c.trendDataURL = h.url_for(controller='Phenotype', action='getTrendData', id=None)
-		c.trendAnnotationDataURL = h.url_for(controller='Phenotype', action='getTrendAnnotationData', id=None)
-		c.multiPhenotypeDataURL = h.url_for(controller='Phenotype', action='getMultiPhenotypeData', id=None,\
+		c.trendDataURL = h.url(controller='Phenotype', action='getTrendData', id=None)
+		c.trendAnnotationDataURL = h.url(controller='Phenotype', action='getTrendAnnotationData', id=None)
+		c.multiPhenotypeDataURL = h.url(controller='Phenotype', action='getMultiPhenotypeData', id=None,\
 										call_method_id=int(config['app_conf']['good_call_method_id']))
 		return render('/PhenotypeTrend.html')
 	

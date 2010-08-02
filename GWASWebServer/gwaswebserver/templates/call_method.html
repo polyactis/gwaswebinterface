@@ -20,7 +20,7 @@
 <tr>
 	% for table_field in call_method.table.columns.keys():
 			% if table_field=='id':
-				<td><a href=${h.url_for(controller='CallInfo', action='call_method', id=call_method.id)}>${call_method.id}</a></td>
+				<td><a href=${h.url(controller='CallInfo', action='call_method', id=call_method.id)}>${call_method.id}</a></td>
 			% elif table_field=='short_name':
 				<td>${getattr(call_method, table_field, '')}</td>
 				<td>${len(call_method.call_info_ls)}</td>

@@ -2,31 +2,31 @@
 
 <%def name="title()">GWA Results Associated With Genes</%def>
 
-${h.form(h.url_for(), method='get', onsubmit="return handleResponse('%s')"%h.url_for(controller="DisplayResultsGene", action='showTopCandidateGenesFromOneResultOneGeneList', id=None) )}
+${h.form(h.url(), method='get', onsubmit="return handleResponse('%s')"%h.url(controller="DisplayResultsGene", action='showTopCandidateGenesFromOneResultOneGeneList', id=None) )}
 
 Type: ${h.select('type_id', 1, options=c.types, prompt='Please Choose ...', 
 	onchange="SelectChange('%s', ['type_id'], 'phenotype_method_id'); return false;"%
-		(h.url_for(controller="DisplayResultsGene", action="getPhenotypeMethodLsGivenTypeJson", id=None)),
+		(h.url(controller="DisplayResultsGene", action="getPhenotypeMethodLsGivenTypeJson", id=None)),
 	required=True )}  <br/>
 ${h.hidden('call_method_id', id='call_method_id')}
 
 Phenotype Method: ${h.select('phenotype_method_id', selected_values=[], options=[], 
 	onchange="SelectChange('%s', ['type_id', 'phenotype_method_id'], 'analysis_method_id'); return false;"%
-		(h.url_for(controller="DisplayResultsGene", action="getAnalysisMethodLsGivenTypeAndPhenotypeMethodJson", id=None)),
+		(h.url(controller="DisplayResultsGene", action="getAnalysisMethodLsGivenTypeAndPhenotypeMethodJson", id=None)),
 	required=True)}  <br />
 
 Analysis Method: ${h.select('analysis_method_id', selected_values=[], options=[],
-	onchange="return handleResponse('%s')"%(h.url_for(controller="DisplayResultsGene", action='showTopCandidateGenesFromOneResultOneGeneList', id=None)),
+	onchange="return handleResponse('%s')"%(h.url(controller="DisplayResultsGene", action='showTopCandidateGenesFromOneResultOneGeneList', id=None)),
 	required=True)}<br />
 ${h.hidden('results_id', id='results_id')}
 
 <!--	onchange="SelectChange('%s', ['type_id', 'phenotype_method_id', 'analysis_method_id'], 'gene_list_type_id'); return false;"%
-		(h.url_for(controller="DisplayResultsGene", action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson", id=None)),-->
+		(h.url(controller="DisplayResultsGene", action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson", id=None)),-->
 
 Maximum Rank: ${h.text('max_rank', value=getattr(c, 'max_rank', 500))}<br/>
 
 Gene List Type: ${h.select('gene_list_type_id', [], options=c.gene_list_ls,
-	onchange="return handleResponse('%s')"%(h.url_for(controller="DisplayResultsGene", action='showTopCandidateGenesFromOneResultOneGeneList', id=None)),
+	onchange="return handleResponse('%s')"%(h.url(controller="DisplayResultsGene", action='showTopCandidateGenesFromOneResultOneGeneList', id=None)),
 	required=True )}  <br/>
 
 

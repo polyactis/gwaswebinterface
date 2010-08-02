@@ -6,8 +6,8 @@ Created on May 27, 2010
 
 import logging
 
-from pylons import request, response, session, tmpl_context as c, config
-from pylons.controllers.util import abort, redirect_to
+from pylons import request, response, session, tmpl_context as c, config, url
+from pylons.controllers.util import abort, redirect
 
 from gwaswebserver.lib.base import BaseController, render, h
 from gwaswebserver import model
@@ -26,9 +26,9 @@ class AccountController(BaseController):
         identity = request.environ.get('repoze.who.identity')
         if identity is not None:
             if not came_from or came_from in CAME_FROM_EXCLUDE:
-                redirect_to('/')
+                redirect(url('/'))
             else:
-                redirect_to(str(came_from))
+                redirect(url(str(came_from)))
         #login_counter = request.environ['repoze.who.logins']
         #if login_counter > 0:
             #h.flash('Wrong credentials')

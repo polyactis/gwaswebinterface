@@ -10,9 +10,9 @@ Check the Original Array Filename to figure out what it is.
 
 <p>
 % if c.qc_simplified=='1' or c.qc_simplified==1:
-	<a href=${h.url_for(controller='CallInfo', action='call_method', id=c.call_info_ls[0].call_method_id, qc_simplified=0)}>View with detailed QC.</a>
+	<a href=${h.url(controller='CallInfo', action='call_method', id=c.call_info_ls[0].call_method_id, qc_simplified=0)}>View with detailed QC.</a>
 % else:
-	<a href=${h.url_for(controller='CallInfo', action='call_method', id=c.call_info_ls[0].call_method_id, qc_simplified=1)}>View with simplified QC.</a> Easy to sort QC in excel.
+	<a href=${h.url(controller='CallInfo', action='call_method', id=c.call_info_ls[0].call_method_id, qc_simplified=1)}>View with simplified QC.</a> Easy to sort QC in excel.
 % endif
 </p>
 
@@ -20,7 +20,7 @@ Check the Original Array Filename to figure out what it is.
 Column QC is mismatch rate versus designated dataset. In non-simplified/detailed vesion, it has (no_of_mismatchs/no_of_non_NA_pairs) attached.
 </p>
 
-<a href=${h.url_for(controller='CallInfo', id=None)}>Check all call methods.</a>
+<a href=${h.url(controller='CallInfo', id=None)}>Check all call methods.</a>
 
 <table border=1>
 

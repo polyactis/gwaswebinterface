@@ -6,67 +6,67 @@
 <p><b>${c.greeting}</b> 
 % if h.user():
 	${h.user().realname} 
-    <a href="${h.url_for("logout")}" target="showframe">Logout</a>
+    <a href="${h.url("logout")}" target="showframe">Logout</a>
 % else:
 Visitor
-<a href="${h.url_for("login")}" target="showframe">Login</a>
+<a href="${h.url("login")}" target="showframe">Login</a>
 % endif
 <p>
-<a href=${h.url_for(controller='Accession', id=None)} target ="showframe">Accession</a>
+<a href=${h.url(controller='Accession', id=None)} target ="showframe">Accession</a>
 </p>
 
 
 <p>
-<a href=${h.url_for(controller='CallInfo', id=None)} target ="showframe">Check all call methods.</a>
+<a href=${h.url(controller='CallInfo', id=None)} target ="showframe">Check all call methods.</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='SNPRegionPlot', id=None)} target ="showframe">View SNP region plots</a>
+<a href=${h.url(controller='SNPRegionPlot', id=None)} target ="showframe">View SNP region plots</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='ScoreRankHistogram', id=None)} target ="showframe">View Histograms of Score/Rank</a>
+<a href=${h.url(controller='ScoreRankHistogram', id=None)} target ="showframe">View Histograms of Score/Rank</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='MAFVsScorePlot', id=None)} target ="showframe">View MAF vs Score Plots</a>
+<a href=${h.url(controller='MAFVsScorePlot', id=None)} target ="showframe">View MAF vs Score Plots</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='DisplayResults', id=None)} target ="showframe">GWAS for all Phenotypes</a>
+<a href=${h.url(controller='DisplayResults', id=None)} target ="showframe">GWAS for all Phenotypes</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='DisplayResults', action='form', id=None)} target ="showframe">GWAS Form</a>
+<a href=${h.url(controller='DisplayResults', action='form', id=None)} target ="showframe">GWAS Form</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='DisplayTopSNPTestRM', id=None)} target ="showframe">Display Candidate-Gene Enrichment Data</a>
+<a href=${h.url(controller='DisplayTopSNPTestRM', id=None)} target ="showframe">Display Candidate-Gene Enrichment Data</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='DisplayTopSNPTestRM', action='form', id=None)} target ="showframe">Form to Display Candidate-Gene Enrichment Data</a>
+<a href=${h.url(controller='DisplayTopSNPTestRM', action='form', id=None)} target ="showframe">Form to Display Candidate-Gene Enrichment Data</a>
 </p>
 
 
 <p>
-<a href=${h.url_for(controller='DisplayResultsGene', action='form', id=None)} target ="showframe">Form to Display Top SNP&Genes from GWAS</a>
+<a href=${h.url(controller='DisplayResultsGene', action='form', id=None)} target ="showframe">Form to Display Top SNP&Genes from GWAS</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='DisplayResultsGene', action='geneForm', id=None)} target ="showframe">Search GWAS Results by Gene Name</a>
+<a href=${h.url(controller='DisplayResultsGene', action='geneForm', id=None)} target ="showframe">Search GWAS Results by Gene Name</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='Phenotype', action='trend', id=None)} target ="showframe">Contrast Phenotypes</a>
+<a href=${h.url(controller='Phenotype', action='trend', id=None)} target ="showframe">Contrast Phenotypes</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='utils', action='', id=None)} target ="showframe">View any data by MotionChart</a>
+<a href=${h.url(controller='utils', action='', id=None)} target ="showframe">View any data by MotionChart</a>
 </p>
 
 <p>
-<a href=${h.url_for(controller='Comparison', action='index', id=None)} target ="showframe">Charts for Comparison</a>
+<a href=${h.url(controller='Comparison', action='index', id=None)} target ="showframe">Charts for Comparison</a>
 </p>
 
 <p>
