@@ -91,7 +91,6 @@ def load_environment(global_conf, app_conf):
     model.stock_db.setup(create_tables=False)
     model.at_db.setup(create_tables=False)
     config['pylons.strict_tmpl_context'] = False
-    return config
     from variation.src.DrawSNPRegion import DrawSNPRegion
     def dealWithGeneAnnotation():
         gene_annotation_picklef = '/Network/Data/250k/tmp-yh/at_gene_model_pickelf'
