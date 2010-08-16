@@ -1,6 +1,6 @@
 #!/bin/sh
 project="/srv/GWASWebInterface/GWASWebServer"
-python_env="/srv/python_environments/current"
+python_env="/srv/python_virtualenv/current"
 cd $project
 sh $python_env/bin/activate
 export PYTHONPATH=/srv/GWASModules
