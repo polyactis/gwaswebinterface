@@ -1,18 +1,20 @@
 #!/bin/sh
 project="/srv/GWASWebInterface/GWASWebServer"
+python_env="/srv/python_environments/current"
 cd $project
+sh $python_env/bin/activate
 export PYTHONPATH=/srv/GWASModules
 
 case "$1" in
 start)
 echo "START DAEMON" >> /tmp/test.log
-/usr/local/bin/paster serve --daemon --pid-file=paster.pid --log-file=application.log  production.ini start
+$python_env/bin/paster serve --daemon --pid-file=paster.pid --log-file=application.log  production.ini start
 ;;
 stop)
-/usr/local/bin/paster serve --daemon --pid-file=paster.pid --log-file=application.log  production.ini stop
+$python_env/bin/paster serve --daemon --pid-file=paster.pid --log-file=application.log  production.ini stop
 ;;
 restart)
-/usr/local/bin/paster serve  --daemon --pid-file=paster.pid --log-file=application.log production.ini restart
+$python_env/bin/paster serve  --daemon --pid-file=paster.pid --log-file=application.log production.ini restart
 ;;
 *)
 echo $"Usage: $0 {start|stop|restart}"
