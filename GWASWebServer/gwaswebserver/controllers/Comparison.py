@@ -87,7 +87,7 @@ class ComparisonController(BaseController):
             y_filename = path+y_filename  
         #0.002
         #return '[ {"x_value":5.4948500216800937,"y_value":3.6986661045512061,"chr":1,"pos":30204930},{"x_value":2.4948500216800937,"y_value":6.6986661045512061,"chr":2,"pos":50204930}]';
-        json_data = analyzeSNPResult.get_comparison_lists(result_file_1=x_filename, result_file_2=y_filename, type='fraction', top_fraction=1,min_MAF_x=min_MAF_x ,min_MAF_y=min_MAF_y)
+        json_data = analyzeSNPResult.get_comparison_lists(result_file_1=x_filename, result_file_2=y_filename, type='fraction', top_fraction=0.002,min_MAF_x=min_MAF_x ,min_MAF_y=min_MAF_y)
         del(json_data['results'])
         #json_data = self.getGWASForComparisionJsonData(rm_x,rm_y)
         json_data['overlap_count'] = 1
