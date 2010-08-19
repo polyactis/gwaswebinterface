@@ -129,15 +129,18 @@ public class PhenotypeTablePopup extends DialogBox implements ClickHandler{
 					for (int i = 0; i < analysisMethodJsonArray.size(); ++i) {
 						jsonValue = analysisMethodJsonArray.get(i);
 						String analysisMethodID = jsonValue.isString().stringValue();
-						String analysisMethodLabel = analysis_method_id2label.get(analysisMethodID).isString().stringValue();
-						final String _fetchOneGWAURL = fetchGWAURL + "?call_method_id="+callMethodID+"&phenotype_method_id=" + phenotypeMethodID
-								+"&analysis_method_id=" + analysisMethodID;
-						final String _getOneResultRawURL = getOneResultRawURL + "?call_method_id="+callMethodID+"&phenotype_method_id=" + phenotypeMethodID
-								+"&analysis_method_id=" + analysisMethodID;
-						HTML oneGWALink = new HTML("<a href=" + _fetchOneGWAURL + " target='_blank'>" +analysisMethodLabel + "</a>, " +
-								"<a href=" + _getOneResultRawURL + " target='_blank'>download</a>");						
-						gwasPlotTreeItem.addItem(oneGWALink);
-					
+						JSONObject analysisMethods = analysis_method_id2label.get(analysisMethodID).isObject();
+						Set<String> keys_trans = analysisMethods.keySet();
+						for (String transformatin_id : keys_trans) {
+							String analysisMethodLabel = analysisMethods.get(transformatin_id).isString().stringValue();
+							final String _fetchOneGWAURL = fetchGWAURL + "?call_method_id="+callMethodID+"&phenotype_method_id=" + phenotypeMethodID
+									+"&analysis_method_id=" + analysisMethodID  + "&transformation_method_id=" + transformatin_id;
+							final String _getOneResultRawURL = getOneResultRawURL + "?call_method_id="+callMethodID+"&phenotype_method_id=" + phenotypeMethodID
+									+"&analysis_method_id=" + analysisMethodID + "&transformation_method_id=" + transformatin_id;
+							HTML oneGWALink = new HTML("<a href=" + _fetchOneGWAURL + " target='_blank'>" +analysisMethodLabel + "</a>, " +
+									"<a href=" + _getOneResultRawURL + " target='_blank'>download</a>");
+							gwasPlotTreeItem.addItem(oneGWALink);
+						}
 					}
 				}
 				
