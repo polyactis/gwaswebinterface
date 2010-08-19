@@ -238,13 +238,13 @@ class HelpothercontrollersController(BaseController):
 			add description_ls in return
 		2008-10-19
 		"""
-		table_str = '%s s, %s p'%(affiliated_table_name, model.Stock_250kDB.AnalysisMethod.table.name)
+		table_str = '%s s, %s p, %s t '%(affiliated_table_name, model.Stock_250kDB.AnalysisMethod.table.name,model.Stock_250kDB.TransformationMethod.table.name)
 		if extra_tables:
 			table_str += ', %s'%extra_tables
-		where_condition = 'p.id=s.analysis_method_id'
+		where_condition = 'p.id=s.analysis_method_id AND s.transformation_method_id = t.id'
 		if extra_condition:
 			where_condition += ' and %s'%extra_condition
-		rows = model.db.metadata.bind.execute("select distinct p.id, p.short_name, p.method_description from %s \
+		rows = model.db.metadata.bind.execute("select distinct p.id, p.short_name, p.method_description,s.transformation_method_id,t.name as transformation_name from %s \
 			where %s order by p.id"\
 			%(table_str, where_condition))
 		id_ls = []
@@ -256,7 +256,7 @@ class HelpothercontrollersController(BaseController):
 		for row in rows:
 			id2index[row.id] = len(id_ls)
 			id_ls.append(row.id)
-			label_ls.append('%s'%(row.short_name))
+			label_ls.append('%s'%(row.short_name + (' (%s)' % row.transformation_name if row.transformation_method_id != 1 else '' )))
 			description_ls.append(row.method_description)
 		list_info = PassingData()
 		list_info.id2index = id2index

@@ -167,14 +167,15 @@ class DisplayresultsController(BaseController):
 		c.call_method_id = int(request.params.get('call_method_id', config['app_conf']['published_call_method_id']))
 		# 2010-3-11
 		analysis_method_id = request.params.get('analysis_method_id', None)
+		transformation_method_id = request.params.get('transformation_method_id', None)
 		if analysis_method_id is not None:
 			analysis_method_id = int(analysis_method_id)
 		
-		c.phenotypeSummaryURL = h.url(controller='Phenotype', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.GWABaseURL = h.url(controller='DisplayResults', action='fetchOne', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.SNPBaseURL = h.url(controller='SNP', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
+		c.phenotypeSummaryURL = h.url(controller='Phenotype', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
+		c.GWABaseURL = h.url(controller='DisplayResults', action='fetchOne', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
+		c.SNPBaseURL = h.url(controller='SNP', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
 		c.getAnalysisMethodLsURL = h.url(controller='DisplayResults', action='getAnalysisMethodLsJson', phenotype_method_id=c.phenotype_method_id, \
-											call_method_id=c.call_method_id, analysis_method_id=analysis_method_id)
+											call_method_id=c.call_method_id, analysis_method_id=analysis_method_id,transformation_method_id=transformation_method_id)
 		"""
 		# 2009-4-25 no way to pass this 2D (int, string) array to the template! 
 		analysis_method_ls = self.getAnalysisMethodLs(c.call_method_id, c.phenotype_method_id)
@@ -202,7 +203,7 @@ class DisplayresultsController(BaseController):
 										phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
 		c.callPhenotypeQQImageURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None,\
 											phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistogramDataURL = h.url(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id)
+		c.phenotypeHistogramDataURL = h.url(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id,transformation_method_id=transformation_method_id)
 		# 2010-3-11
 		c.getOneResultRawURL = h.url(controller='DisplayResults', action='getOneResultRaw', id=None,\
 										call_method_id=c.call_method_id, phenotype_method_id=c.phenotype_method_id)
@@ -261,15 +262,15 @@ class DisplayresultsController(BaseController):
 		return result
 	
 	@staticmethod
-	def getAnalysisMethodLs(call_method_id, phenotype_method_id, analysis_method_id=None):
+	def getAnalysisMethodLs(call_method_id, phenotype_method_id, transformation_method_id,analysis_method_id=None):
 		"""
 		2010-3-11
 			add argument analysis_method_id to narrow down the choice of analysis_method_id
 		2009-1-30
 		"""
 		affiliated_table_name = model.Stock_250kDB.ResultsMethod.table.name	#alias is 's'
-		extra_condition = 's.call_method_id=%s and s.phenotype_method_id=%s '%\
-			(call_method_id, phenotype_method_id)
+		extra_condition = 's.call_method_id=%s and s.phenotype_method_id=%s and s.transformation_method_id=%s '%\
+			(call_method_id, phenotype_method_id,transformation_method_id)
 		if analysis_method_id:
 			extra_condition += ' and s.analysis_method_id=%s'%analysis_method_id
 		list_info = hc.getAnalysisMethodInfo(affiliated_table_name, extra_condition=extra_condition)
@@ -288,11 +289,12 @@ class DisplayresultsController(BaseController):
 		call_method_id = request.params.getone('call_method_id')
 		phenotype_method_id = request.params.getone('phenotype_method_id')
 		analysis_method_id = request.params.get('analysis_method_id', None)
+		transformation_method_id = request.params.get('transformation_method_id', None)
 		result = {
 				'options': [
 						dict(id=value, value=id, description=description) \
 						for id, value, description in self.getAnalysisMethodLs(call_method_id, phenotype_method_id,\
-																			analysis_method_id=analysis_method_id)
+																			transformation_method_id=transformation_method_id,analysis_method_id=analysis_method_id)
 						]
 				}
 		result['options'].insert(0, {'id': u'Please Choose ...', 'value': 0, 'description': ""})
@@ -347,8 +349,9 @@ class DisplayresultsController(BaseController):
 			call_method_id = request.params.getone('call_method_id')
 			phenotype_method_id = request.params.getone('phenotype_method_id')
 			analysis_method_id = request.params.getone('analysis_method_id')
+			transformation_method_id = request.params.getone('transformation_method_id')
 			rm = ResultsMethod.query.filter_by(call_method_id=call_method_id).\
-				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id).first()
+				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id).filter_by(transformation_method_id=transformation_method_id).first()
 		results_id = rm.id
 		
 		response.headers['Content-Type'] = 'application/json'
@@ -586,10 +589,13 @@ class DisplayresultsController(BaseController):
 						no_of_phenotyped_and_genotyped = hc.getNoOfAccessionsGivenPhenotypeAndCallMethodID(phenotype_method_id, row.call_method_id)
 						call_method_id2label[call_method_id] = '%s genotyped in call %s-%s'%\
 									(no_of_phenotyped_and_genotyped, row.call_method_id, row.call_method.short_name)
-					
-					call_method_id2analysis_method_id_ls[call_method_id].append(analysis_method_id)
+									
+					if analysis_method_id not in call_method_id2analysis_method_id_ls[call_method_id]: 
+						call_method_id2analysis_method_id_ls[call_method_id].append(analysis_method_id)
 					if analysis_method_id not in analysis_method_id2label:
-						analysis_method_id2label[row.analysis_method_id] = '%s %s'%(row.analysis_method_id, row.analysis_method.short_name)
+						analysis_method_id2label[analysis_method_id] = {}
+					analysis_method_id2label[analysis_method_id][str(row.transformation_method_id)] = '%s %s'%(row.analysis_method_id, row.analysis_method.short_name if row.transformation_method_id == 1 else row.analysis_method.short_name + ' (%s)' % row.transformation_method.name)
+
 		dc_to_return = {'call_method_id2analysis_method_id_ls': call_method_id2analysis_method_id_ls,\
 					'call_method_id2label': call_method_id2label,\
 					'analysis_method_id2label': analysis_method_id2label}
