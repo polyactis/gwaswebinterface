@@ -76,8 +76,15 @@ class PhenotypeController(BaseController):
 		2009-4-6
 			return histogram data for google barchart
 		"""
+		from variation.src.OutputPhenotype import OutputPhenotype
 		phenotype_method_id = request.params.get('phenotype_method_id', id)
-		dc = self.getPhenotypeValue(id=phenotype_method_id, returnJson=False)
+		transformation_method_id = request.params.get('transformation_method_id',None)
+		transformation_func = None
+		if transformation_method_id != '1' and transformation_method_id is not None:
+			transformation = model.Stock_250kDB.TransformationMethod.query.filter_by(id = transformation_method_id).first()
+			if transformation.function != '':
+				transformation_func = getattr(OutputPhenotype, transformation.function)
+		dc = self.getPhenotypeValue(id=phenotype_method_id, returnJson=False,transform_func=transformation_func)
 		ecotype_id2phenotype_value = dc.get("ecotype_id2phenotype_value", {})
 		phenotype_value_ls = []
 		for ecotype_id, phenotype_value in ecotype_id2phenotype_value.iteritems():
@@ -107,7 +114,7 @@ class PhenotypeController(BaseController):
 		return json_result 
 	
 	#@jsonify
-	def getPhenotypeValue(self, id=None, returnJson=True):
+	def getPhenotypeValue(self, id=None, returnJson=True, transform_func = None):
 		"""
 		2009-4-6
 			given a phenotype method id
@@ -138,6 +145,8 @@ class PhenotypeController(BaseController):
 						min_value = phenotype_value
 					if max_value == None or phenotype_value>max_value:
 						max_value = phenotype_value
+		if transform_func is not None:
+			ecotype_id2phenotype_value = transform_func(ecotype_id2phenotype_value,min_value,max_value) 
 		dc = dict(min_value=min_value, max_value=max_value, ecotype_id2phenotype_value=ecotype_id2phenotype_value)
 		if returnJson:
 			response.headers['Content-Type'] = 'application/json'
