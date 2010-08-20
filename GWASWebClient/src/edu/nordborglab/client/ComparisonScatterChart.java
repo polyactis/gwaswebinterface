@@ -128,7 +128,7 @@ public class ComparisonScatterChart extends Composite {
 					String chr = dataTable.getProperty(s.getRow(), 0, "chr");
 					String pos = dataTable.getProperty(s.getRow(),0,"pos");
 					double score = dataTable.getValueDouble(s.getRow(),0);
-					String SNPBaseURL = "/SNP/?call_method_id="+x_call_method_listbox.getValue(x_call_method_listbox.getSelectedIndex())+"&phenotype_method_id="+x_phenotype_listbox.getValue(x_phenotype_listbox.getSelectedIndex())+"+&analysis_method_id="+x_analysis_method_id.toString();
+					String SNPBaseURL = "/SNP/index?call_method_id="+x_call_method_listbox.getValue(x_call_method_listbox.getSelectedIndex())+"&phenotype_method_id="+x_phenotype_listbox.getValue(x_phenotype_listbox.getSelectedIndex())+"&analysis_method_id="+x_analysis_method_id.toString();
 					final String _SNPURL = URL.encode(SNPBaseURL + "&chromosome="+chr+"&position=" + pos +"&score="+String.valueOf(score));
 					Window.open(_SNPURL, "", "");
 				}
