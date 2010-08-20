@@ -176,7 +176,7 @@ class SnpController(BaseController):
 			
 			analysis = '%s %s'%(analysis_method.id, analysis_method.short_name)
 			track_id = '%s_%s_%s'%(row.result.call_method.id, phenotype_method.id, analysis_method.id)
-			SNPURL = h.url(controller='SNP', action=None, phenotype_method_id=phenotype_method.id, \
+			SNPURL = h.url(controller='SNP', phenotype_method_id=phenotype_method.id, \
 									call_method_id=row.result.call_method.id, analysis_method_id=analysis_method.id,\
 									chromosome=c.chromosome, position=c.position, score=row.score)
 			gbrowseLink = "<a href=%s target='_blank'>%s</a>"%(SNPURL, row.result.id)
