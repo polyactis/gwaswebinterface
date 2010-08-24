@@ -281,7 +281,8 @@ class DisplayresultsController(BaseController):
 			id = list_info.id_ls[i]
 			label = list_info.label_ls[i]
 			description = list_info.description_ls[i]
-			analysis_method_ls.append([id, label, description])
+			pseudoHeritability = list_info.pseudoHeritability_ls[i]
+			analysis_method_ls.append([id, label, description,pseudoHeritability])
 		return analysis_method_ls
 	
 	@jsonify
@@ -292,8 +293,8 @@ class DisplayresultsController(BaseController):
 		transformation_method_id = request.params.get('transformation_method_id', None)
 		result = {
 				'options': [
-						dict(id=value, value=id, description=description) \
-						for id, value, description in self.getAnalysisMethodLs(call_method_id, phenotype_method_id,\
+						dict(id=value, value=id, description=description,pseudoHeritability=pseudoHeritability) \
+						for id, value, description,pseudoHeritability in self.getAnalysisMethodLs(call_method_id, phenotype_method_id,\
 																			transformation_method_id=transformation_method_id,analysis_method_id=analysis_method_id)
 						]
 				}
