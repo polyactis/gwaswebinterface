@@ -12,11 +12,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.json.client.JSONString;
-
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.visualization.client.DataTable;
 
 
@@ -29,6 +26,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 	private String GWABaseURL;
 	private String SNPBaseURL;
 	private String getOneResultRawURL;
+	private Double pseudoHeritability;
 	
 	private HTML statusReport;
 	private String[] colors = {"blue", "green", "red", "cyan", "purple"};
@@ -38,7 +36,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 	
 	public GWASOneResult(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, DecoratedPopupPanel popupLink, 
 			int analysisMethodID, String analysisMethodDescription, String GWABaseURL, String SNPBaseURL, 
-			String getOneResultRawURL)
+			String getOneResultRawURL,Double pseudoHeritability)
 	{
 		super(constants, jsonErrorDialog, constants.GWASOneResultHelpID());
 		this.constants = constants;
@@ -48,6 +46,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 		this.GWABaseURL = GWABaseURL;
 		this.SNPBaseURL = SNPBaseURL;
 		this.getOneResultRawURL = getOneResultRawURL;
+		this.pseudoHeritability = pseudoHeritability;
 		
 		this.popupLink = popupLink;
 		
@@ -59,6 +58,8 @@ public class GWASOneResult extends CustomVerticalPanel{
 		this.add(getOneResultRawLink);
 		
 		this.add(new HTML(this.analysisMethodDescription));
+		if (pseudoHeritability != null)
+			this.add(new HTML("psuedo-heritability: " + pseudoHeritability.toString()));
 		
 		loadGWA();
 	}
@@ -91,11 +92,16 @@ public class GWASOneResult extends CustomVerticalPanel{
 					int chrLength = (int) chr2length.get(chromosome).isNumber().doubleValue();
 					//jsonErrorDialog.displayRequestError("chromosome "+ chromosome + "length: " + chrLength);
 					String color = colors[i%colors.length];
-					AssociationScatterChart associationChart = new AssociationScatterChart(constants, jsonErrorDialog, chromosome,
+					AssociationScatterChart associationChart = new AssociationScatterChart(chromosome,
 							color, chrLength, max_length, max_value, SNPBaseURL);
 					add(associationChart);
 					dataTable = Common.asDataTable(data.substring(1, data.length()-1));	//2009-4-25 data has extra " on both ends
+					dataTable.insertRows(0,1);
+					dataTable.setValue(0, 0, 0);
+					int index = dataTable.addRow();
+					dataTable.setValue(index, 0, chrLength);
 					associationChart.draw_gwas(dataTable);
+					associationChart.initHandler();
 					i += 1;
 				}
 			} catch (JSONException e) {
