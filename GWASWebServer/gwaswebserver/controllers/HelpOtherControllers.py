@@ -244,13 +244,14 @@ class HelpothercontrollersController(BaseController):
 		where_condition = 'p.id=s.analysis_method_id AND s.transformation_method_id = t.id'
 		if extra_condition:
 			where_condition += ' and %s'%extra_condition
-		rows = model.db.metadata.bind.execute("select distinct p.id, p.short_name, p.method_description,s.transformation_method_id,t.name as transformation_name from %s \
+		rows = model.db.metadata.bind.execute("select distinct p.id, p.short_name, p.method_description,s.transformation_method_id,t.name as transformation_name, s.pseudo_heritability from %s \
 			where %s order by p.id"\
 			%(table_str, where_condition))
 		id_ls = []
 		id2index = {}
 		label_ls = []
 		description_ls = []
+		pseudoHeritability_ls = []
 		prev_biology_category_id = -1
 		no_of_separators = 0
 		for row in rows:
@@ -258,11 +259,14 @@ class HelpothercontrollersController(BaseController):
 			id_ls.append(row.id)
 			label_ls.append('%s'%(row.short_name + (' (%s)' % row.transformation_name if row.transformation_method_id != 1 else '' )))
 			description_ls.append(row.method_description)
+			pseudoHeritability_ls.append(row.pseudo_heritability)
+			
 		list_info = PassingData()
 		list_info.id2index = id2index
 		list_info.id_ls = id_ls
 		list_info.label_ls = label_ls
 		list_info.description_ls = description_ls
+		list_info.pseudoHeritability_ls = pseudoHeritability_ls
 		return list_info
 	
 	@classmethod
