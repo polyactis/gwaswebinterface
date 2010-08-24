@@ -13,6 +13,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONException;
+import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.json.client.JSONObject;
@@ -87,11 +88,11 @@ public class GWASOnePhenotype implements EntryPoint {
 		addAssociationResults();
 	}
 	public native int getCallMethodID()/*-{
-		return $wnd.call_method_id;
+		return parseInt($wnd.call_method_id);
 	}-*/;
 	
 	public native int getPhenotypeMethodID()/*-{
-		return $wnd.phenotype_method_id;
+		return parseInt($wnd.phenotype_method_id);
 	}-*/;
 	
 	public native String getGWABaseURL()/*-{ return $wnd.GWABaseURL}-*/;
@@ -118,11 +119,15 @@ public class GWASOnePhenotype implements EntryPoint {
 						
 						String analysisMethodName = object.get("id").isString().stringValue();
 						String analysisMethodDescription = object.get("description").isString().stringValue();
+						JSONNumber heritability = object.get("pseudoHeritability").isNumber();
+						Double pseudoHeritability = null;
+						if (heritability != null)
+							pseudoHeritability = heritability.doubleValue();
 						//int analysis_method_id = Integer.parseInt(analysisMethodName);
 						GWASOneResult gwaOneResult = new GWASOneResult(constants, jsonErrorDialog, popupLink, 
 								analysisMethodID, analysisMethodDescription, GWABaseURL, 
 								SNPBaseURL+"&analysis_method_id="+analysisMethodID,
-								getOneResultRawURL+"&analysis_method_id="+analysisMethodID);
+								getOneResultRawURL+"&analysis_method_id="+analysisMethodID,pseudoHeritability);
 						tPanel.add(gwaOneResult, analysisMethodName);
 					}
 				}

@@ -20,7 +20,7 @@
       <inherits name="com.google.gwt.i18n.I18N"/>
       <inherits name="com.google.gwt.maps.GoogleMaps" />
       <inherits name="com.google.gwt.visualization.Visualization" />
-
+	  <inherits name="edu.nordborglab.client.visualizations.dygraphs.Dygraphs" />
 
       <!-- Specify the app entry point class.                         -->
       <entry-point class='edu.nordborglab.client.GWASOnePhenotype'/>
