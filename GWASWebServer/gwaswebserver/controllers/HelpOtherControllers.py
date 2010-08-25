@@ -375,7 +375,21 @@ class HelpothercontrollersController(BaseController):
 	@classmethod
 	def	getHeatMapFiles(cls):
 		dirname = "/Network/Data/250k/tmp-data/heatmap"
-		return cls.getFilesFromDirectory(dirname)
+		files =  cls.getFilesFromDirectory(dirname)
+		filtered_files = []
+		for file in files['files']:
+			try:
+				parts = file.split("_")
+				if parts[1] !=  '':
+					phenotype = model.Stock_250kDB.PhenotypeMethod.get_by(id=parts[1])
+					if phenotype.checkACL(h.user()):
+						filtered_files.append(file)
+			except Exception:
+				filtered_files.append(file)
+		files['files'] = filtered_files
+		return files
+		
+		
 	
 	@classmethod 
 	def getFilesFromDirectory(cls,dirname):
