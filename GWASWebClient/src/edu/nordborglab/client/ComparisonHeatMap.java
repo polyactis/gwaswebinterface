@@ -92,10 +92,10 @@ public class ComparisonHeatMap extends Composite {
 					Selection s = selectionLs.get(i);
 					int col = s.getColumn();
 					int row = s.getRow();
-					String snp1_text = dataTable.getColumnLabel(col+1);
+					String snp1_text = dataTable.getColumnLabel(col);
 					String snp2_text = dataTable.getValueString(row, 0);
 					Double value = dataTable.getValueDouble(row, col+1);
-					String url = "/SNP/?score=1";
+					String url = "/SNP/index?score="+value.toString();
 					url = url +  getDataSetQueryString(heatmap_file.getItemText(heatmap_file.getSelectedIndex()));
 					snp1.setInnerText(snp1_text);
 					snp1.setHref(url+getSNPQueryString(snp1_text));
@@ -115,10 +115,10 @@ public class ComparisonHeatMap extends Composite {
 			
 			private String getSNPQueryString(String snp)
 			{
-				String[] parts = snp.split("[\\.\\.]");
-				String chr = parts[0].substring(1);
-				String pos = parts[2];
-				return "&pos="+pos+"&chr="+chr;
+				String[] parts = snp.split("[-]");
+				String chr = parts[0].trim();
+				String pos = parts[1].trim();
+				return "&position="+pos+"&chromosome="+chr;
 			}
 		}
 		);
