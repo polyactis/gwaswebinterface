@@ -684,7 +684,7 @@ class DisplayresultsgeneController(BaseController):
 							snp_annotation_text_ls.append(snp_annotation_text)
 					column_value = ';'.join(snp_annotation_text_ls)
 				elif column_name == 'snps_id':
-					SNPURL = h.url(controller='SNP', action=None, phenotype_method_id=row.result.phenotype_method.id, \
+					SNPURL = h.url(controller='SNP', action='index', phenotype_method_id=row.result.phenotype_method.id, \
 									call_method_id=row.result.call_method.id, analysis_method_id=row.result.analysis_method.id,\
 									chromosome=row.snp.chromosome, position=row.snp.position, score=row.score)
 					column_value = "<a href=%s target='_blank'>%s</a>"%(SNPURL, row.snps_id)
