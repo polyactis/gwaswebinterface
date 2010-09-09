@@ -648,7 +648,7 @@ class DisplayresultsgeneController(BaseController):
 				
 				if column_name == 'phenotype_method_id':
 					column_value = "<a href=%s target='_blank'>%s</a>"%\
-						(h.url(controller="DisplayResults", action="showGWA", phenotype_method_id=row.result.phenotype_method_id, call_method_id=row.result.call_method_id),\
+						(h.url(controller="DisplayResults", action="showGWA", phenotype_method_id=row.result.phenotype_method_id, call_method_id=row.result.call_method_id,analysis_method_id=row.result.analysis_method_id,transformation_method_id=row.result.transformation_method_id),\
 						row.result.phenotype_method_id)
 				elif column_name == 'phenotype_short_name':
 					column_value = row.result.phenotype_method.short_name
