@@ -1,0 +1,35 @@
+<%inherit file="/base.html"/>
+
+<%def name="title()">Call Methods</%def>
+
+<p> ${len(c.call_methods)} different types of calls (by different methods or at different stages in QC) in total.</p>
+
+<table border=1>
+
+<tr>
+% for table_field in c.call_methods[0].table.columns.keys():
+		<th>${table_field.replace('_', ' ')}</th>
+		% if table_field=='short_name':
+			<th>No of arrays</th>
+		% endif
+% endfor
+
+
+</tr>
+% for call_method in c.call_methods:
+<tr>
+	% for table_field in call_method.table.columns.keys():
+			% if table_field=='id':
+				<td><a href=${h.url(controller='CallInfo', action='call_method', id=call_method.id)}>${call_method.id}</a></td>
+			% elif table_field=='short_name':
+				<td>${getattr(call_method, table_field, '')}</td>
+				<td>${len(call_method.call_info_ls)}</td>
+			% else:
+				<td>${getattr(call_method, table_field, '')}</td>
+			% endif
+	% endfor
+</tr>
+% endfor
+
+
+</table>

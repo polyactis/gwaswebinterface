@@ -1,0 +1,4 @@
+*.pyc
+GWASWebClient/war/WEB-INF/classes/*
+GWASWebClient/war/*
+!GWASWebClient/war/*.html

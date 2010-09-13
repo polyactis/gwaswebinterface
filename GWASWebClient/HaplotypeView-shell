@@ -1,0 +1,4 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+HOMEDIR=~;
+/usr/lib/jvm/ia32-java-6-sun/bin/java  -Xmx256M -cp "$APPDIR/src:$APPDIR/bin:$HOMEDIR/script/gwt/gwt-user.jar:$HOMEDIR/script/gwt/gwt-dev.jar:$HOMEDIR/script/gwt-visualization/gwt-visualization.jar" com.google.gwt.dev.DevMode -startupUrl HaplotypeView.html edu.nordborglab.HaplotypeView -logLevel DEBUG -war war/ ;
