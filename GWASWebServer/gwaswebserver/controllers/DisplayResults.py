@@ -521,7 +521,7 @@ class DisplayresultsController(BaseController):
 		
 		get_img_data_success = 0
 		if call_method_id and phenotype_method_id:
-			row = model.Stock_250kDB.CallPhenotypeQQPlots.query.filter_by(phenotype_method_id=phenotype_method_id).\
+			row = model.Stock_250kDB.CallPhenotypeQQPlot.query.filter_by(phenotype_method_id=phenotype_method_id).\
 						filter_by(phenotype_method_id=phenotype_method_id).first()
 			if row:
 				img_data = getattr(row, img_type, None)
