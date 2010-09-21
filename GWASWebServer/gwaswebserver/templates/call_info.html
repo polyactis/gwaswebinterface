@@ -49,7 +49,7 @@ Column QC is mismatch rate versus designated dataset. In non-simplified/detailed
 </tr>
 % for call_info in c.call_info_ls:
 <tr>
-<td>${call_info.no}</td>
+<td>${getattr(call_info, 'no', -1)}</td>
 <td>${call_info.ecotype_id}</td>
 <td>${call_info.nativename.decode('utf-8', 'ignore')}</td>
 <td>${call_info.stockparent}</td>
