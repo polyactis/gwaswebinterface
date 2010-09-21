@@ -1,0 +1,30 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:gwas="urn:import:edu.nordborglab.client">
+	<gwas:CustomVerticalPanel>
+		<g:FlowPanel>
+			<g:DisclosurePanel>
+			<g:header>Choose CNV</g:header>
+				<g:HTMLPanel>
+					<fieldset>
+						<li>
+							<label for="cnvMethodListBox">CNV Method ID</label>
+							<g:ListBox ui:field="cnvMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="chromosomeListBox">Chromosome</label>
+							<g:ListBox ui:field="chromosomeListBox"></g:ListBox>
+							<br></br>
+						</li>
+					</fieldset>
+				</g:HTMLPanel>
+			</g:DisclosurePanel>
+		</g:FlowPanel>
+		<g:ScrollPanel>
+		<g:HTMLPanel ui:field='protovisPanel'>
+			<div ui:field='protovisDiv'></div>
+		</g:HTMLPanel>
+		</g:ScrollPanel>
+	</gwas:CustomVerticalPanel>
+</ui:UiBinder> 

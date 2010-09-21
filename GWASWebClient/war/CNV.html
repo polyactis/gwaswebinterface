@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<%inherit file="/base.html"/>
+<%def name="title()">View Genome-Wide CNV</%def>
+<%!
+from webhelpers.html import literal
+%>
+ 
+<%def name="head()">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" href="${h.url('/style/style.css')}" />
+	<script type="text/javascript" language="javascript" src="CNV.nocache.js"></script>	
+	<script type="text/javascript" src="/scripts/zoom_test.js"></script>
+</%def>
+
+<%def name="body()">
+	<script type="text/javascript">
+		var cnv_method_ls_json = ${literal(c.cnv_method_ls_json)};
+		var chr2geneModelDataLsJson = ${literal(c.chr2geneModelDataLsJson)};
+		var getChromsomeLsJsonURL = "${c.getChromsomeLsJsonURL}";
+		var getFullDataJsonURL = "${c.getFullDataJsonURL}";
+	</script>
+	<div id="gwt"></div>
+	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+</%def>
+
+<%def name="footer()">
+</%def>
