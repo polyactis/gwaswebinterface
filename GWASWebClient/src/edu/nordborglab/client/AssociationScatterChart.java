@@ -7,15 +7,16 @@
  */
 package edu.nordborglab.client;
 
+import org.danvk.dygraphs.client.Dygraphs;
+import org.danvk.dygraphs.client.events.DataPoint;
+import org.danvk.dygraphs.client.events.SelectHandler;
+
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.visualization.client.AbstractDataTable;
-import edu.nordborglab.client.visualizations.dygraphs.Dygraphs;
-import edu.nordborglab.client.visualizations.dygraphs.events.DataPoint;
-import edu.nordborglab.client.visualizations.dygraphs.events.Handler;
-import edu.nordborglab.client.visualizations.dygraphs.events.SelectHandler;
+
 
 public class AssociationScatterChart extends Dygraphs  {
 	private String chromosome;
@@ -82,15 +83,11 @@ public class AssociationScatterChart extends Dygraphs  {
 		@Override
 		public void onSelect(SelectEvent event) {
 			//open a new window pointing to the SNP page
-			JsArray<DataPoint> pts = event.getPoints();
-			for (int i=0; i< pts.length(); i++ )
-			{
-				DataPoint point = pts.get(i);
-				int position = (int)point.getXVal();
-				double score = point.getYVal();
-				final String _SNPURL = URL.encode(SNPBaseURL + "&chromosome="+chromosome+"&position=" + position +"&score="+score);
-				Window.open(_SNPURL, "", "");
-			}
+			DataPoint point = event.point;
+			int position = (int)point.getXVal();
+			double score = point.getYVal();
+			final String _SNPURL = URL.encode(SNPBaseURL + "&chromosome="+chromosome+"&position=" + position +"&score="+score);
+			Window.open(_SNPURL, "", "");
 		}
 	}
 }

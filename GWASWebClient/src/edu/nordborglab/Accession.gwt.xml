@@ -7,6 +7,8 @@
       <inherits name="com.google.gwt.i18n.I18N"/>
       <inherits name="com.google.gwt.visualization.Visualization" />
       <inherits name="com.google.gwt.maps.GoogleMaps" />
+      <inherits name="org.danvk.dygraphs.Dygraph" />
+      
       <!-- <inherits name='com.mallardsoft.tuple'/> --> 
 	  <!-- <source path="com/mallardsoft/"/> -->
 	  <!-- <super-source path="tuple"/> -->
