@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="GWAWeb" default="build" basedir=".">
 	<!-- Configure path to GWT SDK -->
-	<property name="gwt.sdk" location="/srv/gwtsdk/gwt-2.0.3" />
-	<property name="common.path" location="/srv/gwtsdk" />
+	<property name="lib.path" location="lib" />
+	<property name="gwt.sdk" location="${lib.path}/gwt" />
 
 	<!-- SWT on Mac requires the -XstartOFirstThreadFlag. -->
 	<condition property="XstartOnFirstThreadFlag" value="-XstartOnFirstThread"
@@ -20,13 +20,10 @@
 
 	<path id="project.class.path">
 		<pathelement location="war/WEB-INF/classes"/>
-		<pathelement location="${gwt.sdk}/gwt-user.jar"/>
-		<pathelement location="${common.path}/gwt-visualization/gwt-visualization.jar"/>
-		<pathelement location="${common.path}/gwt-maps/gwt-maps.jar"/>
-
 		<fileset dir="${gwt.sdk}" includes="gwt-dev*.jar"/>
 		<!-- Add any additional non-server libs (such as JUnit) -->
 		<fileset dir="war/WEB-INF/lib" includes="**/*.jar"/>
+		<fileset dir="${lib.path}" includes="**/*.jar"/>
 	</path>
 
 	<target name="libs" description="Copy libs to WEB-INF/lib">
@@ -55,6 +52,7 @@
 				<pathelement location="src"/>
 				<path refid="project.class.path"/>
 			</classpath>
+			
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
 			<jvmarg value="-Xmx256M"/>
 			<jvmarg value="${XstartOnFirstThreadFlag}"/>
