@@ -22,6 +22,7 @@ def make_map(config):
     map.connect('/', controller='hello', action='index')
     map.connect('login','/management/account/login',controller='management/account',action='login')
     map.connect('logout','/management/account/logout',controller='management/account',action='logout')
+    #map.connect('/{controller}/', action='index')	#2010-9-16 default action is 'index'
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}')
 

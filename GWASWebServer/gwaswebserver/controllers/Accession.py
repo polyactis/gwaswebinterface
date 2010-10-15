@@ -22,6 +22,10 @@ class AccessionController(BaseController):
 		# or, Return a response
 		# return 'Hello World'
 		c.find250kAccessionsURL = h.url(controller="Accession", action="find250kAccessions", id=None)
+		c.findAccessionsByCountryURL = h.url(controller='Accession', action="findAccessionsByCountry", id=None)
+		c.AccessionCountrySuggestOracleURL = h.url(controller='Accession', action="countryNameAutoComplete", id=None)
+		c.AccessionNameSuggestOracleURL = h.url(controller='Accession', action="autoComplete", id=None)
+		c.AccessionByNameURL = h.url(controller='Accession', action="findAccessionsByName", id=None)
 		return render('/Accession.html')
 	
 	@jsonify
@@ -77,6 +81,14 @@ class AccessionController(BaseController):
 		"""
 		ecotype_id = request.params.get('id', '100')	#default is 100
 		condition = "ecotypeid=%s"%(ecotype_id)
+		return self.findAccessions(condition)
+	
+	def findAccessionsByCountry(self):
+		"""
+		2009-4-14
+		"""
+		country = request.params.get('country', 'USA')	#default is 100
+		condition = "country='%s'"%(country)
 		return self.findAccessions(condition)
 	
 	@classmethod
@@ -187,6 +199,25 @@ class AccessionController(BaseController):
 					name_set.add(col_value)
 		return list(name_set)
 	
+	def findCountryLike(self, namelike):
+		"""
+		2010-9-21
+			find all countries with name beginned with 'namelike'
+		"""
+		name_processed_ob = self.processRegexpString(namelike)
+		namelike = name_processed_ob.p_str_sql
+		rows = model.db.metadata.bind.execute("select * from %s where country rlike '^%s'"%\
+											(self.ecotype_central_view, namelike))
+		name_set = set()
+		name_p = re.compile(r'^%s'%name_processed_ob.p_str, re.IGNORECASE)
+		columns_to_be_added = ['country']
+		for row in rows:
+			for col in columns_to_be_added:
+				col_value = getattr(row, col)
+				if col_value and name_p.search(col_value):
+					name_set.add(col_value)
+		return list(name_set)
+	
 	#@jsonify	#2009-4-3, comment it out and using simplejson.dumps() directly because the default encoding 'utf-8' doesn't work due to some swedish letters.
 	def autoComplete(self):
 		"""
@@ -200,6 +231,19 @@ class AccessionController(BaseController):
 			name_ls = name_ls[:100]
 		response.headers['Content-Type'] = 'application/json'
 		return simplejson.dumps(dict(result=name_ls), encoding='latin1')
+	
+	@jsonify
+	def countryNameAutoComplete(self):
+		"""
+		2010-9-21
+			auto complete server end for AccessionByCountry.java
+		"""
+		query = request.params.get('country')
+		name_ls = self.findCountryLike(query)
+		name_ls.sort()
+		if len(name_ls)>100:
+			name_ls = name_ls[:100]
+		return dict(result=name_ls)
 	
 	def haploGroup(self, id=None):
 		"""

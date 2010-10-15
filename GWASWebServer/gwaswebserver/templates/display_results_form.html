@@ -3,11 +3,11 @@
 <%def name="title()">Select Genome-Wide Association</%def>
 
 <%
-GWABaseURL=h.url(controller='DisplayResults', action='fetchOne', id=None)
-CallInfoBaseURL=h.url(controller='DisplayResults', action='fetchCallInfoData', id=None)
-PhenotypeHistImageBaseURL=h.url(controller='DisplayResults', action='getPhenotypeHistImage', id=None)
-CallPhenotypeQQImageBaseURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None)
-getOneResultRawBaseURL = h.url(controller='DisplayResults', action='getOneResultRaw', id=None)
+GWABaseURL=h.url(controller='DisplayResults', action='fetchOne')
+CallInfoBaseURL=h.url(controller='DisplayResults', action='fetchCallInfoData')
+PhenotypeHistImageBaseURL=h.url(controller='DisplayResults', action='getPhenotypeHistImage')
+CallPhenotypeQQImageBaseURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage')
+getOneResultRawBaseURL = h.url(controller='DisplayResults', action='getOneResultRaw')
 %>
 
 ${h.form(h.url(), method='get', onsubmit="return handleResponse('%s')"%(GWABaseURL))}
@@ -15,12 +15,12 @@ ${h.form(h.url(), method='get', onsubmit="return handleResponse('%s')"%(GWABaseU
 <!-- ${h.checkbox('remove_old_plots')} Remove Old Plots<br />	<!-- 2009-1-29 Note: no way to set checkbox default to checked here. do it in the controller's defaults. --> 
 Call Method: ${h.select('call_method_id', selected_values=[], options=c.call_method_ls, 
 	onchange="SelectChange('%s', ['call_method_id'], 'phenotype_method_id'); return false;"%
-		(h.url(controller="DisplayResults", action="getPhenotypeMethodLsJson", id=None)),
+		(h.url(controller="DisplayResults", action="getPhenotypeMethodLsJson")),
 	required=True )}  <br/>
 
 Phenotype Method: ${h.select('phenotype_method_id', selected_values=[], options=[], 
 	onchange="SelectChange('%s', ['call_method_id', 'phenotype_method_id'], 'analysis_method_id'); return false;"%
-		(h.url(controller="DisplayResults", action="getAnalysisMethodLsJson", id=None)),
+		(h.url(controller="DisplayResults", action="getAnalysisMethodLsJson")),
 	required=True)}  <br />
 
 Analysis Method: ${h.select('analysis_method_id', selected_values=[], options=[], 

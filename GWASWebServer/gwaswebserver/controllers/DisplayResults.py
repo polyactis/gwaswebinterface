@@ -171,11 +171,18 @@ class DisplayresultsController(BaseController):
 		if analysis_method_id is not None:
 			analysis_method_id = int(analysis_method_id)
 		
-		c.phenotypeSummaryURL = h.url(controller='Phenotype', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
-		c.GWABaseURL = h.url(controller='DisplayResults', action='fetchOne', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
-		c.SNPBaseURL = h.url(controller='SNP', action='index', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
-		c.getAnalysisMethodLsURL = h.url(controller='DisplayResults', action='getAnalysisMethodLsJson', phenotype_method_id=c.phenotype_method_id, \
-											call_method_id=c.call_method_id, analysis_method_id=analysis_method_id,transformation_method_id=transformation_method_id)
+		c.phenotypeSummaryURL = h.url(controller='Phenotype', action='index', phenotype_method_id=c.phenotype_method_id, \
+									call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
+		c.GWABaseURL = h.url(controller='DisplayResults', action='fetchOne', \
+							phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id,\
+							transformation_method_id=transformation_method_id)
+		c.SNPBaseURL = h.url(controller='SNP', action='index', \
+							phenotype_method_id=c.phenotype_method_id, \
+							call_method_id=c.call_method_id,transformation_method_id=transformation_method_id)
+		c.getAnalysisMethodLsURL = h.url(controller='DisplayResults', action='getAnalysisMethodLsJson', \
+							phenotype_method_id=c.phenotype_method_id, \
+							call_method_id=c.call_method_id, analysis_method_id=analysis_method_id,\
+							transformation_method_id=transformation_method_id)
 		"""
 		# 2009-4-25 no way to pass this 2D (int, string) array to the template! 
 		analysis_method_ls = self.getAnalysisMethodLs(c.call_method_id, c.phenotype_method_id)
@@ -197,15 +204,16 @@ class DisplayresultsController(BaseController):
 		c.phenotype_method_short_name = pm.short_name
 		c.phenotype_method_description = pm.method_description
 		
-		c.callInfoURL = h.url(controller='DisplayResults', action='fetchCallInfoData', id=None,\
+		c.callInfoURL = h.url(controller='DisplayResults', action='fetchCallInfoData', \
 							phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistImageURL = h.url(controller='DisplayResults', action='getPhenotypeHistImage', id=None, \
+		c.phenotypeHistImageURL = h.url(controller='DisplayResults', action='getPhenotypeHistImage', \
 										phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.callPhenotypeQQImageURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None,\
+		c.callPhenotypeQQImageURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage',\
 											phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistogramDataURL = h.url(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id,transformation_method_id=transformation_method_id)
+		c.phenotypeHistogramDataURL = h.url(controller='Phenotype', action='getPhenotypeHistogramData', \
+										id=c.phenotype_method_id,transformation_method_id=transformation_method_id)
 		# 2010-3-11
-		c.getOneResultRawURL = h.url(controller='DisplayResults', action='getOneResultRaw', id=None,\
+		c.getOneResultRawURL = h.url(controller='DisplayResults', action='getOneResultRaw', \
 										call_method_id=c.call_method_id, phenotype_method_id=c.phenotype_method_id)
 		return render('/GWASOnePhenotype.html')
 	
@@ -262,15 +270,20 @@ class DisplayresultsController(BaseController):
 		return result
 	
 	@staticmethod
-	def getAnalysisMethodLs(call_method_id, phenotype_method_id, transformation_method_id,analysis_method_id=None):
+	def getAnalysisMethodLs(call_method_id, phenotype_method_id, transformation_method_id=None, analysis_method_id=None):
 		"""
+		2010-9-21
+			deal with the case that transformation_method_id is None
 		2010-3-11
 			add argument analysis_method_id to narrow down the choice of analysis_method_id
 		2009-1-30
 		"""
 		affiliated_table_name = model.Stock_250kDB.ResultsMethod.table.name	#alias is 's'
-		extra_condition = 's.call_method_id=%s and s.phenotype_method_id=%s and s.transformation_method_id=%s '%\
-			(call_method_id, phenotype_method_id,transformation_method_id)
+		extra_condition = 's.call_method_id=%s and s.phenotype_method_id=%s'%\
+				(call_method_id, phenotype_method_id,)
+		if transformation_method_id is not None:
+			extra_condition += ' and s.transformation_method_id=%s'%transformation_method_id
+		
 		if analysis_method_id:
 			extra_condition += ' and s.analysis_method_id=%s'%analysis_method_id
 		list_info = hc.getAnalysisMethodInfo(affiliated_table_name, extra_condition=extra_condition)
@@ -350,9 +363,14 @@ class DisplayresultsController(BaseController):
 			call_method_id = request.params.getone('call_method_id')
 			phenotype_method_id = request.params.getone('phenotype_method_id')
 			analysis_method_id = request.params.getone('analysis_method_id')
-			transformation_method_id = request.params.getone('transformation_method_id')
-			rm = ResultsMethod.query.filter_by(call_method_id=call_method_id).\
-				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id).filter_by(transformation_method_id=transformation_method_id).first()
+			transformation_method_id = request.params.get('transformation_method_id', None)
+			query = ResultsMethod.query.filter_by(call_method_id=call_method_id).\
+				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id)
+			if transformation_method_id is not None:
+				query = query.filter_by(transformation_method_id=transformation_method_id)
+			rm = query.first()
+		if rm is None:	#2010-9-28 this could still be nothing
+			return None
 		results_id = rm.id
 		
 		response.headers['Content-Type'] = 'application/json'
