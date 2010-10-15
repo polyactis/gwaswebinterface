@@ -6,18 +6,15 @@
 <!-- with a "Standards Mode" doctype is supported, -->
 <!-- but may lead to some differences in layout.   -->
 
-<%inherit file="/base.html"/>
-<%def name="title()">One Phenotype GWAS Gene</%def>
-
-
-<%def name="head()">
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-	<link rel="stylesheet" type="text/css" href="${h.url('/style/style.css')}" />
-	<script type="text/javascript" language="javascript" src="/OnePhenotypeGWASGene/OnePhenotypeGWASGene.nocache.js"></script>
-</%def>
-
-<%def name="body()">
-	<script type="text/javascript">
+<%inherit file="/base.html"/> <%def name="title()">One Phenotype GWAS
+Gene</%def> <%def name="head()">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css"
+	href="${h.url('/style/style.css')}" />
+<script type="text/javascript" language="javascript"
+	src="/OnePhenotypeGWASGene/OnePhenotypeGWASGene.nocache.js"></script>
+</%def> <%def name="body()">
+<script type="text/javascript">
 		google.load("visualization", "1", {'packages' : ["table", "motionchart", "columnchart"] });
 		var snpGeneAssociationTypeID = "${c.snpGeneAssociationTypeID}";
 		var call_method_id = "${c.call_method_id}";
@@ -46,6 +43,7 @@
 		var phenotypeHistogramDataURL = "${c.phenotypeHistogramDataURL}";
 		
 	</script>
-	<div id="onePhenotypeGWASGene"></div>
-	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+<div id="onePhenotypeGWASGene"></div>
+<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+	style="position: absolute; width: 0; height: 0; border: 0"></iframe>
 </%def>
