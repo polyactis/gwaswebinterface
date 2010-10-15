@@ -2,7 +2,7 @@ package edu.nordborglab.client;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/usr/local/home_ubuntu/crocea/script/variation/web_interface/GWAWeb/src/edu/nordborglab/client/AccessionConstants.properties'.
+ * 	'/usr/local/home_ubuntu/crocea/script/GWASWebInterface/GWASWebClient/src/edu/nordborglab/client/AccessionConstants.properties'.
  */
 public interface AccessionConstants extends com.google.gwt.i18n.client.Constants {
   
@@ -14,6 +14,15 @@ public interface AccessionConstants extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("Accession250k")
   @Key("Accession250kHelpID")
   String Accession250kHelpID();
+
+  /**
+   * Translated "AccessionByCountry".
+   * 
+   * @return translated "AccessionByCountry"
+   */
+  @DefaultStringValue("AccessionByCountry")
+  @Key("AccessionByCountryHelpID")
+  String AccessionByCountryHelpID();
 
   /**
    * Translated "AccessionByID".
@@ -41,24 +50,6 @@ public interface AccessionConstants extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("AccessionByName")
   @Key("AccessionByNameHelpID")
   String AccessionByNameHelpID();
-
-  /**
-   * Translated "/Accession/findAccessionsByName?name=".
-   * 
-   * @return translated "/Accession/findAccessionsByName?name="
-   */
-  @DefaultStringValue("/Accession/findAccessionsByName?name=")
-  @Key("AccessionByNameURL")
-  String AccessionByNameURL();
-
-  /**
-   * Translated "/Accession/autoComplete".
-   * 
-   * @return translated "/Accession/autoComplete"
-   */
-  @DefaultStringValue("/Accession/autoComplete")
-  @Key("AccessionSuggestOracleURL")
-  String AccessionSuggestOracleURL();
 
   /**
    * Translated "AssociationOverlapSummary".
@@ -302,6 +293,15 @@ public interface AccessionConstants extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("SignificantHitsInAllPhenotype")
   @Key("SignificantHitsInAllPhenotypeHelpID")
   String SignificantHitsInAllPhenotypeHelpID();
+
+  /**
+   * Translated "ViewCNV".
+   * 
+   * @return translated "ViewCNV"
+   */
+  @DefaultStringValue("ViewCNV")
+  @Key("ViewCNVHelpID")
+  String ViewCNVHelpID();
 
   /**
    * Translated "Analysis Method:".
