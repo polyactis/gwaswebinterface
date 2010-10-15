@@ -10,8 +10,12 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 
-import com.google.gwt.user.client.ui.LoadListener;
-import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.ErrorHandler;
+import com.google.gwt.event.dom.client.ErrorEvent;
 
 
 
@@ -39,8 +43,8 @@ public class HaplotypeSingleView extends Sink {
 	private String geneListLsURL;
 	private String callMethodOnChangeURL;
 	private String haplotypeImgURL;
-	private static final String SUBMIT_BUTTON_DEFAULT_TEXT = "Submit";
-	private static final String SUBMIT_BUTTON_WAITING_TEXT = "Waiting...";
+	public static final String SUBMIT_BUTTON_DEFAULT_TEXT = "Submit";
+	public static final String SUBMIT_BUTTON_WAITING_TEXT = "Cancel";
 	
 	public HaplotypeSingleView(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, String callMethodLsURL, 
 			String geneListLsURL, String callMethodOnChangeURL, String haplotypeImgURL){
@@ -116,12 +120,9 @@ public class HaplotypeSingleView extends Sink {
 		imagePanel.setOpen(true);
 		
 		
-		image.addLoadListener(new LoadListener() {
-			public void onError(Widget sender) {
-				imagePanel.getHeaderTextAccessor().setText("Error occurred while loading image.");
-			}
-
-			public void onLoad(Widget sender) {
+		image.addLoadHandler(new LoadHandler() {
+			public void onLoad(LoadEvent event) {
+				imagePanel.getHeaderTextAccessor().setText("");
 				int height = image.getHeight();
 				int width = image.getWidth();
 				Double newHeight = 1000.0/width*height;
@@ -131,6 +132,17 @@ public class HaplotypeSingleView extends Sink {
 				submitButton.setEnabled(true);
 				//image.setTitle("Loading ...");
 				// submitButton.setText(SUBMIT_BUTTON_WAITING_TEXT);
+			}
+		});
+		
+		image.addErrorHandler(new ErrorHandler() {
+			/*
+			 * 2010-9-19 error handler became separated from LoadHandler.
+			 * @see com.google.gwt.event.dom.client.ErrorHandler#onError(com.google.gwt.event.dom.client.ErrorEvent)
+			 */
+			public void onError(ErrorEvent event) {
+				imagePanel.getHeaderTextAccessor().setText("Error occurred while loading image.");
+				resetSubmitButtonCaption();
 			}
 		});
 		
@@ -150,23 +162,24 @@ public class HaplotypeSingleView extends Sink {
 		
 		Common.fillSelectBox(callMethodLsURL, callMethodListBox, jsonErrorDialog);
 		Common.fillSelectBox(geneListLsURL, geneListTypeListBox, jsonErrorDialog);
-		callMethodListBox.addChangeListener(new CallMethodListBoxChangeListener(callMethodOnChangeURL));
+		callMethodListBox.addChangeHandler(new CallMethodListBoxChangeHandler(callMethodOnChangeURL));
 		
 	}
 	
 	
-	private class CallMethodListBoxChangeListener implements ChangeListener
+	private class CallMethodListBoxChangeHandler implements ChangeHandler
 	{
 		String _url;
-		CallMethodListBoxChangeListener(String baseURL)
+		CallMethodListBoxChangeHandler(String baseURL)
 		{
 			_url = baseURL + "?" + "call_method_id="; 
 		}
-		public void onChange(Widget sender) {
+		public void onChange(ChangeEvent event) {
+			Widget sender = (Widget) event.getSource();	// 2010-9-19 use getSource() to get sender.
 			ListBox senderListBox = (ListBox) sender;
 			String callMethodID = senderListBox.getValue(senderListBox.getSelectedIndex());
-			_url = _url + callMethodID;
-			Common.fillSelectBox(_url, phenotypeMethodListBox, jsonErrorDialog);
+			String fullURL = _url + callMethodID;
+			Common.fillSelectBox(fullURL, phenotypeMethodListBox, jsonErrorDialog);
 			//refreshMap(map, phenotypeSelectBox.getSelectedIndex(), displayOptionSelectBox.getSelectedIndex());
 			//multiBox.ensureDebugId("cwListBox-multiBox");
 		}
@@ -228,8 +241,8 @@ public class HaplotypeSingleView extends Sink {
 		this.stopTxtBox.setText(haplotypeSingleView.stopTxtBox.getText());
 	}
 	public void setSubmitButtonInProgress() {
-		submitButton.setText(constants.LoadingText());
-		submitButton.setEnabled(false);
+		submitButton.setText(this.SUBMIT_BUTTON_WAITING_TEXT);	//constants.LoadingText()
+		submitButton.setEnabled(true);
 	}
 	
 	public String constructFetchImageArguments()
