@@ -70,7 +70,8 @@ public class AccessionByName extends Sink implements ClickListener{
 	private AccessionConstants constants;
 	private static final String SUGGEST_BUTTON_DEFAULT_TEXT = "Search";
 	private static final String SUGGEST_BUTTON_WAITING_TEXT = "Waiting...";
-
+	public String AccessionByNameURL;
+	
 	/*
 	private class SuggestBoxChangeListener implements ChangeListener {
 		public void onChange(Widget sender) {
@@ -101,7 +102,8 @@ public class AccessionByName extends Sink implements ClickListener{
 	public AccessionByName(AccessionConstants constants, DisplayJSONObject jsonErrorDialog) {
 		//super(constants);
 		this.constants = constants;
-		oracle = new CustomSuggestOracle(this.constants.AccessionSuggestOracleURL() + "?namelike=");
+		AccessionByNameURL = get_AccessionByNameURL();
+		oracle = new CustomSuggestOracle(get_AccessionNameSuggestOracleURL() + "&namelike=");
 		
 		this.jsonErrorDialog = jsonErrorDialog;
 		
@@ -135,7 +137,10 @@ public class AccessionByName extends Sink implements ClickListener{
 		// Give the overall composite a style name.
 		setStyleName("AccessionByName");
 	}
-
+	public final native String get_AccessionNameSuggestOracleURL() /*-{ return $wnd.AccessionNameSuggestOracleURL;}-*/;
+	public final native String get_AccessionByNameURL() /*-{ return $wnd.AccessionByNameURL;}-*/;
+	
+	
 	public void onClick(Widget sender) {
 		doFetchURL();
 	}
@@ -194,7 +199,7 @@ public class AccessionByName extends Sink implements ClickListener{
 
 	private void doFetchURL() {
 		suggestButton.setText(SUGGEST_BUTTON_WAITING_TEXT);
-		String url = URL.encode(constants.AccessionByNameURL() + suggestBox.getText());
+		String url = URL.encode(AccessionByNameURL + "&name=" + suggestBox.getText());
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
 		try {
 			requestBuilder.sendRequest(null, new JSONResponseTextHandler());

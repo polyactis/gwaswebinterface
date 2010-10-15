@@ -68,6 +68,7 @@ public class Accession implements EntryPoint, HistoryListener{
 		tp.addSink(new Accession250k(constants, jsonErrorDialog));
 		tp.addSink(new AccessionByName(constants, jsonErrorDialog));
 		tp.addSink(new AccessionByID(constants, jsonErrorDialog));
+		tp.addSink(new AccessionByCountry(constants, jsonErrorDialog));
 		//tp.addSink(new ToySink("By Genetic Distance", "Under construction"));
 		//tp.addSink(new ToySink("By Geographic Distance", "Under construction"));
 		// tp.addSink(new ToySink("By Country", "Under construction"));
