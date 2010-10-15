@@ -41,7 +41,7 @@ Visitor
 </p>
 
 <p>
-<a href=${h.url(controller='DisplayTopSNPTestRM', id=None)} target ="showframe">Display Candidate-Gene Enrichment Data</a>
+<a href=${h.url(controller='DisplayTopSNPTestRM', action='index', id=None)} target ="showframe">Display Candidate-Gene Enrichment Data</a>
 </p>
 
 <p>
@@ -62,11 +62,15 @@ Visitor
 </p>
 
 <p>
-<a href=${h.url(controller='utils', action='', id=None)} target ="showframe">View any data by MotionChart</a>
+<a href=${h.url(controller='utils', action='index', id=None)} target ="showframe">View any data by MotionChart</a>
 </p>
 
 <p>
 <a href=${h.url(controller='Comparison', action='index', id=None)} target ="showframe">Charts for Comparison</a>
+</p>
+
+<p>
+<a href=${h.url(controller='HaplotypeView', action='index', id=None)} target ="showframe">View Association by Haplotype</a>
 </p>
 
 <p>

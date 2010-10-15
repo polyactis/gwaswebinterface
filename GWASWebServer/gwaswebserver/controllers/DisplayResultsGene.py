@@ -150,7 +150,8 @@ class DisplayresultsgeneController(BaseController):
 					break
 				gene = Gene.get(row.gene_id)
 				for gene_desc_name in c.gene_desc_names:
-					setattr(row, gene_desc_name, getattr(gene, gene_desc_name, ''))	#2008-10-29 use getattr() because gene_model could be None.
+					setattr(row, gene_desc_name, getattr(gene, gene_desc_name, ''))
+					#2008-10-29 use getattr() because gene_model could be None.
 				
 				snps_context = SnpsContext.query.filter_by(snps_id=row.snps_id).filter_by(gene_id=row.gene_id).first()
 				row.left_or_right = getattr(snps_context, 'left_or_right', '')
@@ -214,7 +215,8 @@ class DisplayresultsgeneController(BaseController):
 			if rm is None:
 				c.result = None
 				candidate_gene_set = set()	#return nothing
-				return self.getAssociationsGivenGene(type_id, maxRank=1, results_id=results_id, candidate_gene_set=candidate_gene_set)
+				return self.getAssociationsGivenGene(type_id, maxRank=1, results_id=results_id, \
+													candidate_gene_set=candidate_gene_set)
 			results_id = rm.id
 		if results_id is None:
 			candidate_gene_set = set()	#return nothing
@@ -225,7 +227,8 @@ class DisplayresultsgeneController(BaseController):
 			candidate_gene_set = GeneListRankTest.dealWithCandidateGeneList(list_type_id, return_set=True)
 		else:
 			candidate_gene_set = None
-		return self.getAssociationsGivenGene(type_id, maxRank=c.max_rank, results_id=results_id, candidate_gene_set=candidate_gene_set)
+		return self.getAssociationsGivenGene(type_id, maxRank=c.max_rank, results_id=results_id, \
+											candidate_gene_set=candidate_gene_set)
 	
 	@staticmethod
 	def getPhenotypeMethodLsGivenType(type_id, extra_table_name=None):
@@ -309,7 +312,7 @@ class DisplayresultsgeneController(BaseController):
 		result = {
 				'options': [
 						dict(id=value, value=id) for id, value in self.getAnalysisMethodLsGivenTypeAndPhenotypeMethod(
-																									type_id, phenotype_method_id, extra_table_name)
+																						type_id, phenotype_method_id, extra_table_name)
 						]
 				}
 		result['options'].insert(0, {'id': u'Please Choose ...', 'value': 0})
@@ -371,7 +374,8 @@ class DisplayresultsgeneController(BaseController):
 		snp_gene_association_id_desc_ls = []
 		type_attri_name_label_ls = [['call_method_id', 'call_method_id'], ['min_distance', 'maxGeneToSNPdistance'], \
 								['get_closest', 'get_closest'], ['min_MAF','MAF'], ['results_type','results_type'], \
-								['allow_two_sample_overlapping', 'allow_two_sample_overlapping'], ['null_distribution_type_id', 'Null distribution type']]
+								['allow_two_sample_overlapping', 'allow_two_sample_overlapping'], \
+								['null_distribution_type_id', 'Null distribution type']]
 		for row in self.snp_gene_association_types:
 			value_ls = []
 			for attri_name, label in type_attri_name_label_ls:
@@ -535,7 +539,8 @@ class DisplayresultsgeneController(BaseController):
 				if column_name=='gene_id':
 					column_value = getattr(obj, column_name, default_value)
 					if column_value:
-						column_value = "<a href=%s target='_blank'>%s</a>"%(config['app_conf']['NCBIGeneDBURL']%gene_id, column_value)
+						column_value = "<a href=%s target='_blank'>%s</a>"%(config['app_conf']['NCBIGeneDBURL']%gene_id, \
+																		column_value)
 				else:
 					column_value = getattr(obj, column_name, default_value)
 				entry[column_name] = column_value
@@ -648,7 +653,9 @@ class DisplayresultsgeneController(BaseController):
 				
 				if column_name == 'phenotype_method_id':
 					column_value = "<a href=%s target='_blank'>%s</a>"%\
-						(h.url(controller="DisplayResults", action="showGWA", phenotype_method_id=row.result.phenotype_method_id, call_method_id=row.result.call_method_id,analysis_method_id=row.result.analysis_method_id,transformation_method_id=row.result.transformation_method_id),\
+						(h.url(controller="DisplayResults", action="showGWA", phenotype_method_id=row.result.phenotype_method_id, \
+							call_method_id=row.result.call_method_id,analysis_method_id=row.result.analysis_method_id,\
+							transformation_method_id=row.result.transformation_method_id),\
 						row.result.phenotype_method_id)
 				elif column_name == 'phenotype_short_name':
 					column_value = row.result.phenotype_method.short_name
@@ -668,7 +675,8 @@ class DisplayresultsgeneController(BaseController):
 					column_value = row.snp.position
 				elif column_name in ['beta', "maf", "mac", 'genotype_var_perc']:
 					if snp_based_association_result is None:
-						snp_based_association_result = Results.query.filter_by(snps_id=row.snps_id).filter_by(results_id=row.results_id).first() 
+						snp_based_association_result = Results.query.filter_by(snps_id=row.snps_id).\
+						filter_by(results_id=row.results_id).first() 
 					column_value = getattr(snp_based_association_result, column_name, default_value)
 				elif column_name == 'snp_annotation':
 					snp_annotation_text_ls = []
@@ -737,19 +745,23 @@ class DisplayresultsgeneController(BaseController):
 		"""
 		c.phenotype_method_id = int(request.params.get('phenotype_method_id', 1))
 		c.call_method_id = int(request.params.get('call_method_id', config['app_conf']['published_call_method_id']))
-		c.phenotypeSummaryURL = h.url(controller="Phenotype", action=None, phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.GWABaseURL = h.url(controller='DisplayResults', action='fetchOne', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.SNPBaseURL = h.url(controller='SNP', action=None, phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.getAnalysisMethodLsURL = h.url(controller='DisplayResults', action='getAnalysisMethodLsJson', phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
+		c.phenotypeSummaryURL = h.url(controller="Phenotype", action="index", phenotype_method_id=c.phenotype_method_id, \
+									call_method_id=c.call_method_id)
+		c.GWABaseURL = h.url(controller='DisplayResults', action='fetchOne', phenotype_method_id=c.phenotype_method_id, \
+							call_method_id=c.call_method_id)
+		c.SNPBaseURL = h.url(controller='SNP', action='index', phenotype_method_id=c.phenotype_method_id, \
+							call_method_id=c.call_method_id)
+		c.getAnalysisMethodLsURL = h.url(controller='DisplayResults', action='getAnalysisMethodLsJson', \
+										phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
 		pm = model.Stock_250kDB.PhenotypeMethod.get(c.phenotype_method_id)
 		c.phenotype_method_short_name = pm.short_name
 		c.phenotype_method_description = pm.method_description
 		
-		c.callInfoURL = h.url(controller='DisplayResults', action='fetchCallInfoData', id=None,\
+		c.callInfoURL = h.url(controller='DisplayResults', action='fetchCallInfoData',\
 							phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.phenotypeHistImageURL = h.url(controller='DisplayResults', action='getPhenotypeHistImage', id=None, \
+		c.phenotypeHistImageURL = h.url(controller='DisplayResults', action='getPhenotypeHistImage', \
 										phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
-		c.callPhenotypeQQImageURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', id=None,\
+		c.callPhenotypeQQImageURL = h.url(controller='DisplayResults', action='getCallPhenotypeQQImage', \
 											phenotype_method_id=c.phenotype_method_id, call_method_id=c.call_method_id)
 		c.phenotypeHistogramDataURL = h.url(controller='Phenotype', action='getPhenotypeHistogramData', id=c.phenotype_method_id)
 		
@@ -760,11 +772,13 @@ class DisplayresultsgeneController(BaseController):
 		c.snpGeneAssociationTypeID = config['app_conf']['snp_gene_association_type_id']
 		
 		c.snpGeneAssociationTypeLsURL = h.url(controller="DisplayResultsGene", action="snp_gene_association_Json")
-		c.snpGeneAssociationOnChangeURL = h.url(controller="DisplayResultsGene", action="getPhenotypeMethodLsGivenTypeJson", id=None)
-		c.phenotypeMethodOnChangeURL = h.url(controller="DisplayResultsGene", action="getAnalysisMethodLsGivenTypeAndPhenotypeMethodJson", id=None)
-		c.geneListLsURL = h.url(controller="DisplayResultsGene", action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson", id=None)
-		c.fetchResultsGeneURL = h.url(controller="DisplayResultsGene", action='fetchTopCandidateGenesFromOneResultOneGeneList', id=None)
-		c.candidateGeneListURL = h.url(controller="DisplayResultsGene", action='showGeneList', id=None)
+		c.snpGeneAssociationOnChangeURL = h.url(controller="DisplayResultsGene", action="getPhenotypeMethodLsGivenTypeJson")
+		c.phenotypeMethodOnChangeURL = h.url(controller="DisplayResultsGene", \
+											action="getAnalysisMethodLsGivenTypeAndPhenotypeMethodJson",)
+		c.geneListLsURL = h.url(controller="DisplayResultsGene", \
+							action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson",)
+		c.fetchResultsGeneURL = h.url(controller="DisplayResultsGene", action='fetchTopCandidateGenesFromOneResultOneGeneList')
+		c.candidateGeneListURL = h.url(controller="DisplayResultsGene", action='showGeneList')
 		
 		return render('/OnePhenotypeGWASGene.html')
 	

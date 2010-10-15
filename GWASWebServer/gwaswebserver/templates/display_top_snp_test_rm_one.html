@@ -95,16 +95,23 @@ svg_curve_url = h.url(controller='DisplayTopSNPTestRM', action='getImage', id=c.
 
 <h2>Candidate Ratio</h2>
 
-${display_matrix(c.rdata.data_matrix_candidate_sample_size, c.rdata.data_matrix_candidate_gw_size, None)}
+<%
+## display_matrix(c.rdata.data_matrix_candidate_sample_size, c.rdata.data_matrix_candidate_gw_size, None)
+%>
 <a href=${candidate_sample_url}><img src=${candidate_sample_url}></a>
 
 <h2>Non-Candidate Ratio</h2>
 
-${display_matrix(c.rdata.data_matrix_non_candidate_sample_size, c.rdata.data_matrix_non_candidate_gw_size, None)}
+<%
+## display_matrix(c.rdata.data_matrix_non_candidate_sample_size, c.rdata.data_matrix_non_candidate_gw_size, None)}
+%>
 <a href=${non_candidate_sample_url}><img src=${non_candidate_sample_url}></a>
 
 
 <h2>Candidate Significance Pvalues</h2>
 
-${display_matrix(c.rdata.data_matrix, None, None)}
+<%
+### display_matrix(c.rdata.data_matrix, None, None)
+%>
 <a href=${pvalue_png_url}><img src=${pvalue_png_url}></a>
+ 

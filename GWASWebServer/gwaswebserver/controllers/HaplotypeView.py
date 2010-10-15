@@ -20,11 +20,11 @@ class HaplotypeviewController(BaseController):
 
 	def index(self):
 		#c.call_method_ls = DisplayresultsController.getCallMethodLsJson()		
-		c.callMethodLsURL = h.url(controller="DisplayResults", action="getCallMethodLsJson", id=None)
+		c.callMethodLsURL = h.url(controller="DisplayResults", action="getCallMethodLsJson")
 		#c.gene_list_ls = DisplayresultsgeneController.getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson()
-		c.geneListLsURL = h.url(controller="DisplayResultsGene", action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson", id=None)
-		c.callMethodOnChangeURL = h.url(controller="DisplayResults", action="getPhenotypeMethodLsJson", id=None)
-		c.haplotypeImgURL = h.url(controller='HaplotypeView', action='getPlot', id=None)
+		c.geneListLsURL = h.url(controller="DisplayResultsGene", action="getGeneListTypeLsGivenTypeAndPhenotypeMethodAndAnalysisMethodJson")
+		c.callMethodOnChangeURL = h.url(controller="DisplayResults", action="getPhenotypeMethodLsJson")
+		c.haplotypeImgURL = h.url(controller='HaplotypeView', action='getPlot')
 		return render('/HaplotypeView.html')
 	
 	def getPlot(self):
@@ -46,8 +46,8 @@ class HaplotypeviewController(BaseController):
 			start, stop = stop, start
 		snps_id = '%s_%s'%(chromosome, start)
 		
-		call_method_id = int(request.params.getone('call_method_id'))
-		phenotype_method_id = int(request.params.getone('phenotype_method_id'))
+		call_method_id = int(request.params.get('call_method_id'))
+		phenotype_method_id = int(request.params.get('phenotype_method_id'))
 		list_type_id = int(request.params.get('list_type_id', None))
 		
 		plot_key = (chromosome, start, stop, call_method_id, phenotype_method_id, list_type_id)
@@ -61,12 +61,13 @@ class HaplotypeviewController(BaseController):
 		if os.path.isfile(output_fname):	#2010-4-14 check if the plot is there already.
 			return DTSTR.getImage(output_fname)
 		
-		if not getattr(model, 'phenotype_id2analysis_method_id2gwr', None):
-			model.phenotype_id2analysis_method_id2gwr = {}
-		analysis_method_id2gwr = model.phenotype_id2analysis_method_id2gwr.get(phenotype_method_id)
+		if not getattr(model, 'key2analysis_method_id2gwr', None):
+			model.key2analysis_method_id2gwr = {}
+		key = (call_method_id, phenotype_method_id)
+		analysis_method_id2gwr = model.key2analysis_method_id2gwr.get(key)
 		if not analysis_method_id2gwr:
 			analysis_method_id2gwr = DrawSNPRegion.getSimilarGWResultsGivenResultsByGene(phenotype_method_id, call_method_id)
-			model.phenotype_id2analysis_method_id2gwr[phenotype_method_id] = analysis_method_id2gwr
+			model.key2analysis_method_id2gwr[key] = analysis_method_id2gwr
 		
 		if list_type_id>0:	#2009-2-22
 			candidate_gene_set = GeneListRankTest.dealWithCandidateGeneList(list_type_id, return_set=True)
@@ -76,7 +77,7 @@ class HaplotypeviewController(BaseController):
 		
 		snpData = hc.getSNPDataGivenCallMethodID(call_method_id)
 		pheno_data = hc.getPhenotypeDataInSNPDataOrder(snpData)
-	
+		
 		if h.ecotype_info is None:	#2009-3-6 not used right now
 			h.ecotype_info = getEcotypeInfo(model.db)
 		

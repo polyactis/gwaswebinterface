@@ -158,11 +158,18 @@ class HelpothercontrollersController(BaseController):
 	@classmethod
 	def getPhenotypeDataInSNPDataOrder(cls, snpData):
 		"""
+		2010-9-20
+			fix a bug here.
+			"phenoData_inSNPDataOrder" has to change according to snpData.row_id_ls.
+			so add model.snpDataRowKey2phenoData_inSNPDataOrder.
 		2009-4-30
 			get data from all the phenotypes into one matrix (accession by phenotype) 
 		"""
-		phenoData_inSNPDataOrder = getattr(model, 'phenoData_inSNPDataOrder', None)
-		if phenoData_inSNPDataOrder is None:
+		if getattr(model, 'snpDataRowKey2phenoData_inSNPDataOrder', None) is None:
+			model.snpDataRowKey2phenoData_inSNPDataOrder = {}
+		
+		key = tuple(snpData.row_id_ls)
+		if key not in model.snpDataRowKey2phenoData_inSNPDataOrder:
 			phenoData = cls.getPhenotypeData()
 			phenoData_inSNPDataOrder = SNPData(col_id_ls = phenoData.col_id_ls, strain_acc_list=snpData.row_id_ls, \
 											data_matrix=phenoData.data_matrix) #row label is that of the SNP matrix
@@ -170,8 +177,8 @@ class HelpothercontrollersController(BaseController):
 			phenotype_row_id_ls = map(str, phenoData.row_id_ls)	# phenoData.row_id_ls is a list of integer ecotype ids, need to convert
 			phenoData_inSNPDataOrder.data_matrix = Kruskal_Wallis.get_phenotype_matrix_in_data_matrix_order(snpData.row_id_ls, \
 																phenotype_row_id_ls, phenoData_inSNPDataOrder.data_matrix)
-			model.phenoData_inSNPDataOrder = phenoData_inSNPDataOrder
-		return phenoData_inSNPDataOrder
+			model.snpDataRowKey2phenoData_inSNPDataOrder[key] = phenoData_inSNPDataOrder
+		return model.snpDataRowKey2phenoData_inSNPDataOrder[key]
 	
 	@classmethod
 	def getListTypeInfo(cls, affiliated_table_name=None, extra_condition=None, extra_tables=None):

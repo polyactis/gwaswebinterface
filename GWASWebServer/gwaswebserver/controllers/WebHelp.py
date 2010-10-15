@@ -35,7 +35,7 @@ class WebhelpController(BaseController):
 		else:
 			row = model.Stock_250kDB.WebHelp(short_name=helpID, content=helpContent)
 		try:
-			model.db.session.save_or_update(row)
+			model.db.session.add(row)
 			model.db.session.flush()
 			return "1"
 		except:
