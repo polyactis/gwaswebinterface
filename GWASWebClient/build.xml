@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="GWAWeb" default="build" basedir=".">
 	<!-- Configure path to GWT SDK -->
+
 	<property name="lib.path" location="lib" />
 	<property name="gwt.sdk" location="${lib.path}/gwt" />
 
 	<!-- SWT on Mac requires the -XstartOFirstThreadFlag. -->
 	<condition property="XstartOnFirstThreadFlag" value="-XstartOnFirstThread"
-    else="-Dgwt.dummy.arg1=">
-		<os family="mac"/>
+		else="-Dgwt.dummy.arg1=">
+		<os family="mac" />
 	</condition>
 
 	<!-- SWT on Mac requires the -d32 flag if the VM is 64-bit. -->
 	<condition property="d32Flag" value="-d32" else="-Dgwt.dummy.arg2=">
 		<and>
-			<os family="mac"/>
-			<equals arg1="${sun.arch.data.model}" arg2="64"/>
+			<os family="mac" />
+			<equals arg1="${sun.arch.data.model}" arg2="64" />
 		</and>
 	</condition>
 
@@ -33,90 +34,90 @@
 	</target>
 
 	<target name="javac" depends="libs" description="Compile java source">
-		<mkdir dir="war/WEB-INF/classes"/>
-		<javac srcdir="src" includes="**" encoding="utf-8"
-        destdir="war/WEB-INF/classes"
-        source="1.5" target="1.5" nowarn="true"
-        debug="true" debuglevel="lines,vars,source">
-			<classpath refid="project.class.path"/>
-			<compilerarg value="-Xlint:deprecation"/>
+		<mkdir dir="war/WEB-INF/classes" />
+		<javac srcdir="src" includes="**" encoding="utf-8" destdir="war/WEB-INF/classes"
+			source="1.5" target="1.5" nowarn="true" debug="true" debuglevel="lines,vars,source">
+			<classpath refid="project.class.path" />
+			<compilerarg value="-Xlint:deprecation" />
 		</javac>
 		<copy todir="war/WEB-INF/classes">
-			<fileset dir="src" excludes="**/*.java"/>
+			<fileset dir="src" excludes="**/*.java" />
 		</copy>
 	</target>
 
 	<target name="gwtc" depends="javac" description="GWT compile to JavaScript">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
-				<pathelement location="src"/>
-				<path refid="project.class.path"/>
+				<pathelement location="src" />
+				<path refid="project.class.path" />
 			</classpath>
 			
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
-			<jvmarg value="-Xmx256M"/>
-			<jvmarg value="${XstartOnFirstThreadFlag}"/>
-			<jvmarg value="${d32Flag}"/>
+			<jvmarg value="-Xmx256M" />
+			<jvmarg value="${XstartOnFirstThreadFlag}" />
+			<jvmarg value="${d32Flag}" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-			<arg value="edu.nordborglab.Accession"/>
-			<arg value="edu.nordborglab.GeneListView"/>
-			<arg value="edu.nordborglab.GWASOnePhenotype"/>
-			<arg value="edu.nordborglab.GWASPhenotypes"/>
-			<arg value="edu.nordborglab.HaploGroup"/>
-			<arg value="edu.nordborglab.HaplotypeView"/>
-			<arg value="edu.nordborglab.OnePhenotype"/>
-			<arg value="edu.nordborglab.OnePhenotypeGWASGene"/>
-			<arg value="edu.nordborglab.PhenotypeTrend"/>
-			<arg value="edu.nordborglab.SearchGWAS"/>
-			<arg value="edu.nordborglab.SNP"/>
-			<arg value="edu.nordborglab.Utils"/>
-			<arg value="edu.nordborglab.Comparison"/>
+			<arg value="edu.nordborglab.Accession" />
+			<arg value="edu.nordborglab.GeneListView" />
+			<arg value="edu.nordborglab.GWASOnePhenotype" />
+			<arg value="edu.nordborglab.GWASPhenotypes" />
+			<arg value="edu.nordborglab.HaploGroup" />
+			<arg value="edu.nordborglab.HaplotypeView" />
+			<arg value="edu.nordborglab.OnePhenotype" />
+			<arg value="edu.nordborglab.OnePhenotypeGWASGene" />
+			<arg value="edu.nordborglab.PhenotypeTrend" />
+			<arg value="edu.nordborglab.SearchGWAS" />
+			<arg value="edu.nordborglab.SNP" />
+			<arg value="edu.nordborglab.Utils" />
+			<arg value="edu.nordborglab.Comparison" />
 		</java>
 	</target>
-	
+
 	<target name="buildone" depends="javac" description="GWT compile to JavaScript">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
 			<classpath>
-				<pathelement location="src"/>
-				<path refid="project.class.path"/>
+				<pathelement location="src" />
+				<path refid="project.class.path" />
 			</classpath>
 			<!-- add jvmarg -Xss16M or similar if you see a StackOverflowError -->
-			<jvmarg value="-Xmx256M"/>
-			<jvmarg value="${XstartOnFirstThreadFlag}"/>
-			<jvmarg value="${d32Flag}"/>
+			<jvmarg value="-Xmx256M" />
+			<jvmarg value="${XstartOnFirstThreadFlag}" />
+			<jvmarg value="${d32Flag}" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-			<arg value="edu.nordborglab.GWASPhenotypes"/>
-			<arg value="edu.nordborglab.GWASOnePhenotype"/>
+			<arg value="edu.nordborglab.CNV" />
 		</java>
 	</target>
 
 	<target name="hosted" depends="javac" description="Run hosted mode">
 		<java failonerror="true" fork="true" classname="com.google.gwt.dev.DevMode">
 			<classpath>
-				<pathelement location="src"/>
-				<path refid="project.class.path"/>
+				<pathelement location="src" />
+				<path refid="project.class.path" />
 			</classpath>
-			<jvmarg value="-Xmx256M"/>
-			<jvmarg value="${XstartOnFirstThreadFlag}"/>
-			<jvmarg value="${d32Flag}"/>
-			<arg value="-startupUrl"/>
-			<arg value="GWASOnePhenotype.html"/>
+			<jvmarg value="-Xmx256M" />
+			<jvmarg value="${XstartOnFirstThreadFlag}" />
+			<jvmarg value="${d32Flag}" />
+			<arg value="-noserver" />
+			<arg value="-startupUrl" />
+			<arg value="http://banyan.usc.edu:5000/CNV/index" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-			<arg value="-logLevel"/>
-			<arg value="DEBUG"/>
-			<arg value="edu.nordborglab.GWASOnePhenotype"/>
+			<arg value="-logLevel" />
+			<arg value="DEBUG" />
+			<arg value="edu.nordborglab.CNV" />
 		</java>
 	</target>
 
 	<target name="build" depends="gwtc" description="Build this project" />
 
 	<target name="war" depends="build" description="Create a war file">
-		<zip destfile="GWAWeb" basedir="war"/>
+		<zip destfile="GWAWeb" basedir="war" />
 	</target>
 
 	<target name="clean" description="Cleans this project">
 		<delete dir="war/WEB-INF/classes" failonerror="false" />
 		<delete dir="war/Accession" failonerror="false" />
+		<delete dir="war/CNV" failonerror="false" />
+		<delete dir="war/Comparison" failonerror="false" />
 		<delete dir="war/GeneListView" failonerror="false" />
 		<delete dir="war/GWASOnePhenotype" failonerror="false" />
 		<delete dir="war/GWASPhenotypes" failonerror="false" />
@@ -128,7 +129,6 @@
 		<delete dir="war/SearchGWAS" failonerror="false" />
 		<delete dir="war/SNP" failonerror="false" />
 		<delete dir="war/Utils" failonerror="false" />
-		<delete dir="war/Comparison" failonerror="false" />
 	</target>
 
 </project>
