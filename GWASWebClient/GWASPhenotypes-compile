@@ -1,0 +1,8 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+HOMEDIR=~;
+java  -Xmx256M -cp "$APPDIR/src:$APPDIR/bin:$HOMEDIR/script/gwt/gwt-user.jar:$HOMEDIR/script/gwt/gwt-dev-linux.jar:$HOMEDIR/script/gwt-visualization/gwt-visualization.jar" com.google.gwt.dev.GWTCompiler -out "$APPDIR/www" "$@" edu.nordborglab.GWASPhenotypes;
+
+# 2009-4-23 link the directory into GWASPhenotypes because getGWA is an action of controller DisplayResults in pylons.
+#cd $APPDIR/www/edu.nordborglab.GWASPhenotypes;
+#ln -s ../edu.nordborglab.GWASOnePhenotype ./showGWA;

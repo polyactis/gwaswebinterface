@@ -1,0 +1,67 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+		xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		xmlns:gwas="urn:import:edu.nordborglab.client">
+	<g:SplitLayoutPanel ui:field="panel">
+	<g:west size='50'>
+		<g:FlowPanel>
+			<gwas:CustomVerticalPanel>
+				<g:HTMLPanel>
+					<fieldset>
+					<legend>Genome-wide Deletion Frequency</legend>
+						<li>
+							<label for="overviewDataTypeListBox">Data Type</label>
+							<g:ListBox ui:field="overviewDataTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="cnvFrequencyCNVMethodListBox">CNV Method ID</label>
+							<g:ListBox ui:field="cnvFrequencyCNVMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="cnvFrequencyChromosomeListBox">Chromosome</label>
+							<g:ListBox ui:field="cnvFrequencyChromosomeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="cnvFrequencySmoothTypeListBox">Smooth Type</label>
+							<g:ListBox ui:field="cnvFrequencySmoothTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="cnvFrequencyPlotTypeListBox">Plot type</label>
+							<g:ListBox ui:field="cnvFrequencyPlotTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<g:Button ui:field="cnvFrequencySubmitButton" enabled="false" text="Submit">
+						</g:Button>
+					</fieldset>
+				</g:HTMLPanel>
+			</gwas:CustomVerticalPanel>
+			<g:HTMLPanel>
+					<fieldset>
+					<legend>Deletion Haplotype</legend>
+						<li>
+							<label for="cnvCallHaplotypeCNVMethodListBox">CNV Method ID</label>
+							<g:ListBox ui:field="cnvCallHaplotypeCNVMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<g:Button ui:field="cnvCallHaplotypeSubmitButton" enabled="false" text="Submit">
+						</g:Button>
+					</fieldset>
+			</g:HTMLPanel>
+		</g:FlowPanel>
+	</g:west>
+	<g:center>
+		<g:ScrollPanel>
+			<g:HTMLPanel>
+				<fieldset>
+				<g:FlowPanel ui:field='protovisPanel'>
+				</g:FlowPanel>
+				</fieldset>
+			</g:HTMLPanel>
+		</g:ScrollPanel>
+	</g:center>
+	</g:SplitLayoutPanel>
+</ui:UiBinder> 
