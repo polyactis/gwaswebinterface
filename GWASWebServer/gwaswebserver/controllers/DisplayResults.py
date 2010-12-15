@@ -65,7 +65,10 @@ class DisplayresultsController(BaseController):
 		for row in rows:
 			if row.biology_category_id is not None:
 				biologyCategory = model.Stock_250kDB.BiologyCategory.get(row.biology_category_id)
-				phenotypeCategoryLs.append([str(biologyCategory.id), biologyCategory.short_name])
+				if biologyCategory is not None:
+					phenotypeCategoryLs.append([str(biologyCategory.id), biologyCategory.short_name])
+				else:
+					existNullCategoryID = True
 			else:
 				existNullCategoryID = True
 		if existNullCategoryID:
