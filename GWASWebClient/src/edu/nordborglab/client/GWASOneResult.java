@@ -2,6 +2,9 @@ package edu.nordborglab.client;
 
 import java.util.Set;
 
+import at.gmi.nordborglab.widgets.geneviewer.client.datasource.impl.JBrowseDataSourceImpl;
+import at.gmi.nordborglab.widgets.gwasgeneviewer.client.GWASGeneViewer;
+
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -81,6 +84,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 				int max_length = (int) serverData.get("max_length").isNumber().doubleValue();
 				Set<String> keys = chr2data.keySet();
 				int i =0;
+				JBrowseDataSourceImpl datasource = new JBrowseDataSourceImpl("/Genes/getGenes");
 				for (String chromosome : keys) 
 				//for (i=0; i<keys.size(); i++)
 				{
@@ -92,16 +96,18 @@ public class GWASOneResult extends CustomVerticalPanel{
 					int chrLength = (int) chr2length.get(chromosome).isNumber().doubleValue();
 					//jsonErrorDialog.displayRequestError("chromosome "+ chromosome + "length: " + chrLength);
 					String color = colors[i%colors.length];
-					AssociationScatterChart associationChart = new AssociationScatterChart(chromosome,
-							color, chrLength, max_length, max_value, SNPBaseURL);
+					GWASGeneViewer associationChart = new GWASGeneViewer("Chr"+chromosome, color, 1000,datasource);
+					
+					/*AssociationScatterChart associationChart = new AssociationScatterChart(chromosome,
+							color, chrLength, max_length, max_value, SNPBaseURL);*/
 					add(associationChart);
 					dataTable = Common.asDataTable(data.substring(1, data.length()-1));	//2009-4-25 data has extra " on both ends
 					dataTable.insertRows(0,1);
 					dataTable.setValue(0, 0, 0);
 					int index = dataTable.addRow();
 					dataTable.setValue(index, 0, chrLength);
-					associationChart.draw_gwas(dataTable);
-					associationChart.initHandler();
+					associationChart.draw(dataTable,max_value,chrLength);
+					//associationChart.initHandler();
 					i += 1;
 				}
 			} catch (JSONException e) {

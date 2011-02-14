@@ -5,7 +5,7 @@
  *   add mouseover/mouseout handler to display popup
  *   sink the MOUSEEVENTS in order to pass X,Y to visualization's mouseover/mouseout event handler
  */
-package edu.nordborglab.client;
+/*package edu.nordborglab.client;
 
 import org.danvk.dygraphs.client.Dygraphs;
 import org.danvk.dygraphs.client.events.DataPoint;
@@ -91,3 +91,4 @@ public class AssociationScatterChart extends Dygraphs  {
 		}
 	}
 }
+*/
