@@ -15,7 +15,7 @@ class GenesController(BaseController):
     def getGenes(self):
         try:
             if  not hasattr(self, '__datasource') or self.__datasource == None:
-                self.__datasource = JBrowseDataSource('/var/www/jbrowse','mRNA2')
+                self.__datasource = JBrowseDataSource('/srv/jbrowse','TAIR10')
             genes = []
             chromosome = request.params['chromosome']
             start = request.params['start']
