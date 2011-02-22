@@ -6,11 +6,14 @@ import org.danvk.dygraphs.client.events.DataPoint;
 import org.danvk.dygraphs.client.events.SelectHandler;
 import org.danvk.dygraphs.client.events.SelectHandler.SelectEvent;
 
+import at.gmi.nordborglab.widgets.geneviewer.client.datasource.impl.GeneSuggestion;
 import at.gmi.nordborglab.widgets.geneviewer.client.datasource.impl.JBrowseDataSourceImpl;
+import at.gmi.nordborglab.widgets.geneviewer.client.datasource.impl.ServerSuggestOracle;
 import at.gmi.nordborglab.widgets.geneviewer.client.event.ClickGeneEvent;
 import at.gmi.nordborglab.widgets.geneviewer.client.event.ClickGeneHandler;
 import at.gmi.nordborglab.widgets.gwasgeneviewer.client.GWASGeneViewer;
 
+import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -25,6 +28,14 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SuggestOracle;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.SuggestBox.DefaultSuggestionDisplay;
+import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.visualization.client.DataTable;
 
 
@@ -46,6 +57,9 @@ public class GWASOneResult extends CustomVerticalPanel{
 	
 	private DataTable dataTable;
 	private DecoratedPopupPanel popupLink;
+	private HorizontalPanel searchGenePanel = new HorizontalPanel();
+	private SuggestBox searchGeneBox;
+	private JBrowseDataSourceImpl datasource = new JBrowseDataSourceImpl("/Genes/");
 	
 	public GWASOneResult(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, DecoratedPopupPanel popupLink, 
 			int analysisMethodID, String analysisMethodDescription, String GWABaseURL, String SNPBaseURL, 
@@ -74,6 +88,25 @@ public class GWASOneResult extends CustomVerticalPanel{
 		if (pseudoHeritability != null)
 			this.add(new HTML("psuedo-heritability: " + pseudoHeritability.toString()));
 		
+		add(searchGenePanel);
+		searchGeneBox = new SuggestBox(new ServerSuggestOracle(datasource,5));
+		((DefaultSuggestionDisplay)searchGeneBox.getSuggestionDisplay()).setAnimationEnabled(true);
+		searchGeneBox.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+			
+			@Override
+			public void onSelection(SelectionEvent<Suggestion> event) {
+				GeneSuggestion suggestion =  (GeneSuggestion)event.getSelectedItem();
+				GWASGeneViewer viewer = getGWASGeneViewer(suggestion.getGene().getChromosome());
+				if (viewer != null)
+				{
+					viewer.clearDisplayGenes();
+					viewer.addDisplayGene(suggestion.getGene());
+					viewer.refresh();
+				}
+			}
+		});
+		searchGenePanel.add(new HTML("Search genes:"));
+		searchGenePanel.add(searchGeneBox);
 		loadGWA();
 	}
 	
@@ -94,7 +127,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 				int max_length = (int) serverData.get("max_length").isNumber().doubleValue();
 				Set<String> keys = chr2data.keySet();
 				int i =0;
-				JBrowseDataSourceImpl datasource = new JBrowseDataSourceImpl("/Genes/");
+				
 				
 				ClickGeneHandler clickGeneHandler = new ClickGeneHandler() {
 					
@@ -170,5 +203,15 @@ public class GWASOneResult extends CustomVerticalPanel{
 	public void resetTitle()
 	{
 		statusReport.setVisible(false);
+	}
+	
+	public GWASGeneViewer getGWASGeneViewer(String chromosome) 
+	{
+		for (int i = 0;i < getWidgetCount();i++) {
+			Widget widget = getWidget(i);
+			if ((widget instanceof GWASGeneViewer) && ((GWASGeneViewer)widget).getChromosome().equals(chromosome)) 
+				return (GWASGeneViewer)widget;
+		}
+		return null;
 	}
 }
