@@ -2,9 +2,16 @@ package edu.nordborglab.client;
 
 import java.util.Set;
 
+import org.danvk.dygraphs.client.events.DataPoint;
+import org.danvk.dygraphs.client.events.SelectHandler;
+import org.danvk.dygraphs.client.events.SelectHandler.SelectEvent;
+
 import at.gmi.nordborglab.widgets.geneviewer.client.datasource.impl.JBrowseDataSourceImpl;
+import at.gmi.nordborglab.widgets.geneviewer.client.event.ClickGeneEvent;
+import at.gmi.nordborglab.widgets.geneviewer.client.event.ClickGeneHandler;
 import at.gmi.nordborglab.widgets.gwasgeneviewer.client.GWASGeneViewer;
 
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -15,9 +22,11 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.visualization.client.DataTable;
+
 
 
 public class GWASOneResult extends CustomVerticalPanel{
@@ -33,6 +42,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 	
 	private HTML statusReport;
 	private String[] colors = {"blue", "green", "red", "cyan", "purple"};
+	private String[] gene_mark_colors = {"red", "red", "blue", "red", "green"};
 	
 	private DataTable dataTable;
 	private DecoratedPopupPanel popupLink;
@@ -84,7 +94,16 @@ public class GWASOneResult extends CustomVerticalPanel{
 				int max_length = (int) serverData.get("max_length").isNumber().doubleValue();
 				Set<String> keys = chr2data.keySet();
 				int i =0;
-				JBrowseDataSourceImpl datasource = new JBrowseDataSourceImpl("/Genes/getGenes");
+				JBrowseDataSourceImpl datasource = new JBrowseDataSourceImpl("/Genes/");
+				
+				ClickGeneHandler clickGeneHandler = new ClickGeneHandler() {
+					
+					@Override
+					public void onClickGene(ClickGeneEvent event) {
+						Window.open(" http://arabidopsis.org/servlets/TairObject?name="+event.getGene().getName()+"&type=gene","","");
+					}
+				};
+				
 				for (String chromosome : keys) 
 				//for (i=0; i<keys.size(); i++)
 				{
@@ -96,7 +115,8 @@ public class GWASOneResult extends CustomVerticalPanel{
 					int chrLength = (int) chr2length.get(chromosome).isNumber().doubleValue();
 					//jsonErrorDialog.displayRequestError("chromosome "+ chromosome + "length: " + chrLength);
 					String color = colors[i%colors.length];
-					GWASGeneViewer associationChart = new GWASGeneViewer("Chr"+chromosome, color, 1000,datasource);
+					String gene_mark_color = gene_mark_colors[i%gene_mark_colors.length];
+					GWASGeneViewer associationChart = new GWASGeneViewer("Chr"+chromosome, color,gene_mark_color, 1000,datasource);
 					
 					/*AssociationScatterChart associationChart = new AssociationScatterChart(chromosome,
 							color, chrLength, max_length, max_value, SNPBaseURL);*/
@@ -107,6 +127,19 @@ public class GWASOneResult extends CustomVerticalPanel{
 					int index = dataTable.addRow();
 					dataTable.setValue(index, 0, chrLength);
 					associationChart.draw(dataTable,max_value,chrLength);
+					associationChart.addClickGeneHandler(clickGeneHandler);
+					final String SNPUrl = SNPBaseURL+"&chromosome="+chromosome; 
+					associationChart.addSelectionHandler(new SelectHandler() {
+						
+						@Override
+						public void onSelect(SelectEvent event) {
+							DataPoint point = event.point;
+							int position = (int)point.getXVal();
+							double score = point.getYVal();
+							String _SNPURL = URL.encode(SNPUrl + "&position=" + position +"&score="+score);
+							Window.open(_SNPURL, "", "");
+						}
+					});
 					//associationChart.initHandler();
 					i += 1;
 				}
