@@ -50,7 +50,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 	private String SNPBaseURL;
 	private String getOneResultRawURL;
 	private Double pseudoHeritability;
-	
+	private String geneInfoUrl;
 	private HTML statusReport;
 	private String[] colors = {"blue", "green", "red", "cyan", "purple"};
 	private String[] gene_mark_colors = {"red", "red", "blue", "red", "green"};
@@ -63,7 +63,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 	
 	public GWASOneResult(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, DecoratedPopupPanel popupLink, 
 			int analysisMethodID, String analysisMethodDescription, String GWABaseURL, String SNPBaseURL, 
-			String getOneResultRawURL,Double pseudoHeritability)
+			String getOneResultRawURL,Double pseudoHeritability,String geneInfoUrl)
 	{
 		super(constants, jsonErrorDialog, constants.GWASOneResultHelpID());
 		this.constants = constants;
@@ -74,7 +74,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 		this.SNPBaseURL = SNPBaseURL;
 		this.getOneResultRawURL = getOneResultRawURL;
 		this.pseudoHeritability = pseudoHeritability;
-		
+		this.geneInfoUrl = geneInfoUrl;
 		this.popupLink = popupLink;
 		
 		statusReport = new HTML(this.constants.LoadingText());
@@ -129,13 +129,6 @@ public class GWASOneResult extends CustomVerticalPanel{
 				int i =0;
 				
 				
-				ClickGeneHandler clickGeneHandler = new ClickGeneHandler() {
-					
-					@Override
-					public void onClickGene(ClickGeneEvent event) {
-						Window.open(" http://arabidopsis.org/servlets/TairObject?name="+event.getGene().getName()+"&type=gene","","");
-					}
-				};
 				
 				for (String chromosome : keys) 
 				//for (i=0; i<keys.size(); i++)
@@ -150,7 +143,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 					String color = colors[i%colors.length];
 					String gene_mark_color = gene_mark_colors[i%gene_mark_colors.length];
 					GWASGeneViewer associationChart = new GWASGeneViewer("Chr"+chromosome, color,gene_mark_color, 1000,datasource);
-					
+					associationChart.setGeneInfoUrl(geneInfoUrl);
 					/*AssociationScatterChart associationChart = new AssociationScatterChart(chromosome,
 							color, chrLength, max_length, max_value, SNPBaseURL);*/
 					add(associationChart);
@@ -159,8 +152,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 					dataTable.setValue(0, 0, 0);
 					int index = dataTable.addRow();
 					dataTable.setValue(index, 0, chrLength);
-					associationChart.draw(dataTable,max_value,chrLength);
-					associationChart.addClickGeneHandler(clickGeneHandler);
+					associationChart.draw(dataTable,max_value,0,chrLength);
 					final String SNPUrl = SNPBaseURL+"&chromosome="+chromosome; 
 					associationChart.addSelectionHandler(new SelectHandler() {
 						
