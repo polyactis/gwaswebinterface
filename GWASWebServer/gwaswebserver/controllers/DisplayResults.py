@@ -359,6 +359,7 @@ class DisplayresultsController(BaseController):
 		if id is None:
 			id = request.params.get('results_id', None)
 		
+		chromosome = request.params.get('chromosome', None)
 		ResultsMethod = model.Stock_250kDB.ResultsMethod
 		if id:
 			rm = ResultsMethod.get(id)
@@ -383,13 +384,14 @@ class DisplayresultsController(BaseController):
 		else:
 			min_MAF = 0
 		
+		json_data = None
 		no_of_top_snps = 10000
 		ResultsMethodJson = model.Stock_250kDB.ResultsMethodJson
 		rm_json = ResultsMethodJson.query.filter_by(results_id=results_id).\
 				filter(ResultsMethodJson.min_MAF<=min_MAF+0.0001).filter(ResultsMethodJson.min_MAF>=min_MAF-0.0001).\
 				filter_by(no_of_top_snps=no_of_top_snps).first()
 		if rm_json:
-			return rm_json.json_data.__str__()
+			json_data =  rm_json.json_data.__str__()
 		else:
 			json_data = self.getOneResultJsonData(rm, min_MAF, no_of_top_snps)
 			try:
@@ -402,7 +404,15 @@ class DisplayresultsController(BaseController):
 				loginfo += repr(sys.exc_info())
 				loginfo += repr(traceback.print_exc())
 				log.error(loginfo)
-			return json_data
+		if chromosome != None:
+			new_json_data = {}
+			json_data_dec = simplejson.loads(json_data)
+			new_json_data['chr2data'] = json_data_dec['chr2data'][chromosome]
+			new_json_data['chr2length'] = json_data_dec['chr2length'][chromosome]
+			new_json_data['max_length'] = json_data_dec['max_length']
+			new_json_data['max_value'] = json_data_dec['max_value']
+			json_data = simplejson.dumps(new_json_data)
+		return json_data
 	
 	def getCallMethodEigenValue(self):
 		"""
