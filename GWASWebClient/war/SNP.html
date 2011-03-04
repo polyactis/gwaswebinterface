@@ -33,6 +33,11 @@ name="head()">
 		var call_method_id = ${c.call_method_id};
 		var phenotype_method_id = ${c.phenotype_method_id};
 		var analysis_method_id = ${c.analysis_method_id};
+		var chromosome = ${c.chromosome};
+		
+		var snpPosition = ${c.position};
+		var start_pos = ${c.start_pos};
+		var stop_pos = ${c.stop_pos};
 		
 		var snpSpace = {};
 		var url_query = "chromosome="+"${c.chromosome}"+"&position="+"${c.position}"+"&call_method_id="+"${c.call_method_id}"+"&phenotype_method_id="+"${c.phenotype_method_id}"+"&analysis_method_id="+"${c.analysis_method_id}"+"&score="+"${c.score}";		
@@ -41,11 +46,14 @@ name="head()">
 		var snpSummaryQueryURL = "${h.url(controller='SNP', action='getSNPSummaryInfo', id=None)}"+'&'+url_query;
 		var snpSignificantHitsQueryURL = "${h.url(controller='SNP', action='getSignificantHits', id=None)}"+'&'+url_query;
 		var ecotypeAllelePhenotypeURL = "${h.url(controller='SNP', action='getEcotypeAllelePhenotype', id=None)}"+'&'+url_query;
-
+	    var gwasgeneViewerQueryURL = "${h.url(controller='DisplayResults',action='fetchOne')}"+ '?' + url_query;
+	    var SNPUrl = "${h.url(controller='SNP',action='index')}" + '?chromosome='+${c.chromosome}+'&call_method_id='+${c.call_method_id}+'&phenotype_method_id='+${c.phenotype_method_id}+'&analysis_method_id='+${c.analysis_method_id};  
+	    	
 		var track_id = call_method_id+"_"+phenotype_method_id+"_"+analysis_method_id;
 
 		var GBrowseURL = "${c.gbrowseLink}";
 		var GBrowseURLJS = "${config['app_conf']['GBrowseURLJS']}";
+		var GeneInfoUrl = "${h.literal(config['app_conf']['TAIRGeneURL'])}";
 		GBrowseURLJS.format(${c.position-40000}, ${c.position+40000}, ${c.chromosome})+track_id+"-"+track_id+"_SNP";
 
 		loadTable(snpSummaryQueryURL, "SNPSummaryDiv");
