@@ -7,6 +7,7 @@ from webhelpers import *
 
 #2008-12-24 for the forms
 from webhelpers.html.tags import *
+from webhelpers.html import literal
 from pylons import url, request, response
 from webhelpers.pylonslib import Flash as _Flash
 from pylons.controllers.util import abort
