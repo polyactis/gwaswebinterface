@@ -44,6 +44,8 @@ class SnpController(BaseController):
 		
 		start_pos = c.position-40000
 		stop_pos = c.position+40000
+		c.start_pos = start_pos
+		c.stop_pos = stop_pos
 		track_id = '%s_%s_%s'%(c.call_method_id, c.phenotype_method_id, c.analysis_method_id)
 		c.gbrowseLink = config['app_conf']['GBrowseURL']%(start_pos, stop_pos, c.chromosome)+track_id+"-"+track_id+"_SNP"
 		
