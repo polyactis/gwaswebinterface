@@ -125,6 +125,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 				JSONObject chr2length = serverData.get("chr2length").isObject();
 				double max_value = serverData.get("max_value").isNumber().doubleValue();
 				int max_length = (int) serverData.get("max_length").isNumber().doubleValue();
+				double bonferroniThreshold = serverData.get("bonferroniThreshold").isNumber().doubleValue();
 				Set<String> keys = chr2data.keySet();
 				int i =0;
 				
@@ -152,7 +153,7 @@ public class GWASOneResult extends CustomVerticalPanel{
 					dataTable.setValue(0, 0, 0);
 					int index = dataTable.addRow();
 					dataTable.setValue(index, 0, chrLength);
-					associationChart.draw(dataTable,max_value,0,chrLength);
+					associationChart.draw(dataTable,max_value,0,chrLength,bonferroniThreshold);
 					final String SNPUrl = SNPBaseURL+"&chromosome="+chromosome; 
 					associationChart.addSelectionHandler(new SelectHandler() {
 						
