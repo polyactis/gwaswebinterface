@@ -345,6 +345,7 @@ class DisplayresultsController(BaseController):
 	
 	#@jsonify
 	def fetchOne(self, id=None):
+		import math
 		"""
 		2009-5-13
 			apply min_MAF cutoff according to column min_maf in table analysis_method
@@ -404,13 +405,16 @@ class DisplayresultsController(BaseController):
 				loginfo += repr(sys.exc_info())
 				loginfo += repr(traceback.print_exc())
 				log.error(loginfo)
+		json_data_dec = simplejson.loads(json_data)
+		json_data_dec['bonferroniThreshold'] = -math.log10(1.0/(214000.0*20.0))
+		json_data = simplejson.dumps(json_data_dec)
 		if chromosome != None:
 			new_json_data = {}
-			json_data_dec = simplejson.loads(json_data)
 			new_json_data['chr2data'] = json_data_dec['chr2data'][chromosome]
 			new_json_data['chr2length'] = json_data_dec['chr2length'][chromosome]
 			new_json_data['max_length'] = json_data_dec['max_length']
 			new_json_data['max_value'] = json_data_dec['max_value']
+			new_json_data['bonferroniThreshold']   = json_data_dec['bonferroniThreshold']
 			json_data = simplejson.dumps(new_json_data)
 		return json_data
 	
