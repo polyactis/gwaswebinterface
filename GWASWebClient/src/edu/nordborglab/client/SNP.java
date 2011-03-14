@@ -91,6 +91,7 @@ public class SNP implements EntryPoint {
 				//String data = chr2data.toString();
 				double chrLength = jsonValue.get("chr2length").isNumber().doubleValue();
 				double max_value = jsonValue.get("max_value").isNumber().doubleValue();
+				double bonferroniThreshold = jsonValue.get("bonferroniThreshold").isNumber().doubleValue();
 				DataTable dataTable = Common.asDataTable(chr2data);	
 				dataTable.insertRows(0,1);
 				dataTable.setValue(0, 0, 0);
@@ -104,7 +105,7 @@ public class SNP implements EntryPoint {
 				gwasgeneviewer.setGeneViewerHeight(400);
 				gwasgeneviewer.setSnpPosX(getSnpPosition());
 				vPanel.add(gwasgeneviewer);
-				gwasgeneviewer.draw(dataTable,max_value,startPos,endPos);
+				gwasgeneviewer.draw(dataTable,max_value,startPos,endPos,bonferroniThreshold);
 				gwasgeneviewer.addSelectionHandler(new SelectHandler() {
 					
 					@Override
