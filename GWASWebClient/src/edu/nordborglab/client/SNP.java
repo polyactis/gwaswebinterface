@@ -112,6 +112,7 @@ public class SNP implements EntryPoint {
 					public void onSelect(SelectEvent event) {
 						DataPoint point = event.point;
 						int position = (int)point.getXVal();
+								
 						if (getSnpPosition() != position) {
 							double score = point.getYVal();
 							String _SNPURL = URL.encode(getSNPUrl() + "&chromosome="+chromosome+"&position=" + position +"&score="+score);
@@ -161,25 +162,18 @@ public class SNP implements EntryPoint {
 		//tPanel.setSize("100%", "100%");
 		tPanel.setWidth("100%");
 		panelWidth = tPanel.getOffsetWidth();
-		vPanel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.GBrowseHelpID());
+		vPanel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.GWASGeneViewerHelpId());
 		vPanel.setSize("100%", "100%");
 		tPanel.add(vPanel, "GWASGeneViewer");
 		loadGWASGeneViewer();
 
-		//GBrowseFrame = new Frame(GBrowseURL);
-		
-		//GBrowseFrame.setSize("100%", "800px");
-		//GBrowseHTML.getElement().getId();
-		//vPanel.add(GBrowseFrame);
-		
-		
-		
 		RootPanel SNPSummaryDiv = RootPanel.get("SNPSummary");
 		RootPanel.detachNow(SNPSummaryDiv);
-		CustomVerticalPanel SNPSummaryPanel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.SNPSummaryPanelHelpID());
-		SNPSummaryPanel.add(SNPSummaryDiv);
+		//CustomVerticalPanel SNPSummaryPanel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.SNPSummaryPanelHelpID());
+		//SNPSummaryPanel.add(SNPSummaryDiv);
+		vPanel.add(SNPSummaryDiv);
 		//SNPSummaryDiv.setVisible(true);
-		tPanel.add(SNPSummaryPanel, "SNP Summary Info");
+		//tPanel.add(SNPSummaryPanel, "SNP Summary Info");
 		
 		RootPanel SignificantHitsInAllPhenotypeDiv = RootPanel.get("SignificantHitsInAllPhenotype");
 		RootPanel.detachNow(SignificantHitsInAllPhenotypeDiv);
