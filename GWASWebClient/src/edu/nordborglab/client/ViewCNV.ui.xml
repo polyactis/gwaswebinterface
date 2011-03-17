@@ -4,19 +4,25 @@
 		xmlns:gwas="urn:import:edu.nordborglab.client">
 	<g:SplitLayoutPanel ui:field="panel">
 	<g:west size='50'>
+		<g:ScrollPanel>
 		<g:FlowPanel>
 			<gwas:CustomVerticalPanel>
 				<g:HTMLPanel>
 					<fieldset>
 					<legend>Genome-wide Deletion Frequency</legend>
 						<li>
-							<label for="overviewDataTypeListBox">Data Type</label>
-							<g:ListBox ui:field="overviewDataTypeListBox"></g:ListBox>
+							<label for="cnvFrequencyCNVMethodListBox">CNV Method ID</label>
+							<g:ListBox ui:field="cnvFrequencyCNVMethodListBox"></g:ListBox>
 							<br></br>
 						</li>
 						<li>
-							<label for="cnvFrequencyCNVMethodListBox">CNV Method ID</label>
-							<g:ListBox ui:field="cnvFrequencyCNVMethodListBox"></g:ListBox>
+							<label for="cnvDataTypeListBox">Data Type</label>
+							<g:ListBox ui:field="cnvDataTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="cnvFrequencyPlotTypeListBox">Plot type</label>
+							<g:ListBox ui:field="cnvFrequencyPlotTypeListBox"></g:ListBox>
 							<br></br>
 						</li>
 						<li>
@@ -25,13 +31,8 @@
 							<br></br>
 						</li>
 						<li>
-							<label for="cnvFrequencySmoothTypeListBox">Smooth Type</label>
+							<label for="cnvFrequencySmoothTypeListBox">Overview Smooth</label>
 							<g:ListBox ui:field="cnvFrequencySmoothTypeListBox"></g:ListBox>
-							<br></br>
-						</li>
-						<li>
-							<label for="cnvFrequencyPlotTypeListBox">Plot type</label>
-							<g:ListBox ui:field="cnvFrequencyPlotTypeListBox"></g:ListBox>
 							<br></br>
 						</li>
 						<g:Button ui:field="cnvFrequencySubmitButton" enabled="false" text="Submit">
@@ -41,17 +42,171 @@
 			</gwas:CustomVerticalPanel>
 			<g:HTMLPanel>
 					<fieldset>
-					<legend>Deletion Haplotype</legend>
+					<legend>Add Haplotype</legend>
 						<li>
-							<label for="cnvCallHaplotypeCNVMethodListBox">CNV Method ID</label>
-							<g:ListBox ui:field="cnvCallHaplotypeCNVMethodListBox"></g:ListBox>
+							<label for="haplotypeDataTypeListBox">Data Type</label>
+							<g:ListBox ui:field="haplotypeDataTypeListBox"></g:ListBox>
 							<br></br>
 						</li>
-						<g:Button ui:field="cnvCallHaplotypeSubmitButton" enabled="false" text="Submit">
+						<li>
+							<label for="haplotypeCNVMethodListBox">CNV Method</label>
+							<g:ListBox ui:field="haplotypeCNVMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="haplotypeCNVTypeListBox">CNV Type</label>
+							<g:ListBox ui:field="haplotypeCNVTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="haplotypeSortByListBox">Sort By</label>
+							<g:ListBox ui:field="haplotypeSortByListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<g:Button ui:field="haplotypeSubmitButton" enabled="false" text="Submit">
+						</g:Button>
+					</fieldset>
+			</g:HTMLPanel>
+			<g:HTMLPanel>
+					<fieldset>
+					<legend>Tiling Probe Position</legend>
+						<li>
+							<label for="probeTypeListBox">Probe Type</label>
+							<g:ListBox ui:field="probeTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="tilingProbePlotTypeListBox">Tiling Probe Plot Type</label>
+							<g:ListBox ui:field="tilingProbePlotTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="tilingProbeChromosomeListBox">Chromosome</label>
+							<g:ListBox ui:field="tilingProbeChromosomeListBox" enabled="true"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="cnvFrequencySmoothTypeListBox">Overview Smooth Type</label>
+							<g:ListBox ui:field="tilingProbeSmoothTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<g:Button ui:field="tilingProbeSubmitButton" enabled="true" text="Submit">
+						</g:Button>
+					</fieldset>
+			</g:HTMLPanel>
+			<g:HTMLPanel visible="false">
+					<fieldset>
+					<legend>View Structural Change for Single Accession</legend>
+						<li>
+							<label for="SCDataTypeListBox">Data Type</label>
+							<g:ListBox ui:field="SCDataTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="SCCNVMethodListBox">CNV Method ID</label>
+							<g:ListBox ui:field="SCCNVMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="SCAccessionListBox">Accession ID</label>
+							<g:ListBox ui:field="SCAccessionListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="SCYValueListBox">Y Value Choice</label>
+							<g:ListBox ui:field="SCYValueListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="SCPlotTypeListBox">Plot Type</label>
+							<g:ListBox ui:field="SCPlotTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="SCChromosomeListBox">Chromosome</label>
+							<g:ListBox ui:field="SCChromosomeListBox" enabled="true"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="SCSmoothTypeListBox">Overview Smooth Type</label>
+							<g:ListBox ui:field="SCSmoothTypeListBox" enabled="true"></g:ListBox>
+							<br></br>
+						</li>
+						<g:Button ui:field="SCSubmitButton" enabled="false" text="Submit">
+						</g:Button>
+					</fieldset>
+			</g:HTMLPanel>
+			<g:HTMLPanel visible="true">
+					<fieldset>
+					<legend>View GWAS</legend>
+						<li>
+							<label for="GWASDataTypeListBox">Data Type</label>
+							<g:ListBox ui:field="GWASDataTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWASCallMethodListBox">Call Method</label>
+							<g:ListBox ui:field="GWASCallMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWASPhenotypeListBox">Phenotype Method</label>
+							<g:ListBox ui:field="GWASPhenotypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWASAnalysisMethodListBox">Analysis Method</label>
+							<g:ListBox ui:field="GWASAnalysisMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWASPlotTypeListBox">Plot Type</label>
+							<g:ListBox ui:field="GWASPlotTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWASChromosomeListBox">Chromosome</label>
+							<g:ListBox ui:field="GWASChromosomeListBox" enabled="true"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWASSmoothTypeListBox">Overview Smooth Type</label>
+							<g:ListBox ui:field="GWASSmoothTypeListBox" enabled="true"></g:ListBox>
+							<br></br>
+						</li>
+						<g:Button ui:field="GWASSubmitButton" enabled="false" text="Submit">
+						</g:Button>
+					</fieldset>
+			</g:HTMLPanel>
+			<g:HTMLPanel visible="true">
+					<fieldset>
+					<legend>View misc Genome-Wide-Result</legend>
+						<li>
+							<label for="GWRMethodListBox">Result Method</label>
+							<g:ListBox ui:field="GWRMethodListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWRPlotTypeListBox">Plot Type</label>
+							<g:ListBox ui:field="GWRPlotTypeListBox"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWRChromosomeListBox">Chromosome</label>
+							<g:ListBox ui:field="GWRChromosomeListBox" enabled="true"></g:ListBox>
+							<br></br>
+						</li>
+						<li>
+							<label for="GWRSmoothTypeListBox">Overview Smooth Type</label>
+							<g:ListBox ui:field="GWRSmoothTypeListBox" enabled="true"></g:ListBox>
+							<br></br>
+						</li>
+						<g:Button ui:field="GWRSubmitButton" enabled="false" text="Submit">
 						</g:Button>
 					</fieldset>
 			</g:HTMLPanel>
 		</g:FlowPanel>
+		</g:ScrollPanel>
 	</g:west>
 	<g:center>
 		<g:ScrollPanel>
