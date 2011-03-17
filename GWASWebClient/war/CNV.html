@@ -19,16 +19,37 @@ from webhelpers.html import literal
 
 <%def name="body()">
 	<script type="text/javascript">
-		var smoothTypeLsJson = ${literal(c.smoothTypeLsJson)};
-
-		var cnvCallCNVMethodLsJson = ${literal(c.cnvCallCNVMethodLsJson)};
+		
+		var dataTypeOptionLsJson = ${literal(c.dataTypeOptionLsJson)};
 		var cnvFrequencyCNVMethodLsJson = ${literal(c.cnvFrequencyCNVMethodLsJson)};
-		var plotTypeLsJson = ${literal(c.plotTypeLsJson)};
-		var getChromsomeLsJsonFromTableCNVCallURL = "${c.getChromsomeLsJsonFromTableCNVCallURL}";
 		var getChromsomeLsJsonFromTableCNVURL = "${c.getChromsomeLsJsonFromTableCNVURL}";
 		var getFrequencyOverviewDataJsonFromTableCNVURL = "${c.getFrequencyOverviewDataJsonFromTableCNVURL}";
+		
 		var getGeneModelDataJsonURL = "${c.getGeneModelDataJsonURL}";
-		var getHaplotypeDataJsonFromTableCNVCallURL = "${c.getHaplotypeDataJsonFromTableCNVCallURL}";
+		
+		var getChromsomeLsJsonFromTableCNVCallURL = "${c.getChromsomeLsJsonFromTableCNVCallURL}";
+		
+		//haplotype
+		var haplotypeDataTypeListJson = ${literal(c.haplotypeDataTypeListJson)};
+		var cnvCallCNVMethodLsJson = ${literal(c.cnvCallCNVMethodLsJson)};
+		var getCNVMethodLsJsonURL = "${c.getCNVMethodLsJsonURL}";
+		var getCNVTypeLsJsonURL = "${c.getCNVTypeLsJsonURL}";
+		var getHaplotypeDataJsonURL = "${c.getHaplotypeDataJsonURL}";
+		
+		//probe position
+		var probeTypeListJson = ${literal(c.probeTypeListJson)};
+		var getTilingProbeDataJsonURL = "${c.getTilingProbeDataJsonURL}";
+		
+		//gwas
+		var callMethodLsJson = ${literal(c.callMethodLsJson)};
+		var getPhenotypeMethodLsJsonURL = "${c.getPhenotypeMethodLsJsonURL}";
+		var getAnalysisMethodLsJsonURL = "${c.getAnalysisMethodLsJsonURL}";
+		
+		
+		//common stuff
+		var plotTypeLsJson = ${literal(c.plotTypeLsJson)};
+		var chromosomeOptionLsJson = ${literal(c.chromosomeOptionLsJson)};
+		var smoothTypeLsJson = ${literal(c.smoothTypeLsJson)};
 		
 		var imageURL = "/images/";
 		var overviewHeight = 60;
