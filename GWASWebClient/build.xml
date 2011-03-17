@@ -58,6 +58,7 @@
 			<jvmarg value="${d32Flag}" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
 			<arg value="edu.nordborglab.Accession" />
+			<arg value="edu.nordborglab.CNV" />
 			<arg value="edu.nordborglab.GeneListView" />
 			<arg value="edu.nordborglab.GWASOnePhenotype" />
 			<arg value="edu.nordborglab.GWASPhenotypes" />
