@@ -272,6 +272,8 @@ class DisplayresultsController(BaseController):
 	@staticmethod
 	def getAnalysisMethodLs(call_method_id, phenotype_method_id, transformation_method_id=None, analysis_method_id=None):
 		"""
+		2010-11-8
+			fix a bug: transformation_method_id and analysis_method_id could be 'None' (a string).
 		2010-9-21
 			deal with the case that transformation_method_id is None
 		2010-3-11
@@ -281,10 +283,10 @@ class DisplayresultsController(BaseController):
 		affiliated_table_name = model.Stock_250kDB.ResultsMethod.table.name	#alias is 's'
 		extra_condition = 's.call_method_id=%s and s.phenotype_method_id=%s'%\
 				(call_method_id, phenotype_method_id,)
-		if transformation_method_id is not None:
+		if transformation_method_id is not None and transformation_method_id!='None':	#2010-11-8
 			extra_condition += ' and s.transformation_method_id=%s'%transformation_method_id
 		
-		if analysis_method_id:
+		if analysis_method_id!='None' and analysis_method_id:	#2010-11-8
 			extra_condition += ' and s.analysis_method_id=%s'%analysis_method_id
 		list_info = hc.getAnalysisMethodInfo(affiliated_table_name, extra_condition=extra_condition)
 		
@@ -343,6 +345,8 @@ class DisplayresultsController(BaseController):
 	#@jsonify
 	def fetchOne(self, id=None):
 		"""
+		2010-10-26
+			move the fetching ResultsMethod part to HelpOtherControllers
 		2009-5-13
 			apply min_MAF cutoff according to column min_maf in table analysis_method
 			
@@ -351,24 +355,7 @@ class DisplayresultsController(BaseController):
 		2009-1-30
 			return a dictionary with key as chromosome, value as google visualization data table representing association results.
 		"""
-		if id is None:
-			id = request.params.get('id', None)
-		if id is None:
-			id = request.params.get('results_id', None)
-		
-		ResultsMethod = model.Stock_250kDB.ResultsMethod
-		if id:
-			rm = ResultsMethod.get(id)
-		else:
-			call_method_id = request.params.getone('call_method_id')
-			phenotype_method_id = request.params.getone('phenotype_method_id')
-			analysis_method_id = request.params.getone('analysis_method_id')
-			transformation_method_id = request.params.get('transformation_method_id', None)
-			query = ResultsMethod.query.filter_by(call_method_id=call_method_id).\
-				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id)
-			if transformation_method_id is not None:
-				query = query.filter_by(transformation_method_id=transformation_method_id)
-			rm = query.first()
+		rm = hc.getGWASResultsMethodGivenRequest(request)
 		if rm is None:	#2010-9-28 this could still be nothing
 			return None
 		results_id = rm.id
