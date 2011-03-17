@@ -14,6 +14,7 @@ from variation.src.GeneListRankTest import GeneListRankTest
 from variation.src.Kruskal_Wallis import Kruskal_Wallis
 from pymodule import PassingData, SNPData
 from sets import Set
+import simplejson
 
 log = logging.getLogger(__name__)
 
@@ -404,4 +405,53 @@ class HelpothercontrollersController(BaseController):
 		files = [f for f in os.listdir(dirname)  if os.path.isfile(os.path.join(dirname, f))]
 		result = {"path":dirname,"files":files}
 		return result
+	
+	@classmethod
+	def getPredefinedOptionListJson(cls, option_id_name_ls=[], withIDInLabel=True, addZeroOption=False):
+		"""
+		2010-10-19
+			add argument withIDInLabel, 
+		2010-9-24
+			option_id_name_ls is a list of (id, name) tuples
+		"""
+		smoothTypeLs = []
+		for type_id, type_name in option_id_name_ls:
+			if withIDInLabel:
+				type_label = "%s: %s"%(type_id , type_name)
+			else:
+				type_label = type_name
+			smoothTypeLs.append({'value': type_id, 'id':type_label})
+		if addZeroOption:
+			smoothTypeLs.insert(0, {'id': u'Please Choose ...', 'value': 0})
+		result = {'options': smoothTypeLs}
+		#result['options'].insert(0, {'id': u'Please Choose ...', 'value': 0})	# not necessary
+		response.content_type = 'text/html'	#otherwise, the page rendered in index() will be regarded as "application/json"
+		response.charset = 'utf-8'
+		return simplejson.dumps(result)
+	
+	@classmethod
+	def getGWASResultsMethodGivenRequest(cls, request, id=None):
+		"""
+		2010-11-8
+			fix a bug: transformation_method_id could be 'None' (a string).
+		2010-10-26
+		"""
+		if id is None:
+			id = request.params.get('id', None)
+		if id is None:
+			id = request.params.get('results_id', None)
 		
+		ResultsMethod = model.Stock_250kDB.ResultsMethod
+		if id:
+			rm = ResultsMethod.get(id)
+		else:
+			call_method_id = request.params.getone('call_method_id')
+			phenotype_method_id = request.params.getone('phenotype_method_id')
+			analysis_method_id = request.params.getone('analysis_method_id')
+			transformation_method_id = request.params.get('transformation_method_id', None)
+			query = ResultsMethod.query.filter_by(call_method_id=call_method_id).\
+				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id)
+			if transformation_method_id is not None and transformation_method_id!='None':
+				query = query.filter_by(transformation_method_id=transformation_method_id)
+			rm = query.first()
+		return rm
