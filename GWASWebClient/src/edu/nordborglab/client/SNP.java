@@ -115,13 +115,13 @@ public class SNP implements EntryPoint {
 		RootPanel.detachNow(EcotypeAlleleMotionChartDiv);
 		CustomVerticalPanel EcotypeAlleleMotionChartPanel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.EcotypeAlleleMotionChartHelpID());
 		EcotypeAlleleMotionChartPanel.add(EcotypeAlleleMotionChartDiv);
-		tPanel.add(EcotypeAlleleMotionChartPanel, "Ecotype Allele Phenotype BarChart");
+		tPanel.add(EcotypeAlleleMotionChartPanel, "Accession Allele Phenotype BarChart");
 		
 		RootPanel EcotypeAlleleTableDiv = RootPanel.get("EcotypeAlleleTable");
 		RootPanel.detachNow(EcotypeAlleleTableDiv);
 		CustomVerticalPanel EcotypeAlleleTablePanel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.EcotypeAlleleTableHelpID());
 		EcotypeAlleleTablePanel.add(EcotypeAlleleTableDiv);
-		tPanel.add(EcotypeAlleleTablePanel, "Ecotype Allele Phenotype Table");
+		tPanel.add(EcotypeAlleleTablePanel, "Accession Allele Phenotype Table");
 		
 		resetTitle();
 		//fetchGBrowseHTML();
