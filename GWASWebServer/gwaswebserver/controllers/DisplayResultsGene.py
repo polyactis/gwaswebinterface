@@ -7,7 +7,6 @@ log = logging.getLogger(__name__)
 from formencode import htmlfill
 import simplejson, re
 from DisplayTopSNPTestRM import DisplaytopsnptestrmController
-EntrezgeneMapping = model.GenomeDB.EntrezgeneMapping
 Gene = model.GenomeDB.Gene
 GeneList = model.Stock_250kDB.GeneList
 GeneListType = model.Stock_250kDB.GeneListType
@@ -511,13 +510,15 @@ class DisplayresultsgeneController(BaseController):
 	
 	def fillGVizDataEntryForOneGene(self, entry, gene_id, column_name_type_ls):
 		"""
+		2011-3-21
+			EntrezgeneMapping is merged into Gene in GenomeDB.
 		2009-7-2
 			subroutine to get info based on column_name_type_ls related to a gene
 			argument entry is a given dictionary. This function fills it up.
 			usually the entry would be added to a list, which is turned into a gviz_api.data_table. 
 		"""
 		gene = Gene.get(gene_id)
-		em = EntrezgeneMapping.get(gene_id)
+		em = gene	#2011-3-21
 		if gene is not None:
 			for column_name_type in column_name_type_ls:
 				column_name = column_name_type[0]
