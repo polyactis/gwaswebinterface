@@ -395,18 +395,21 @@ class DisplayresultsController(BaseController):
 			json_data =  rm_json.json_data.__str__()
 		else:
 			json_data = self.getOneResultJsonData(rm, min_MAF, no_of_top_snps)
-			try:
-				rm_json = ResultsMethodJson(results_id=rm.id, min_MAF=min_MAF, no_of_top_snps=no_of_top_snps)
-				rm_json.json_data = json_data
-				model.db.session.add(rm_json)
-				model.db.session.flush()	#db is in no transaction. automatically commit. 
-			except:
-				loginfo = "DB Saving Error: json_data of result %s, min_MAF %s, no_of_top_snps %s\n"%(results_id, min_MAF, no_of_top_snps)
-				loginfo += repr(sys.exc_info())
-				loginfo += repr(traceback.print_exc())
-				log.error(loginfo)
+			#try:
+			#	rm_json = ResultsMethodJson(results_id=rm.id, min_MAF=min_MAF, no_of_top_snps=no_of_top_snps)
+			#	rm_json.json_data = json_data
+			#	model.db.session.add(rm_json)
+			#	model.db.session.flush()	#db is in no transaction. automatically commit. 
+			#except:
+			#	loginfo = "DB Saving Error: json_data of result %s, min_MAF %s, no_of_top_snps %s\n"%(results_id, min_MAF, no_of_top_snps)
+			#	loginfo += repr(sys.exc_info())
+			#	loginfo += repr(traceback.print_exc())
+			#	log.error(loginfo)
 		json_data_dec = simplejson.loads(json_data)
-		json_data_dec['bonferroniThreshold'] = -math.log10(1.0/(214000.0*20.0))
+		if 'no_of_tests' in json_data_dec:
+			json_data_dec['bonferroniThreshold'] = -math.log10(1.0/(json_data_dec['no_of_tests']*20.0))
+		else:
+			json_data_dec['bonferroniThreshold'] = -math.log10(1.0/(214000.0*20.0))
 		json_data = simplejson.dumps(json_data_dec)
 		if chromosome != None:
 			new_json_data = {}
