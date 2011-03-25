@@ -6,7 +6,8 @@ from pylons.controllers.util import abort, redirect
 from gwaswebserver.lib.base import BaseController, render, config, h, model
 from pylons.decorators import jsonify
 import simplejson, sys, traceback
-from pymodule import algorithm
+from pymodule import algorithm, PassingData
+from pymodule import SNP
 from HelpOtherControllers import HelpothercontrollersController as hc
 from variation.src.common import getEcotypeInfo
 from DisplayResults import DisplayresultsController
@@ -50,6 +51,7 @@ class CnvController(BaseController):
 		c.getTilingProbeDataJsonURL = h.url(controller="CNV", action='getTilingProbeDataJson')
 		
 		# gwas
+		c.gwasCNVMethodLsJson = self.getCNVMethodLsJson(table_name='results_method')
 		c.callMethodLsJson = DisplayresultsController.getCallMethodLsJson()
 		c.getPhenotypeMethodLsJsonURL = h.url(controller='DisplayResults', action='getPhenotypeMethodLsJson')
 		c.getAnalysisMethodLsJsonURL = h.url(controller='DisplayResults', action='getAnalysisMethodLsJson')
@@ -72,7 +74,7 @@ class CnvController(BaseController):
 		2010-10-18
 			get table_name from request.params in case it's called from the client
 		2010-9-21
-			add argument table_name
+			add argument table_name, from which the cnv_method_id column is used to identify which rows of CNVMethod to pull.
 		"""
 		if table_name is None:
 			table_name = request.params.get('table_name', model.Stock_250kDB.CNV.table.name)
@@ -533,48 +535,54 @@ class CnvController(BaseController):
 		return {"overviewData": overviewData, "data": fullData}
 	
 	@jsonify
-	def getGWASDataJson(self,):
+	def getGWASDataJson(self, no_of_top_loci=10000, no_of_overview_points=1500,):
 		"""
+		2011-3-21
+			finished. can handle ResultsMethod that have either call_method_id or cnv_method_id.
 		2010-10-26
-		
+			unfinished
 		"""
 		rm = hc.getGWASResultsMethodGivenRequest(request)
-		data_type = request.params.get('data_type', data_type)
-		if data_type is None:
-			data_type = 1
-		else:
-			data_type = int(data_type)
-		chromosome = request.params.get('chromosome', chromosome)
+		chromosome = request.params.get('chromosome', None)
 		smooth_type_id = request.params.get('smooth_type_id', None)
 		start = request.params.get('start', None)
 		stop = request.params.get('stop', None)
-		sys.stderr.write("Getting tiling probe position data from chromosome %s, smooth type %s, start %s, stop %s ... \n"%\
-						(chromosome, smooth_type_id, start, stop))
+		sys.stderr.write("Getting gwas data for result %s chromosome %s, smooth type %s, start %s, stop %s ... \n"%\
+						(rm.id, chromosome, smooth_type_id, start, stop))
 		
-		if data_type==2 or data_type==3:	# SNP probes
-			where_sql = 'where p.chromosome is not null and p.position is not null and p.end_position is null '
-			where_sql += ' and p.chromosome=%s '%(chromosome)
-			if data_type==2:
-				where_sql += ' and p.include_after_qc=1'
-		else:
-			where_sql = 'where p.snps_id is null and p.chromosome=%s and p.direction is not null and p.Tair9Copy=1 '%(chromosome)
-		if start:
-			where_sql += ' and p.position>=%s'%(start)
-		if stop:
-			where_sql += ' and p.position<=%s'%(stop)
+		#genomeRBDict = None
+		pd = PassingData(min_MAF=0.1,\
+					no_of_top_loci=no_of_top_loci, \
+					starting_rank=0, \
+					need_chr_pos_ls=0,\
+					need_candidate_association=False,\
+					chromosome=chromosome,\
+					start=start,\
+					stop=stop)
 		
-		if data_type==2 or data_type==3:
-			sql_sentence = "select distinct p.chromosome, p.position, p.tair8_chromosome, p.tair8_position \
-				from %s p %s order by chromosome, position"%(model.Stock_250kDB.Snps.table.name, where_sql)
+		if rm.call_method_id:
+			pd.db_id2chr_pos = model.db.chr_pos2snp_id
+		elif rm.cnv_method_id:
+			if model.db._cnv_method_id!=rm.cnv_method_id:
+				model.db.cnv_id2chr_pos = rm.cnv_method_id
+			pd.db_id2chr_pos = model.db.cnv_id2chr_pos
 		else:
-			sql_sentence = "select p.id, p.chromosome, p.position, p.tair8_chromosome, p.tair8_position \
-				from %s p %s order by chromosome, position"%(model.Stock_250kDB.Probes.table.name, where_sql)
-		rows = model.db.metadata.bind.execute(sql_sentence)
+			return "Error: ResultsMethod %s have neither call_method_id nor cnv_method_id.\n"%(rm.id)
+		
+		gwr = model.db.getResultMethodContent(rm.id, pdata=pd)
+		
+		data_obj_ls = []
+		for i in range(min(no_of_top_loci, len(gwr))):	#2011-3-21 less than the max number it contains
+			data_obj = gwr.get_data_obj_at_given_rank(i+1)
+			data_obj_ls.append(data_obj)
+		
+		data_obj_ls.sort(cmp=SNP.cmpDataObjByChrPos)
+		
 		fullData = []
-		for row in rows:
-			fullData.append(dict(start=row.position, yStart=1, stop=row.position, chromosome=row.chromosome, \
-				description='tair8 chr, pos: %s, %s'%(row.tair8_chromosome,\
-													row.tair8_position),))
+		for data_obj in data_obj_ls:
+			fullData.append(dict(start=data_obj.position, yStart=data_obj.value, stop=data_obj.stop_position, \
+					chromosome=data_obj.chromosome, \
+					description='MAF: %s, MAC: %s'%(data_obj.maf, data_obj.mac),))
 		
 		if smooth_type_id is not None:
 			overviewData = algorithm.smoothFullData(fullData, smooth_type_id=int(smooth_type_id), \
