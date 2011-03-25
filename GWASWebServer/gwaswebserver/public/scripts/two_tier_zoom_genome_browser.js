@@ -1,3 +1,8 @@
+/*
+ * 2011-9
+ * 	a multi-zoom-tier genome browser.
+ * 
+ */
 function segmentKeyForStartSearch (position){
 	/* 2010-9-17 generates a function. In case the position is in between of the segment, return position as key to be best matched.
 	
@@ -13,6 +18,7 @@ function segmentKeyForStartSearch (position){
 	}
 
 var no_of_widgets = 0;
+var defaultTopOffset = 20;
 
 function createNewDiv(){
 	/*
@@ -40,7 +46,7 @@ zoomInPanel.prototype.init = function (parentDivID, title, fetchURL, originalDat
 {
 	/*
 	 * 2010-9-27
-	 * 	this init() can't be a constructor because it requires arguments. so "new zoomInPanel" won't be valid in prototype inheritance.
+	 * 	this init() can't be a constructor because it requires arguments and "new zoomInPanel" won't be valid in prototype inheritance.
 	 */
 	this.parentDivID = parentDivID;	
 	this.parentDiv = document.getElementById(this.parentDivID);
@@ -81,7 +87,7 @@ zoomInPanel.prototype.init = function (parentDivID, title, fetchURL, originalDat
 	this.width = width;
 	this.height = height;
 	if (topOffset===null){
-		this.topOffset = 15;
+		this.topOffset = defaultTopOffset;
 	}
 	else{
 		this.topOffset = topOffset;
@@ -494,7 +500,7 @@ function genePanel(parentDivID, fetchURL, originalData, originalDataStart, origi
 	var yStart = -1;	// extra space below 0 for gene label
 	var singleGeneHeight = height/(2*this.noOfGeneLanes);
 	var yStop =  yStart + this.noOfGeneLanes + 0.5;
-	var topOffset = 20;
+	var topOffset = defaultTopOffset;
 	this.addYTicks = false;
 	//this.inheritFrom = zoomInPanel;
 	//this.prototype = new zoomInPanel(parentDivID, "Gene Model", fetchURL, originalData, originalDataStart, originalDataStop, xStart, 
@@ -846,7 +852,7 @@ function initializeContexts(parentDivID, title, getGeneModelDataJsonURL, overvie
 		contextFFHeight = height*2,
 		//yStart = pv.min(overviewData, function(d) {return d.yStart}),
 		//yStop = pv.max(overviewData, function(d) {return d.yStart}),
-		verticalMarginHeight = 20;
+		verticalMarginHeight = defaultTopOffset;
 	
 	var addZoomButton = 1;
 	var context = new contextPanel(parentDivID, title, "", overviewData, start, end, start, end, null, null, 
@@ -891,7 +897,7 @@ function tickPanel(parentDivID, title, fetchURL, originalData, originalDataStart
 	var xStop = 1000;
 	var yStart = 0;
 	var yStop = yStart + 2;
-	var topOffset = 20;
+	var topOffset = defaultTopOffset;
 	//this.addXTicks = false;
 	this.addYTicks = false;
 	this.init(parentDivID, title, fetchURL, originalData, originalDataStart, originalDataStop, xStart, 
