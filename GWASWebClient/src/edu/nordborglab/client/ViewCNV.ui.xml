@@ -3,7 +3,7 @@
 		xmlns:g="urn:import:com.google.gwt.user.client.ui"
 		xmlns:gwas="urn:import:edu.nordborglab.client">
 	<g:SplitLayoutPanel ui:field="panel">
-	<g:west size='50'>
+	<g:west size='150'>
 		<g:ScrollPanel>
 		<g:FlowPanel>
 			<gwas:CustomVerticalPanel>
@@ -140,8 +140,8 @@
 					<fieldset>
 					<legend>View GWAS</legend>
 						<li>
-							<label for="GWASDataTypeListBox">Data Type</label>
-							<g:ListBox ui:field="GWASDataTypeListBox"></g:ListBox>
+							<label for="GWASCNVMethodListBox">GWAS CNV Method</label>
+							<g:ListBox ui:field="GWASCNVMethodListBox"></g:ListBox>
 							<br></br>
 						</li>
 						<li>
