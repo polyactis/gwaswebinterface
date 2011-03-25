@@ -78,7 +78,7 @@ public class ViewCNV extends Composite  {
 	@UiField Button SCSubmitButton;
 	
 	// GWAS
-	@UiField ListBox GWASDataTypeListBox;
+	@UiField ListBox GWASCNVMethodListBox;
 	@UiField ListBox GWASCallMethodListBox;
 	@UiField ListBox GWASPhenotypeListBox;
 	@UiField ListBox GWASAnalysisMethodListBox;
@@ -120,6 +120,7 @@ public class ViewCNV extends Composite  {
 		fillSelectBoxWithJsArray(this.smoothTypeLsJsonFromJS(), tilingProbeSmoothTypeListBox);
 		
 		// GWAS
+		fillSelectBoxWithJsArray(this.gwasCNVMethodLsJson(), GWASCNVMethodListBox);
 		fillSelectBoxWithJsArray(this.callMethodLsJson(), GWASCallMethodListBox);
 		fillSelectBoxWithJsArray(this.plotTypeLsJsonFromJS(), GWASPlotTypeListBox);
 		fillSelectBoxWithJsArray(this.chromosomeOptionLsJson(), GWASChromosomeListBox);
@@ -162,6 +163,7 @@ public class ViewCNV extends Composite  {
 	public native String getTilingProbeDataJsonURL() /*-{ return $wnd.getTilingProbeDataJsonURL; }-*/;
 	
 	// gwas
+	public native JsArray gwasCNVMethodLsJson() /*-{ return $wnd.gwasCNVMethodLsJson; }-*/;
 	public native JsArray callMethodLsJson() /*-{ return $wnd.callMethodLsJson; }-*/;
 	public native String getPhenotypeMethodLsJsonURL() /*-{ return $wnd.getPhenotypeMethodLsJsonURL; }-*/;
 	public native String getAnalysisMethodLsJsonURL() /*-{ return $wnd.getAnalysisMethodLsJsonURL; }-*/;
@@ -169,7 +171,7 @@ public class ViewCNV extends Composite  {
 	
 	@UiHandler(value={"cnvFrequencyCNVMethodListBox", "cnvFrequencyChromosomeListBox", "haplotypeCNVMethodListBox",
 			"tilingProbePlotTypeListBox", "cnvFrequencyPlotTypeListBox", "haplotypeDataTypeListBox", "haplotypeCNVTypeListBox",
-			"GWASCallMethodListBox", "GWASPhenotypeListBox", "GWASAnalysisMethodListBox"})
+			"GWASCNVMethodListBox", "GWASCallMethodListBox", "GWASPhenotypeListBox", "GWASAnalysisMethodListBox"})
 	void onChangeListBox(ChangeEvent event)
 	{
 		ListBox source = (ListBox)event.getSource();
@@ -222,13 +224,22 @@ public class ViewCNV extends Composite  {
 				tilingProbeChromosomeListBox.setEnabled(false);
 			}
 		}
+		else if (source==GWASCNVMethodListBox)
+		{
+			GWASCallMethodListBox.setSelectedIndex(0);
+			loadGWASPhenotypeListBox();
+			setGWASSubmitButtonStatus();
+		}
 		else if (source==GWASCallMethodListBox)
 		{
+			GWASCNVMethodListBox.setSelectedIndex(0);
 			loadGWASPhenotypeListBox();
+			setGWASSubmitButtonStatus();
 		}
 		else if (source==GWASPhenotypeListBox)
 		{
 			loadGWASAnalysisMethodListBox();
+			setGWASSubmitButtonStatus();
 		}
 		else if (source==GWASAnalysisMethodListBox)
 		{
@@ -256,7 +267,7 @@ public class ViewCNV extends Composite  {
 			addOverviewInJS(divID, title, url, fetchGeneModelURL);
 		}
 		else if (plot_type_id==2){
-			addCNVFrequencyToLastOverview(divID, title, url);
+			addGWASLikeDataToLastOverview(divID, title, url);
 		}
 	}
 	
@@ -308,32 +319,45 @@ public class ViewCNV extends Composite  {
 	@UiHandler("GWASSubmitButton")
 	void onClickGWASSubmitButton(ClickEvent event)
 	{
-		String call_method_id = Common.getSelectedValueInListBox(GWASCallMethodListBox);
-		String phenotype_method_id = Common.getSelectedItemTextInListBox(GWASPhenotypeListBox);
-		String analysis_method_id = Common.getSelectedItemTextInListBox(GWASAnalysisMethodListBox);
-		String smooth_type_id = Common.getSelectedValueInListBox(tilingProbeSmoothTypeListBox);
-		Integer plot_type_id = GWASPlotTypeListBox.getSelectedIndex()+1;
-		String fetchURL = this.getGWASDataJsonURL() + "?call_method_id="+ call_method_id + "&phenotype_method_id" + phenotype_method_id
-			+"&analysis_method_id="+analysis_method_id;
-		String divID = addNewDivToProtovisPanel();
-		String title = "GWAS" + " position";
-		if (plot_type_id==1){
-			chromosome = Common.getSelectedValueInListBox(GWASChromosomeListBox);
-			//to smooth the full data for the top global overview 
-			fetchURL = URL.encode(fetchURL + "&chromosome="+ chromosome + "&smooth_type_id="+smooth_type_id);
-			String fetchGeneModelURL = URL.encode(this.getGeneModelDataJsonURL() + "?chromosome=" + chromosome);
-			addOverviewInJS(divID, title, fetchURL, fetchGeneModelURL);
+		if ((GWASCallMethodListBox.getSelectedIndex()>0 || GWASCNVMethodListBox.getSelectedIndex()>0) && 
+				GWASPhenotypeListBox.getSelectedIndex() > 0 && 
+				GWASAnalysisMethodListBox.getSelectedIndex() > 0){
+			String cnv_method_id = Common.getSelectedValueInListBox(GWASCNVMethodListBox);
+			String call_method_id = Common.getSelectedValueInListBox(GWASCallMethodListBox);
+			String phenotype_method_id = Common.getSelectedValueInListBox(GWASPhenotypeListBox);
+			String analysis_method_id = Common.getSelectedValueInListBox(GWASAnalysisMethodListBox);
+			String smooth_type_id = Common.getSelectedValueInListBox(tilingProbeSmoothTypeListBox);
+			Integer plot_type_id = GWASPlotTypeListBox.getSelectedIndex()+1;
+			String fetchURL = this.getGWASDataJsonURL() + "?call_method_id="+ call_method_id 
+				+ "&cnv_method_id=" + cnv_method_id
+				+ "&phenotype_method_id=" + phenotype_method_id
+				+ "&analysis_method_id=" + analysis_method_id;
+			String divID = addNewDivToProtovisPanel();
+			String title = "GWAS: cnv method " + cnv_method_id + " call method " + call_method_id
+				+ " phenotype " + phenotype_method_id + " analysis method " + analysis_method_id;
+			if (plot_type_id==1){
+				chromosome = Common.getSelectedValueInListBox(GWASChromosomeListBox);
+				title += " chr " + chromosome;
+				//to smooth the full data for the top global overview
+				fetchURL = URL.encode(fetchURL + "&chromosome="+ chromosome + "&smooth_type_id="+smooth_type_id);
+				String fetchGeneModelURL = URL.encode(this.getGeneModelDataJsonURL() + "?chromosome=" + chromosome);
+				addOverviewInJS(divID, title, fetchURL, fetchGeneModelURL);
+			}
+			else if (plot_type_id==2){
+				if (chromosome=="")
+				{
+					jsonErrorDialog.displayParseError("Chromosome not chosen by previous overview. Probably no overview has been generated yet.");
+				}
+				else
+				{
+					title += " chr " + chromosome;
+					fetchURL = URL.encode(fetchURL + "&chromosome=" + chromosome);	// chromosome is global value
+					addGWASLikeDataToLastOverview(divID, title, fetchURL);
+				}
+			}
 		}
-		else if (plot_type_id==2){
-			if (chromosome=="")
-			{
-				jsonErrorDialog.displayParseError("Chromosome not chosen by previous overview. Probably no overview has been generated yet.");
-			}
-			else
-			{
-				fetchURL = URL.encode(fetchURL + "&chromosome=" + chromosome);	// chromosome is global value
-				addTilingProbePositonToLastOverview(divID, title, fetchURL);
-			}
+		else{
+			GWASSubmitButton.setEnabled(false);
 		}
 		
 	}
@@ -380,8 +404,9 @@ public class ViewCNV extends Composite  {
 	
 	private void setGWASSubmitButtonStatus()
 	{
-		if (GWASCallMethodListBox.getSelectedIndex()>0 && GWASPhenotypeListBox.getSelectedIndex() > 0 && 
-				GWASAnalysisMethodListBox.getSelectedIndex() > 0 && chromosome.length()>0)
+		if ((GWASCallMethodListBox.getSelectedIndex()>0 || GWASCNVMethodListBox.getSelectedIndex()>0) && 
+				GWASPhenotypeListBox.getSelectedIndex() > 0 && 
+				GWASAnalysisMethodListBox.getSelectedIndex() > 0)
 		{
 			GWASSubmitButton.setEnabled(true);
 		}
@@ -412,17 +437,25 @@ public class ViewCNV extends Composite  {
 	}
 	private void loadGWASPhenotypeListBox()
 	{
-		String call_method_id = Common.getSelectedValueInListBox(GWASCallMethodListBox);
-		String url = this.getPhenotypeMethodLsJsonURL() + "?call_method_id="+ call_method_id;
-		Common.fillSelectBox(url, GWASPhenotypeListBox, jsonErrorDialog);
+		if (GWASCallMethodListBox.getSelectedIndex()>0 || GWASCNVMethodListBox.getSelectedIndex()>0){
+			String cnv_method_id = Common.getSelectedValueInListBox(GWASCNVMethodListBox);
+			String call_method_id = Common.getSelectedValueInListBox(GWASCallMethodListBox);
+			String url = this.getPhenotypeMethodLsJsonURL() + "?call_method_id="+ call_method_id + "&cnv_method_id="+cnv_method_id;
+			Common.fillSelectBox(url, GWASPhenotypeListBox, jsonErrorDialog);
+		}
 	}
+	
 	private void loadGWASAnalysisMethodListBox()
 	{
-		String call_method_id = Common.getSelectedValueInListBox(GWASCallMethodListBox);
-		String phenotype_method_id = Common.getSelectedValueInListBox(GWASPhenotypeListBox);
-		String url = this.getPhenotypeMethodLsJsonURL() + "?call_method_id="+ call_method_id +
-			"&phenotype_method_id="+phenotype_method_id;
-		Common.fillSelectBox(url, GWASAnalysisMethodListBox, jsonErrorDialog);
+		if ((GWASCallMethodListBox.getSelectedIndex()>0 || GWASCNVMethodListBox.getSelectedIndex()>0) && 
+				GWASPhenotypeListBox.getSelectedIndex()>0){
+			String cnv_method_id = Common.getSelectedValueInListBox(GWASCNVMethodListBox);
+			String call_method_id = Common.getSelectedValueInListBox(GWASCallMethodListBox);
+			String phenotype_method_id = Common.getSelectedValueInListBox(GWASPhenotypeListBox);
+			String url = this.getAnalysisMethodLsJsonURL() + "?call_method_id="+ call_method_id + "&cnv_method_id="+cnv_method_id
+				+ "&phenotype_method_id="+phenotype_method_id;
+			Common.fillSelectBox(url, GWASAnalysisMethodListBox, jsonErrorDialog);
+		}
 	}
 	
 	public static native void addOverviewInJS(String divID, String title, String url, String fetchGeneModelURL)
@@ -431,33 +464,45 @@ public class ViewCNV extends Composite  {
 		}-*/;
 	
 	
-	public static native void addCNVFrequencyToLastOverview(String divID, String title, String fetchURL)/*-{
+	public static native void addCNVCallHaplotypeToLastOverview(String divID, String title, String fetchURL)/*-{
+		var rowInfoData = null;
 		var data = [];
-		var widget = new $wnd.contextPanel(divID, title, fetchURL, data, null, null, 0, 0, null, null, 
-			$wnd.width, $wnd.overviewHeight*2, null, $wnd.imageURL);
+		var originalDataStart = null;
+		var originalDataStop = null;
+		var xStart = 0;
+		var xStop = 1;
+		var widget = new $wnd.haplotypePanel(divID, title, fetchURL, rowInfoData, data, originalDataStart, originalDataStop, 
+			xStart, xStop, $wnd.width, $wnd.overviewHeight*10, $wnd.imageURL);
+		$wnd.addWidgetAsFocusChildToLastContext(widget);
+	}-*/;
+	
+	public static native void addTilingProbePositonToLastOverview(String divID, String title, String fetchURL)/*-{
+		var data = [];
+		var originalDataStart = null;
+		var originalDataStop = null;
+		var widget = new $wnd.tickPanel(divID, title, fetchURL, data, originalDataStart, originalDataStop,
+			$wnd.width, $wnd.overviewHeight/2, $wnd.imageURL);
+		$wnd.addWidgetAsFocusChildToLastContext(widget);
+	}-*/;
+	
+	public static native void addGWASLikeDataToLastOverview(String divID, String title, String fetchURL)/*-{
+		var data = [];
+		var topOffset = null;
+		var originalDataStart = null;
+		var originalDataStop = null;
+		var xStart = 0;
+		var xStop = 0; 
+		var yStart = null;
+		var yStop = null;
+		var widget = new $wnd.contextPanel(divID, title, fetchURL, data, originalDataStart, originalDataStop, xStart, xStop, 
+			yStart, yStop, $wnd.width, $wnd.overviewHeight*2, topOffset, $wnd.imageURL);
+		widget.autoUpdateYScaleDomain = 1;	// 2011-3-23 default is 0.
 		$wnd.addCrossHair(widget);
 		widget.addPlot();
 		$wnd.addWidgetAsFocusChildToLastContext(widget);
 	}-*/;
 	
-	public static native void addCNVCallHaplotypeToLastOverview(String divID, String title, String fetchURL)/*-{
-		var rowInfoData = null;
-		var data = [];
-		var widget = new $wnd.haplotypePanel(divID, title, fetchURL, rowInfoData, data, null, null, 0, 1,
-			$wnd.width, $wnd.overviewHeight*10, $wnd.imageURL);
-		$wnd.addWidgetAsFocusChildToLastContext(widget);
-	}-*/;
-	
-	public static native void addTilingProbePositonToLastOverview(String divID, String title, String fetchURL)/*-{
-	var data = [];
-	var originalDataStart = null;
-	var originalDataStop = null;
-	var widget = new $wnd.tickPanel(divID, title, fetchURL, data, originalDataStart, originalDataStop,
-		$wnd.width, $wnd.overviewHeight/2, $wnd.imageURL);
-	$wnd.addWidgetAsFocusChildToLastContext(widget);
-	}-*/;
-	
 	public static native JavaScriptObject parseJson(String jsonStr) /*-{
-	  return eval(jsonStr);
+		return eval(jsonStr);
 	}-*/;
 }
