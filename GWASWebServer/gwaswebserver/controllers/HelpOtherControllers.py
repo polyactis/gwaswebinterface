@@ -240,19 +240,25 @@ class HelpothercontrollersController(BaseController):
 	@classmethod
 	def getAnalysisMethodInfo(cls, affiliated_table_name, extra_condition=None, extra_tables=None):
 		"""
+		2011-3-21
+			a new way of handling transformation_method_id, which doesn't require every ResultsMethod entry
+				having a non-null transformation_method_id.
 		2009-5-20
 			label no longer includes db id
 		2009-4-26
 			add description_ls in return
 		2008-10-19
 		"""
-		table_str = '%s s, %s p, %s t '%(affiliated_table_name, model.Stock_250kDB.AnalysisMethod.table.name,model.Stock_250kDB.TransformationMethod.table.name)
+		table_str = '%s s, %s p'%(affiliated_table_name, model.Stock_250kDB.AnalysisMethod.table.name)
+			#,model.Stock_250kDB.TransformationMethod.table.name)
 		if extra_tables:
 			table_str += ', %s'%extra_tables
-		where_condition = 'p.id=s.analysis_method_id AND s.transformation_method_id = t.id'
+		where_condition = ' p.id=s.analysis_method_id'
 		if extra_condition:
 			where_condition += ' and %s'%extra_condition
-		rows = model.db.metadata.bind.execute("select distinct p.id, p.short_name, p.method_description,s.transformation_method_id,t.name as transformation_name, s.pseudo_heritability from %s \
+		
+		rows = model.db.metadata.bind.execute("select distinct p.id, p.short_name, p.method_description, \
+			s.transformation_method_id, s.pseudo_heritability from %s \
 			where %s order by p.id"\
 			%(table_str, where_condition))
 		id_ls = []
@@ -265,7 +271,15 @@ class HelpothercontrollersController(BaseController):
 		for row in rows:
 			id2index[row.id] = len(id_ls)
 			id_ls.append(row.id)
-			label_ls.append('%s'%(row.short_name + (' (%s)' % row.transformation_name if row.transformation_method_id != 1 else '' )))
+			if row.transformation_method_id:
+				tm = model.Stock_250kDB.TransformationMethod.get(row.transformation_method_id)
+			else:
+				tm = None
+			if tm and tm.id != 1:
+				tm_description = ' (%s)' % tm.name
+			else:
+				tm_description = ''
+			label_ls.append('%s'%(row.short_name + tm_description))
 			description_ls.append(row.method_description)
 			pseudoHeritability_ls.append(row.pseudo_heritability)
 			
@@ -432,6 +446,8 @@ class HelpothercontrollersController(BaseController):
 	@classmethod
 	def getGWASResultsMethodGivenRequest(cls, request, id=None):
 		"""
+		2011-3-21
+			add code to deal with CNV association, which are tagged by cnv_method_id
 		2010-11-8
 			fix a bug: transformation_method_id could be 'None' (a string).
 		2010-10-26
@@ -445,13 +461,19 @@ class HelpothercontrollersController(BaseController):
 		if id:
 			rm = ResultsMethod.get(id)
 		else:
+			cnv_method_id = request.params.getone('cnv_method_id')
 			call_method_id = request.params.getone('call_method_id')
 			phenotype_method_id = request.params.getone('phenotype_method_id')
 			analysis_method_id = request.params.getone('analysis_method_id')
 			transformation_method_id = request.params.get('transformation_method_id', None)
-			query = ResultsMethod.query.filter_by(call_method_id=call_method_id).\
-				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id)
-			if transformation_method_id is not None and transformation_method_id!='None':
+			query = ResultsMethod.query.filter_by(phenotype_method_id=phenotype_method_id).\
+						filter_by(analysis_method_id=analysis_method_id)
+			if call_method_id and call_method_id!='None' and call_method_id!='0':	#2011-3-21
+				query = query.filter_by(call_method_id=call_method_id)
+			elif cnv_method_id and cnv_method_id!='None' and cnv_method_id!='0':	#2011-3-21
+				query = query.filter_by(cnv_method_id=cnv_method_id)
+			
+			if transformation_method_id and transformation_method_id!='None' and transformation_method_id!='0':	#2011-3-21
 				query = query.filter_by(transformation_method_id=transformation_method_id)
 			rm = query.first()
 		return rm
