@@ -28,6 +28,9 @@ import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
+import com.google.gwt.maps.client.overlay.Icon; 
+import com.google.gwt.maps.client.geom.Size;
+
 import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.http.client.Request;
@@ -185,6 +188,10 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 	public void addMarkers(AbstractDataTable dataTable, JSONObject ecotype_id2phenotype_value, double min_value, double max_value, String phenotype_method_id, int displayOption)
 	{
 		/*
+		 * 2011-4-30
+		 * 	remove the shadow of each marker.
+		 * 
+		 * 2010
 		 * 1. create 3 data tables
 		 * 2. for loop to add markers (with url for the icon) 
 		 * 3. add click callback on each marker
@@ -205,7 +212,13 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 			final String markerLabel = dataTable.getValueString(i, nativename_idx)+" ID: " + dataTable.getValueInt(i, ecotypeid_idx);
 			final MarkerOptions markerOption = MarkerOptions.newInstance();
 			markerOption.setTitle(markerLabel);	// title shows up as tooltip
+			
+			//2011-4-30 squash the shadow
+			final Icon icon = Icon.getDefaultIcon();
+			icon.setShadowSize(Size.newInstance(0, 0));
+			markerOption.setIcon(icon);
 			final Marker marker = new Marker(newNonOverlappingPnt(point), markerOption);
+			
 			if (ecotype_id2phenotype_value== null)
 			{
 				
