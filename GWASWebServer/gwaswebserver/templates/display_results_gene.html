@@ -1,0 +1,46 @@
+<%inherit file="/base.html"/>
+
+<%def name="title()">Types of Association between SNP and Genes</%def>
+View top candidate genes that are associated with top snps (under certain association rule) from associations results.
+<p>
+There are different ways of associating a SNP to a certain gene. The results are classified according to that.
+</p>
+
+% if len(c.score_rank_hist_type_ls)>0:
+	<table border=1>
+	
+	<tr>	
+	% for table_field in c.score_rank_hist_type_ls[0].c.keys():
+		<th>
+		% if table_field=='null_distribution_type_id':
+			Null distribution type
+		% else:
+			${table_field}
+		% endif
+		</th>
+	% endfor
+	
+	</tr>
+	
+	% for score_rank_hist_type in c.score_rank_hist_type_ls:
+		<tr>
+		% for table_field in score_rank_hist_type.c.keys():
+			<td>
+			% if table_field=='id':
+				<a href=${h.url(controller='DisplayResultsGene', action='gene_list_by_phenotype', id=score_rank_hist_type.id)}>${getattr(score_rank_hist_type, table_field, '')}</a>
+				## (${len(score_rank_hist_type.score_rank_hist_ls)} plots)
+			% elif table_field=='null_distribution_type_id':
+				${score_rank_hist_type.null_distribution_type.short_name}
+			% else:
+				${getattr(score_rank_hist_type, table_field, '')}
+			% endif
+			</td>
+		% endfor
+		</tr>
+	% endfor
+	
+	
+	</table>
+% else:
+	<p>Nothing in table ScoreRankHistogramType.</p>
+% endif

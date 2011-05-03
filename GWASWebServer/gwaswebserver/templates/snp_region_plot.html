@@ -1,0 +1,37 @@
+<%inherit file="/base.html"/>
+
+<%def name="title()">Types of SNP Region Plots</%def>
+
+% if len(c.snp_region_plot_type_ls)>0:
+	<table border=1>
+	
+	<tr>	
+	% for table_field in c.snp_region_plot_type_ls[0].table.columns.keys():
+		
+		<th>${table_field}</th>
+	% endfor
+	
+	</tr>
+	
+	% for snp_region_plot_type in c.snp_region_plot_type_ls:
+		<tr>
+		% for table_field in snp_region_plot_type.table.columns.keys():
+			<td>
+			% if table_field=='id':
+				<a href=${h.url(controller='SNPRegionPlot', action='type', id=snp_region_plot_type.id)}>${getattr(snp_region_plot_type, table_field, '')}</a>
+				##(${len(snp_region_plot_type.snp_region_plot_ls)} plots)
+				<a href=${h.url(controller='SNPRegionPlot', action='type_by_snp', id=snp_region_plot_type.id)}>SNP_by_Phenotype</a>
+				<a href=${h.url(controller='SNPRegionPlot', action='type_by_gene', id=snp_region_plot_type.id)}>Gene_by_Phenotype</a>
+			% else:
+				${getattr(snp_region_plot_type, table_field, '')}
+			% endif
+			</td>
+		% endfor
+		</tr>
+	% endfor
+	
+	
+	</table>
+% else:
+	<p>Nothing in table SNPRegionPlotType.</p>
+% endif

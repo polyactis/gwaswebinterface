@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+<%!
+	import datetime
+%>
+
+<%def name="title()">Web portal for Nordborg Lab database</%def>
+
+
+<%def name="head()">
+${ h.stylesheet_link('/css/management.css') }
+</%def>
+
+
+
+<%def name="footer()">
+	<p><a href="/hello">Web Portal</a> of database stock_250k from <a href=http://papaya.usc.edu/>Nordborg Lab</a>. Page generated at ${str(datetime.datetime.now())}. <a href=https://dl324b-1.cmb.usc.edu/projects/hapmap/newticket target="_blank">Feature Request/Bug Report</a>.</p>
+</%def>
+
+<html>
+    <head>
+    		${self.head()}
+        <title>${self.title()}</title>
+    </head>
+    <body>
+        ${self.body()}
+			<div class="footer">
+				${self.footer()}
+			</div>
+    </body>
+</html>
