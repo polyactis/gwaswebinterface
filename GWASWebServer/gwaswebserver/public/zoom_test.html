@@ -60,11 +60,11 @@ var imageURL = "/images/";
 var getFrequencyOverviewDataJsonFromTableCNVURL = "/CNV/getFrequencyOverviewDataJsonFromTableCNV?cnv_method_id=20&chromosome=1&smooth_type_id=3";
 var getGeneModelDataJsonURL = "/CNV/getGeneModelDataJson?chromosome=1";
 
-/*
+
 var init = new initializeContextsByFetchingData("overview", "randomData", 
 	getFrequencyOverviewDataJsonFromTableCNVURL, getGeneModelDataJsonURL,
 	width, overviewHeight, imageURL);
-*/
+
 
 /*
 if (overviewPanels.length>0){
@@ -78,6 +78,7 @@ var parentDivID = "overview";
 */
 //zoomTest("overview", fullData);
 
+/*
 var color = pv.Colors.category19().by(function(d) {return d.group});
  
 var vis = new pv.Panel()
@@ -98,16 +99,16 @@ layout.link.add(pv.Panel)
         ? ((l.targetNode.group == l.sourceNode.group)
         ? color(l.sourceNode) : "#555") : "#eee"})
     .antialias(false)
-    .lineWidth(1);
-    /*
+    .lineWidth(1)
     .anchor("top").add(pv.Label)
     .visible(function() {return this.parent.active()})
     .textStyle("white");
-     */
+
 layout.label.add(pv.Label)
     .textStyle(color);
  
 vis.render();
+*/
     </script>
         
     

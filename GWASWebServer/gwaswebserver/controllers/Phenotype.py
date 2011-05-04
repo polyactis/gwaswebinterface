@@ -73,6 +73,8 @@ class PhenotypeController(BaseController):
 	
 	def getPhenotypeHistogramData(self, id=None):
 		"""
+		2010-11-8
+			fix a bug: transformation_method_id could be 'None' (a string).
 		2009-4-6
 			return histogram data for google barchart
 		"""
@@ -80,7 +82,7 @@ class PhenotypeController(BaseController):
 		phenotype_method_id = request.params.get('phenotype_method_id', id)
 		transformation_method_id = request.params.get('transformation_method_id',None)
 		transformation_func = None
-		if transformation_method_id != '1' and transformation_method_id is not None:
+		if transformation_method_id!= '1' and transformation_method_id is not None and transformation_method_id!='None':	#2010-11-8
 			transformation = model.Stock_250kDB.TransformationMethod.query.filter_by(id = transformation_method_id).first()
 			if transformation.function != '':
 				transformation_func = getattr(OutputPhenotype, transformation.function)

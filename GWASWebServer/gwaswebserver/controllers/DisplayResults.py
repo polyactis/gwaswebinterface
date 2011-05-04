@@ -247,12 +247,17 @@ class DisplayresultsController(BaseController):
 	getCallMethodLsJson = classmethod(getCallMethodLsJson)
 	
 	@staticmethod
-	def getPhenotypeMethodLs(call_method_id):
+	def getPhenotypeMethodLs(call_method_id=None, cnv_method_id=None):
 		"""
+		2011-3-21
+			add argument cnv_method_id
 		2009-1-30
 		"""
 		affiliated_table_name = model.Stock_250kDB.ResultsMethod.table.name
-		extra_condition = 's.call_method_id=%s'%(call_method_id)
+		if call_method_id and call_method_id!='None' and call_method_id!='0':
+			extra_condition = 's.call_method_id=%s'%(call_method_id)
+		elif cnv_method_id and cnv_method_id!='None' and cnv_method_id!='0':
+			extra_condition = 's.cnv_method_id=%s'%(cnv_method_id)
 		phenotype_info  = hc.getPhenotypeInfo(affiliated_table_name=affiliated_table_name, extra_condition=extra_condition)
 		phenotype_method_ls = []
 		for i in range(len(phenotype_info.phenotype_method_id_ls)):
@@ -263,9 +268,16 @@ class DisplayresultsController(BaseController):
 	
 	@jsonify
 	def getPhenotypeMethodLsJson(self):
+		"""
+		2011-3-21
+			add code to deal with cnv_method_id
+		2009-1-30
+		"""
+		call_method_id = request.params.getone('call_method_id')
+		cnv_method_id = request.params.getone('cnv_method_id')
 		result = {
 				'options': [
-						dict(id=value, value=id) for id, value in self.getPhenotypeMethodLs(request.params.getone('call_method_id'))
+						dict(id=value, value=id) for id, value in self.getPhenotypeMethodLs(call_method_id, cnv_method_id=cnv_method_id)
 						]
 				}
 		#result['options'].append({'id': u'[At the end]', 'value': u''})
@@ -273,8 +285,13 @@ class DisplayresultsController(BaseController):
 		return result
 	
 	@staticmethod
-	def getAnalysisMethodLs(call_method_id, phenotype_method_id, transformation_method_id=None, analysis_method_id=None):
+	def getAnalysisMethodLs(call_method_id, phenotype_method_id, transformation_method_id=None, analysis_method_id=None,\
+						cnv_method_id=None):
 		"""
+		2011-3-21
+			add argument cnv_method_id
+		2010-11-8
+			fix a bug: transformation_method_id and analysis_method_id could be 'None' (a string).
 		2010-9-21
 			deal with the case that transformation_method_id is None
 		2010-3-11
@@ -282,13 +299,19 @@ class DisplayresultsController(BaseController):
 		2009-1-30
 		"""
 		affiliated_table_name = model.Stock_250kDB.ResultsMethod.table.name	#alias is 's'
-		extra_condition = 's.call_method_id=%s and s.phenotype_method_id=%s'%\
-				(call_method_id, phenotype_method_id,)
-		if transformation_method_id is not None:
+		if call_method_id and call_method_id!='None' and call_method_id!='0':
+			extra_condition = 's.call_method_id=%s '%(call_method_id)
+		elif cnv_method_id and cnv_method_id!='None' and cnv_method_id!='0':
+			extra_condition = 's.cnv_method_id=%s '%(cnv_method_id)
+		
+		if phenotype_method_id and phenotype_method_id!='None':
+			extra_condition += ' and s.phenotype_method_id=%s'%(phenotype_method_id,)
+		if transformation_method_id is not None and transformation_method_id!='None':	#2010-11-8
 			extra_condition += ' and s.transformation_method_id=%s'%transformation_method_id
 		
-		if analysis_method_id:
+		if analysis_method_id!='None' and analysis_method_id:	#2010-11-8
 			extra_condition += ' and s.analysis_method_id=%s'%analysis_method_id
+		
 		list_info = hc.getAnalysisMethodInfo(affiliated_table_name, extra_condition=extra_condition)
 		
 		analysis_method_ls = []
@@ -303,7 +326,13 @@ class DisplayresultsController(BaseController):
 	
 	@jsonify
 	def getAnalysisMethodLsJson(self):
+		"""
+		2011-3-21
+			add code to deal with cnv_method_id
+		2009-1-30
+		"""
 		call_method_id = request.params.getone('call_method_id')
+		cnv_method_id = request.params.get('cnv_method_id',None)
 		phenotype_method_id = request.params.getone('phenotype_method_id')
 		analysis_method_id = request.params.get('analysis_method_id', None)
 		transformation_method_id = request.params.get('transformation_method_id', None)
@@ -311,7 +340,8 @@ class DisplayresultsController(BaseController):
 				'options': [
 						dict(id=value, value=id, description=description,pseudoHeritability=pseudoHeritability) \
 						for id, value, description,pseudoHeritability in self.getAnalysisMethodLs(call_method_id, phenotype_method_id,\
-																			transformation_method_id=transformation_method_id,analysis_method_id=analysis_method_id)
+											transformation_method_id=transformation_method_id, \
+											analysis_method_id=analysis_method_id, cnv_method_id=cnv_method_id)
 						]
 				}
 		result['options'].insert(0, {'id': u'Please Choose ...', 'value': 0, 'description': ""})
@@ -341,7 +371,9 @@ class DisplayresultsController(BaseController):
 		log.info("Getting json_data from result %s ... \n"%rm.id)
 		from variation.src.common import getOneResultJsonData
 		log.info("Done.\n")
-		return getOneResultJsonData(rm, min_MAF, no_of_top_snps)
+		db_id2chr_pos = model.db.snp_id2chr_pos
+		pdata = PassingData(min_MAF=min_MAF,db_id2chr_pos=db_id2chr_pos)
+		return getOneResultJsonData(rm, min_MAF, no_of_top_snps,pdata=pdata)
 	
 	#@jsonify
 	def fetchOne(self, id=None):
