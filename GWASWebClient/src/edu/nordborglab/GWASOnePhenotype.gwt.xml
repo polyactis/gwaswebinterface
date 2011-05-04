@@ -20,7 +20,8 @@
 	<inherits name="com.google.gwt.i18n.I18N" />
 	<inherits name="com.google.gwt.maps.GoogleMaps" />
 	<inherits name="com.google.gwt.visualization.Visualization" />
-	<inherits name="org.danvk.dygraphs.Dygraph" />
+	<inherits name="at.gmi.nordborglab.widgets.gwasgeneviewer.GWASGeneViewer" />
+	<!-- <inherits name="org.danvk.dygraphs.Dygraph" /> -->
 	
 	<!-- Specify the app entry point class.                         -->
 	<entry-point class='edu.nordborglab.client.GWASOnePhenotype' />
