@@ -543,4 +543,13 @@ public class Common {
 	public static native String getCandidateGeneListURL() /*-{ return $wnd.candidateGeneListURL; }-*/;
 	public static native String getGeneListTypeID() /*-{ return $wnd.geneListTypeID; }-*/;
 	public static native String getFetchGeneListURL() /*-{ return $wnd.fetchGeneListURL; }-*/;
+	
+	public static String getSelectedValueInListBox(ListBox selectBox)
+	{
+		return selectBox.getValue(selectBox.getSelectedIndex());
+	}
+	public static String getSelectedItemTextInListBox(ListBox selectBox)
+	{
+		return selectBox.getItemText(selectBox.getSelectedIndex());
+	}
 }
