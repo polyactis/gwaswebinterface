@@ -99,6 +99,7 @@ public class GWASOnePhenotype implements EntryPoint {
 	public native String getSNPBaseURL()/*-{ return $wnd.SNPBaseURL}-*/;
 	public native String getAnalysisMethodLsURL()/*-{ return $wnd.getAnalysisMethodLsURL}-*/;
 	public native String getOneResultRawURL() /*-{ return $wnd.getOneResultRawURL}-*/;
+	public native String getGeneInfoUrl() /*-{ return $wnd.GeneInfoUrl;}-*/;
 	
 	private class JSONResponseTextHandler implements RequestCallback {
 		public void onError(Request request, Throwable exception) {
@@ -127,7 +128,7 @@ public class GWASOnePhenotype implements EntryPoint {
 						GWASOneResult gwaOneResult = new GWASOneResult(constants, jsonErrorDialog, popupLink, 
 								analysisMethodID, analysisMethodDescription, GWABaseURL, 
 								SNPBaseURL+"&analysis_method_id="+analysisMethodID,
-								getOneResultRawURL+"&analysis_method_id="+analysisMethodID,pseudoHeritability);
+								getOneResultRawURL+"&analysis_method_id="+analysisMethodID,pseudoHeritability,getGeneInfoUrl());
 						tPanel.add(gwaOneResult, analysisMethodName);
 					}
 				}

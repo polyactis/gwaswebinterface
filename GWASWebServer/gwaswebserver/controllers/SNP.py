@@ -44,6 +44,8 @@ class SnpController(BaseController):
 		
 		start_pos = c.position-40000
 		stop_pos = c.position+40000
+		c.start_pos = start_pos
+		c.stop_pos = stop_pos
 		track_id = '%s_%s_%s'%(c.call_method_id, c.phenotype_method_id, c.analysis_method_id)
 		c.gbrowseLink = config['app_conf']['GBrowseURL']%(start_pos, stop_pos, c.chromosome)+track_id+"-"+track_id+"_SNP"
 		
@@ -113,8 +115,8 @@ class SnpController(BaseController):
 				snp_annotation_text += ':gene %s'%snp_annotation.gene_id
 				gene = Gene.get(snp_annotation.gene_id)
 				#gene_touched = '%s %s'%(gene.gene_id, gene.gene_symbol)
-				gene_touched = '<a href='+config['app_conf']['NCBIGeneDBURL']%gene.gene_id+'  target="_blank">%s %s</a>'%\
-					(gene.gene_id, gene.gene_symbol)
+				gene_touched = '<a href='+config['app_conf']['NCBIGeneDBURL']%gene.ncbi_gene_id+'  target="_blank">%s %s</a>'%\
+					(gene.ncbi_gene_id, gene.gene_symbol)
 			if snp_annotation.comment:
 				snp_annotation_text += ':%s'%snp_annotation.comment
 			if len(snp_annotation_text_ls)>0:

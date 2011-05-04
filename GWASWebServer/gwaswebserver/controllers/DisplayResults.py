@@ -65,7 +65,10 @@ class DisplayresultsController(BaseController):
 		for row in rows:
 			if row.biology_category_id is not None:
 				biologyCategory = model.Stock_250kDB.BiologyCategory.get(row.biology_category_id)
-				phenotypeCategoryLs.append([str(biologyCategory.id), biologyCategory.short_name])
+				if biologyCategory is not None:
+					phenotypeCategoryLs.append([str(biologyCategory.id), biologyCategory.short_name])
+				else:
+					existNullCategoryID = True
 			else:
 				existNullCategoryID = True
 		if existNullCategoryID:
@@ -329,7 +332,7 @@ class DisplayresultsController(BaseController):
 		2009-1-30
 		"""
 		call_method_id = request.params.getone('call_method_id')
-		cnv_method_id = request.params.getone('cnv_method_id')
+		cnv_method_id = request.params.get('cnv_method_id',None)
 		phenotype_method_id = request.params.getone('phenotype_method_id')
 		analysis_method_id = request.params.get('analysis_method_id', None)
 		transformation_method_id = request.params.get('transformation_method_id', None)
@@ -368,13 +371,14 @@ class DisplayresultsController(BaseController):
 		log.info("Getting json_data from result %s ... \n"%rm.id)
 		from variation.src.common import getOneResultJsonData
 		log.info("Done.\n")
-		return getOneResultJsonData(rm, min_MAF, no_of_top_snps)
+		db_id2chr_pos = model.db.snp_id2chr_pos
+		pdata = PassingData(min_MAF=min_MAF,db_id2chr_pos=db_id2chr_pos)
+		return getOneResultJsonData(rm, min_MAF, no_of_top_snps,pdata=pdata)
 	
 	#@jsonify
 	def fetchOne(self, id=None):
+		import math
 		"""
-		2010-10-26
-			move the fetching ResultsMethod part to HelpOtherControllers
 		2009-5-13
 			apply min_MAF cutoff according to column min_maf in table analysis_method
 			
@@ -383,7 +387,25 @@ class DisplayresultsController(BaseController):
 		2009-1-30
 			return a dictionary with key as chromosome, value as google visualization data table representing association results.
 		"""
-		rm = hc.getGWASResultsMethodGivenRequest(request)
+		if id is None:
+			id = request.params.get('id', None)
+		if id is None:
+			id = request.params.get('results_id', None)
+		
+		chromosome = request.params.get('chromosome', None)
+		ResultsMethod = model.Stock_250kDB.ResultsMethod
+		if id:
+			rm = ResultsMethod.get(id)
+		else:
+			call_method_id = request.params.getone('call_method_id')
+			phenotype_method_id = request.params.getone('phenotype_method_id')
+			analysis_method_id = request.params.getone('analysis_method_id')
+			transformation_method_id = request.params.get('transformation_method_id', None)
+			query = ResultsMethod.query.filter_by(call_method_id=call_method_id).\
+				filter_by(phenotype_method_id=phenotype_method_id).filter_by(analysis_method_id=analysis_method_id)
+			if transformation_method_id is not None:
+				query = query.filter_by(transformation_method_id=transformation_method_id)
+			rm = query.first()
 		if rm is None:	#2010-9-28 this could still be nothing
 			return None
 		results_id = rm.id
@@ -395,26 +417,41 @@ class DisplayresultsController(BaseController):
 		else:
 			min_MAF = 0
 		
+		json_data = None
 		no_of_top_snps = 10000
 		ResultsMethodJson = model.Stock_250kDB.ResultsMethodJson
 		rm_json = ResultsMethodJson.query.filter_by(results_id=results_id).\
 				filter(ResultsMethodJson.min_MAF<=min_MAF+0.0001).filter(ResultsMethodJson.min_MAF>=min_MAF-0.0001).\
 				filter_by(no_of_top_snps=no_of_top_snps).first()
 		if rm_json:
-			return rm_json.json_data.__str__()
+			json_data =  rm_json.json_data.__str__()
 		else:
 			json_data = self.getOneResultJsonData(rm, min_MAF, no_of_top_snps)
-			try:
-				rm_json = ResultsMethodJson(results_id=rm.id, min_MAF=min_MAF, no_of_top_snps=no_of_top_snps)
-				rm_json.json_data = json_data
-				model.db.session.add(rm_json)
-				model.db.session.flush()	#db is in no transaction. automatically commit. 
-			except:
-				loginfo = "DB Saving Error: json_data of result %s, min_MAF %s, no_of_top_snps %s\n"%(results_id, min_MAF, no_of_top_snps)
-				loginfo += repr(sys.exc_info())
-				loginfo += repr(traceback.print_exc())
-				log.error(loginfo)
-			return json_data
+			#try:
+			#	rm_json = ResultsMethodJson(results_id=rm.id, min_MAF=min_MAF, no_of_top_snps=no_of_top_snps)
+			#	rm_json.json_data = json_data
+			#	model.db.session.add(rm_json)
+			#	model.db.session.flush()	#db is in no transaction. automatically commit. 
+			#except:
+			#	loginfo = "DB Saving Error: json_data of result %s, min_MAF %s, no_of_top_snps %s\n"%(results_id, min_MAF, no_of_top_snps)
+			#	loginfo += repr(sys.exc_info())
+			#	loginfo += repr(traceback.print_exc())
+			#	log.error(loginfo)
+		json_data_dec = simplejson.loads(json_data)
+		if 'no_of_tests' in json_data_dec:
+			json_data_dec['bonferroniThreshold'] = -math.log10(1.0/(json_data_dec['no_of_tests']*20.0))
+		else:
+			json_data_dec['bonferroniThreshold'] = -math.log10(1.0/(214000.0*20.0))
+		json_data = simplejson.dumps(json_data_dec)
+		if chromosome != None:
+			new_json_data = {}
+			new_json_data['chr2data'] = json_data_dec['chr2data'][chromosome]
+			new_json_data['chr2length'] = json_data_dec['chr2length'][chromosome]
+			new_json_data['max_length'] = json_data_dec['max_length']
+			new_json_data['max_value'] = json_data_dec['max_value']
+			new_json_data['bonferroniThreshold']   = json_data_dec['bonferroniThreshold']
+			json_data = simplejson.dumps(new_json_data)
+		return json_data
 	
 	def getCallMethodEigenValue(self):
 		"""
