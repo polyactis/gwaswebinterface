@@ -1,0 +1,41 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:gwas="urn:import:edu.nordborglab.client"
+	xmlns:viz="urn:import:com.google.gwt.visualization.client.visualizations">
+	<ui:style>
+		.important {
+		font-weight: bold;
+		}
+	</ui:style>
+	<g:DockLayoutPanel ui:field="panel" unit="EM">
+		<g:west size="50">
+			<g:HTMLPanel>
+				Selection:
+				<g:FormPanel ui:field="formPanel_x">
+					<g:FlowPanel ui:field="testFlowPanel">
+						<g:HTMLPanel>
+							Dataset:
+							<g:ListBox ui:field="call_method_listbox"></g:ListBox>
+						</g:HTMLPanel>
+						<g:HTMLPanel>
+							Analysis:
+							<g:ListBox ui:field="analysis_listbox"></g:ListBox>
+						</g:HTMLPanel>
+					</g:FlowPanel>
+				</g:FormPanel>
+			</g:HTMLPanel>
+		</g:west>
+		<g:south size="2">
+			<g:HTMLPanel>
+				test
+	   </g:HTMLPanel>
+		</g:south>
+		<g:center>
+			<!-- <viz:PieChart ui:field="pie">
+		</viz:PieChart> -->
+			<viz:MotionChart ui:field="motionChart">
+			</viz:MotionChart>
+		</g:center>
+	</g:DockLayoutPanel>
+
+</ui:UiBinder> 

@@ -1,0 +1,33 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
+<!-- above set at the top of the file will set     -->
+<!-- the browser's rendering engine into           -->
+<!-- "Quirks Mode". Replacing this declaration     -->
+<!-- with a "Standards Mode" doctype is supported, -->
+<!-- but may lead to some differences in layout.   -->
+
+<%inherit file="/base.html"/>
+<%def name="title()">Gene List ${c.list_type_id} ${c.list_short_name}</%def>
+
+
+<%def name="head()">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<link rel="stylesheet" type="text/css" href="${h.url('/style/style.css')}" />
+	<script type="text/javascript" language="javascript" src="/GeneListView/GeneListView.nocache.js"></script>
+</%def>
+
+<%def name="body()">
+	<div id="Summary">
+	<b>Gene List ID: </b> ${c.list_type_id}<br />
+	<b>Gene List Name: </b> ${c.list_short_name}<br />
+	<b>Gene List Description: </b> ${c.list_description}<br />
+	</div>
+	<script type="text/javascript">
+		google.load("visualization", "1", {packages:["table"]});
+		var fetchGeneListURL = "${c.fetchGeneListURL}";
+		
+	
+	</script>
+	<div id="geneListView"></div>
+	<iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+</%def>

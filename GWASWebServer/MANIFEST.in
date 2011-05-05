@@ -1,0 +1,3 @@
+include gwaswebserver/config/deployment.ini_tmpl
+recursive-include gwaswebserver/public *
+recursive-include gwaswebserver/templates *

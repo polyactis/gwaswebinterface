@@ -1,0 +1,134 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:gwas="urn:import:edu.nordborglab.client"
+	xmlns:viz="urn:import:com.google.gwt.visualization.client.visualizations">
+	<ui:style>
+		.important {
+		font-weight: bold;
+		}
+		.selection {
+		float: left;
+		margin:0 0 0 20px;
+		}
+
+		.selection_table {
+		float: left;
+		margin:0 0 0 50px;
+		}
+
+		.submit
+		{
+		height:100%;
+		float:bottom;
+		}
+
+
+		fieldset {
+		margin: 0.5em 0 0 0;
+		padding: 0;
+		width:35em;
+		}
+		legend {
+		margin-left: 1em;
+		padding: 0;
+		color: #000;
+		font-weight: bold;
+		}
+		label {
+		float: left;
+		width: 7em;
+		margin-right: 1em;
+		}
+		fieldset ol {
+		padding: 0em 1em 0 1em;
+		list-style: none;
+		}
+		fieldset li {
+		padding-bottom: 0.2em;
+		}
+		fieldset.submit {
+		border-style: none;
+		}
+		
+		
+		
+	
+	</ui:style>
+	<g:DockLayoutPanel ui:field="panel" unit="EM">
+		<g:north size="13">
+			<g:FlowPanel>
+				<g:HTMLPanel addStyleNames='{style.selection}'>
+					<fieldset>
+						<legend>X-Axis</legend>
+						<ol>
+							<li>
+								<label for="x_call_method_listbox">Dataset</label>
+								<g:ListBox ui:field="x_call_method_listbox"></g:ListBox>
+								<br></br>
+							</li>
+							<li>
+								<label for="x_phenotype_listbox">Phenotype</label>
+								<g:ListBox ui:field="x_phenotype_listbox"></g:ListBox>
+								<br></br>
+							</li>
+							<li>
+								<label for="x_results_listbox">Result</label>
+								<g:ListBox ui:field="x_results_listbox"></g:ListBox>
+								<br></br>
+							</li>
+							<li>
+								<label for="x_results_file">GWAS-Files</label>
+								<g:ListBox ui:field="x_results_file"></g:ListBox>
+								<br></br>
+							</li>
+						</ol>
+					</fieldset>
+				</g:HTMLPanel>
+				<g:HTMLPanel addStyleNames='{style.selection}'>
+					<fieldset>
+						<legend>Y-Axis</legend>
+						<ol>
+							<li>
+								<label for="y_call_method_listbox">Dataset</label>
+								<g:ListBox ui:field="y_call_method_listbox"></g:ListBox>
+								<br></br>
+							</li>
+							<li>
+								<label for="y_phenotype_listbox">Phenotype</label>
+								<g:ListBox ui:field="y_phenotype_listbox"></g:ListBox>
+								<br></br>
+							</li>
+							<li>
+								<label for="y_results_listbox">Result</label>
+								<g:ListBox ui:field="y_results_listbox"></g:ListBox>
+								<br></br>
+							</li>
+							<li>
+								<label for="y_results_file">GWAS-Files</label>
+								<g:ListBox ui:field="y_results_file"></g:ListBox>
+								<br></br>
+							</li>
+						</ol>
+					</fieldset>
+				</g:HTMLPanel>
+				<g:HTMLPanel addStyleNames="{style.submit}">
+					<g:Button ui:field="submitButton" addStyleNames='{style.selection}'
+						enabled="false" text="Submit">
+					</g:Button>
+				</g:HTMLPanel>
+			</g:FlowPanel>
+		</g:north>
+		<g:center>
+			<g:FlowPanel>
+				<g:HTMLPanel addStyleNames='{style.selection}'>
+					<viz:ScatterChart ui:field="scatterChart">
+					</viz:ScatterChart>
+				</g:HTMLPanel>
+				<g:HTMLPanel addStyleNames='{style.selection_table}'>
+					<viz:Table ui:field="table">
+					</viz:Table>
+				</g:HTMLPanel>
+			</g:FlowPanel>
+		</g:center>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 
