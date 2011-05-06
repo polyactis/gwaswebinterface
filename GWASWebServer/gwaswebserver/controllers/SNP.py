@@ -236,6 +236,9 @@ class SnpController(BaseController):
 		description = dict(column_name_type_ls)
 		rows = model.db.metadata.bind.execute("select * from view_call where call_method_id=%s"%(c.call_method_id))
 		return_ls = []
+		snpdata_key = key = '%s_%s'%(c.chromosome, c.position)
+		if snpData.isSNPId() == True:
+			snpdata_key = str(model.db.chr_pos2snp_id.get((c.chromosome,c.position)))
 		for row in rows:
 			pcs = call_info_id2pcs.get(row.call_info_id)
 			if pcs:
@@ -255,7 +258,7 @@ class SnpController(BaseController):
 			label = '%s ID:%s Phenotype:%s.'%(row.nativename, row.ecotype_id, phenotype_value)
 			
 			snpdata_row_index = snpData.row_id2row_index.get(str(row.ecotype_id))
-			snpdata_col_index = snpData.col_id2col_index.get('%s_%s'%(c.chromosome, c.position))
+			snpdata_col_index = snpData.col_id2col_index.get(snpdata_key)
 			if snpdata_row_index is None or snpdata_col_index is None:
 				allele = -2
 			else:
