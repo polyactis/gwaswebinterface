@@ -123,7 +123,6 @@ def load_environment(global_conf, app_conf):
 		gene_annotation = DrawSNPRegion_ins.dealWithGeneAnnotation(gene_annotation_picklef, cls_with_db_args=DrawSNPRegion_ins)
 		return gene_annotation
 	model.gene_annotation = dealWithGeneAnnotation()
-	return config
 	
 	#2008-11-05 a dictionary to link two type-tables in order to cross-link pages of DisplayTopSNPTestRM and ScoreRankHistogram/DisplayResultsGene
 	sys.stderr.write("Getting a map between CandidateGeneTopSNPTestRMType id and ScoreRankHistogramType id ... ")
