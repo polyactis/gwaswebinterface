@@ -7,6 +7,7 @@
 package edu.nordborglab.client;
 
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -21,6 +22,8 @@ import com.google.gwt.visualization.client.Selection;
 import com.google.gwt.visualization.client.events.SelectHandler;
 import com.google.gwt.visualization.client.events.SelectHandler.SelectEvent;
 import com.google.gwt.maps.client.InfoWindowContent;
+import com.google.gwt.maps.client.MapPane;
+import com.google.gwt.maps.client.MapPaneType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.control.LargeMapControl;
@@ -30,6 +33,8 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
 import com.google.gwt.maps.client.overlay.Icon; 
 import com.google.gwt.maps.client.geom.Size;
+import com.google.gwt.event.dom.client.ChangeHandler; 
+import com.google.gwt.event.dom.client.ChangeEvent;
 
 import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.InfoWindow;
@@ -47,6 +52,8 @@ import com.google.gwt.json.client.JSONValue;
 import java.util.HashMap;
 import edu.nordborglab.module.Pair;
 
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 
 
 public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.CustomVisualizationDrawOptions> implements Selectable{
@@ -69,6 +76,7 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 	private HorizontalPanel topHPanel = new HorizontalPanel();
 
 	private MapWidget map;
+	public MapPane pane;
 	private VerticalPanel dialogVPanel = new VerticalPanel();
 	private DisplayJSONObject jsonErrorDialog;
 
@@ -94,8 +102,10 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 	//private HashMap<LatLng, Integer> latlngPnt2counter = new HashMap<LatLng, Integer>();	LatLng's hashcode() is different on same GPS coordinates.
 	private HashMap<Pair<Double, Double>, Integer> latlngPnt2counter = new HashMap<Pair<Double, Double>, Integer>();
 	
-	private String mapWidth = "1000px";
-	private String mapHeight = "400px";
+	private int width;
+	private int height;
+	private String mapWidth = "1400px";
+	private String mapHeight = "800px";
 	LatLng mapCenter = LatLng.newInstance(30.93992433102344, 121.5966796875);	//it's shanghai
 
 	public MapWithPhenotype(AccessionConstants constants, DisplayJSONObject jsonErrorDialog) {
@@ -106,32 +116,39 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 
 		// setSize("800px", "600px");
 		
-		/*
-		 * 2009-5-3 commented out, wait for later improvement
-		fillPhenotypeSelectBox(phenotypeSelectBox);
-		phenotypeSelectBox.addChangeListener(new ChangeListener() {
-			public void onChange(Widget sender) {
+		// 2009-5-3 commented out, wait for later improvement
+		//fillPhenotypeSelectBox(phenotypeSelectBox);
+		phenotypeSelectBox.addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent event) {
 				refreshMap(map, phenotypeSelectBox.getSelectedIndex(), displayOptionSelectBox.getSelectedIndex());
 				//multiBox.ensureDebugId("cwListBox-multiBox");
 			}
 		});
 
-		String[] displayOptions = {constants.MapWithPhenotypeDisplayOption1(), constants.MapWithPhenotypeDisplayOption2(), constants.MapWithPhenotypeDisplayOption3()};
+		String[] displayOptions = {constants.MapWithPhenotypeDisplayOption1(), constants.MapWithPhenotypeDisplayOption2(), 
+				constants.MapWithPhenotypeDisplayOption3()};
 		for (int i = 0; i < displayOptions.length; i++) {
 			displayOptionSelectBox.addItem(displayOptions[i]);
 		}
-		displayOptionSelectBox.addChangeListener(new ChangeListener() {
-			public void onChange(Widget sender) {
+		displayOptionSelectBox.addChangeHandler(new ChangeHandler() {
+			public void onChange(ChangeEvent event) {
 				refreshMap(map, phenotypeSelectBox.getSelectedIndex(), displayOptionSelectBox.getSelectedIndex());
 				//multiBox.ensureDebugId("cwListBox-multiBox");
 			}
 		});
 		topHPanel.add(phenotypeSelectBox);
 		topHPanel.add(displayOptionSelectBox);
+		
+		
+		map = new MapWidget(mapCenter, 3);
+		resetMapSize();
+		/*
+		width = Window.getClientWidth()-100;
+		height = Window.getClientHeight()-250;
+		
+		map.setSize(width+"px", height+"px");
 		*/
 		
-		map = new MapWidget(mapCenter, 1);
-		map.setSize(mapWidth, mapHeight);
 		// Add some controls for the zoom level
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
@@ -140,10 +157,18 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		map.setScrollWheelZoomEnabled(true);
 		map.setVisible(true);
 		
+		pane = map.getPane(MapPaneType.MARKER_PANE);
+		//pane.getParent();
+		
 		dialogVPanel.add(map);
 		dialogVPanel.add(topHPanel);
 		initWidget(dialogVPanel);
-
+		Window.addResizeHandler(new ResizeHandler(){
+			@Override
+			public void onResize(ResizeEvent event) {
+				resetMapSize();
+			}
+		});
 	}
 
 	public void findLatLongCol(AbstractDataTable dataTable)
@@ -199,7 +224,7 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		latlngPnt2counter.clear();	//clear up
 		rowIndex2Marker.clear();
 		map.clearOverlays();
-		map.setSize(mapWidth, mapHeight);	//2009-4-17 this would avoid map partial blank.
+		//map.setSize(mapWidth, mapHeight);	//2009-4-17 this would avoid map partial blank.
 		
 		double latitude;
 		double longitude;
@@ -411,6 +436,9 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 	
 	public void resetMapSize()
 	{
-		map.setSize(mapWidth, mapHeight);
+		width = Window.getClientWidth()-50;
+		height = Window.getClientHeight() - 250;
+		map.setSize(width+"px", height+"px");
+		//map.setSize(mapWidth, mapHeight);
 	}
 }
