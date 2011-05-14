@@ -38,12 +38,7 @@ public class MapCustomShapeOverlay extends Composite {
 		public void setColor(String color) {
 			DOM.setStyleAttribute(getElement(), "color", color);
 		}
-		public void setBackgroundCo/*
-		 * 2011-5-13
-		 * 	a map overlay powered by the canvas widget in GWT. It will be drawn on a MapCanvasOverlay canvas,
-		 * 	which is shared by all markers like this one. MapCanvasOverlay is added to the map before all these markers
-		 * 	are added.
-		 */lor(String color) {
+		public void setBackgroundColor(String color) {
 			DOM.setStyleAttribute(getElement(), "backgroundColor", color);
 		}
 		public void setBorderRadius(String width) {
