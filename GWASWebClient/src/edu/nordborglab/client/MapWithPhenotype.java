@@ -7,6 +7,8 @@
 package edu.nordborglab.client;
 
 
+import com.google.gwt.user.client.Random;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;
@@ -14,6 +16,10 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.visualization.client.AbstractDataTable;
 import com.google.gwt.visualization.client.AbstractVisualization;
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
+import com.google.gwt.canvas.dom.client.FillStrokeStyle;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.visualization.client.AbstractDrawOptions;
 import com.google.gwt.ajaxloader.client.ArrayHelper;
@@ -32,11 +38,15 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.MarkerOptions;
 import com.google.gwt.maps.client.overlay.Icon; 
+import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.geom.Size;
 import com.google.gwt.event.dom.client.ChangeHandler; 
 import com.google.gwt.event.dom.client.ChangeEvent;
 
+import com.google.gwt.maps.client.event.MapMoveEndHandler;
+import com.google.gwt.maps.client.event.MapMoveHandler;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
+import com.google.gwt.maps.client.event.MarkerMouseOverHandler;
 import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -77,6 +87,10 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 
 	private MapWidget map;
 	public MapPane pane;
+	
+	// 2011-5-12 canvas to draw anything we want
+	private MapCanvasOverlay mapCanvas;
+
 	private VerticalPanel dialogVPanel = new VerticalPanel();
 	private DisplayJSONObject jsonErrorDialog;
 
@@ -89,7 +103,7 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 	private int nativename_idx = 2;
 	private int ecotypeid_idx = 0;
 
-	private final HashMap<Integer, Marker> rowIndex2Marker = new HashMap<Integer, Marker>();
+	private final HashMap<Integer, Overlay> rowIndex2Marker = new HashMap<Integer, Overlay>();
 	private int selectedRow=-1;
 	private SelectHandler selectHandler;
 	
@@ -102,19 +116,18 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 	//private HashMap<LatLng, Integer> latlngPnt2counter = new HashMap<LatLng, Integer>();	LatLng's hashcode() is different on same GPS coordinates.
 	private HashMap<Pair<Double, Double>, Integer> latlngPnt2counter = new HashMap<Pair<Double, Double>, Integer>();
 	
+	// map width and height
 	private int width;
 	private int height;
-	private String mapWidth = "1400px";
-	private String mapHeight = "800px";
 	LatLng mapCenter = LatLng.newInstance(30.93992433102344, 121.5966796875);	//it's shanghai
-
+	
+	
 	public MapWithPhenotype(AccessionConstants constants, DisplayJSONObject jsonErrorDialog) {
 		this.constants = constants;
 		this.jsonErrorDialog = jsonErrorDialog;
 		// Set the dialog box's caption.
 		//setText(DIALOG_DEFAULT_TEXT);
 
-		// setSize("800px", "600px");
 		
 		// 2009-5-3 commented out, wait for later improvement
 		//fillPhenotypeSelectBox(phenotypeSelectBox);
@@ -133,6 +146,7 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		displayOptionSelectBox.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				refreshMap(map, phenotypeSelectBox.getSelectedIndex(), displayOptionSelectBox.getSelectedIndex());
+				resetMapSize();
 				//multiBox.ensureDebugId("cwListBox-multiBox");
 			}
 		});
@@ -141,13 +155,30 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		
 		
 		map = new MapWidget(mapCenter, 3);
-		resetMapSize();
+		mapCanvas = new MapCanvasOverlay(mapCenter);
+		map.addOverlay(mapCanvas);
+		map.addMapMoveHandler(new MapMoveHandler(){
+			@Override
+			public void onMove(MapMoveEvent event) {
+				/*
+				 * 2011-5-13 every time map moves, reset the mapCanvas
+				 */
+				mapCanvas.resetWidgetPositionAfterMapMove();
+			}
+			
+		});
 		/*
-		width = Window.getClientWidth()-100;
-		height = Window.getClientHeight()-250;
-		
-		map.setSize(width+"px", height+"px");
+		map.addMapMoveEndHandler(new MapMoveEndHandler(){
+			@Override
+			public void onMoveEnd(MapMoveEndEvent event) {
+				//mapCanvas.drawMarkerList();
+			}
+			
+			
+		});
 		*/
+		resetMapSize();
+		
 		
 		// Add some controls for the zoom level
 		map.addControl(new LargeMapControl());
@@ -157,11 +188,9 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		map.setScrollWheelZoomEnabled(true);
 		map.setVisible(true);
 		
-		pane = map.getPane(MapPaneType.MARKER_PANE);
-		//pane.getParent();
-		
 		dialogVPanel.add(map);
 		dialogVPanel.add(topHPanel);
+		
 		initWidget(dialogVPanel);
 		Window.addResizeHandler(new ResizeHandler(){
 			@Override
@@ -169,8 +198,28 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 				resetMapSize();
 			}
 		});
+		
+		//context.drawImage(canvas.getCanvasElement(), 0.0, 0.0);
+		/*
+		 * 2011-5-13 drawing in the constructor won't show anything.
+		context.setFillStyle(redrawColor);
+		context.fillRect(0, 0, 200, 200);
+		context.fill();
+		 */
+		
+		/*
+		 * 2011-5-13 test using a timer to add random rectangles
+		final Timer timer = new Timer() {
+			@Override
+			public void run() {
+				drawSomethingNew();
+			}
+		};
+		timer.scheduleRepeating(1500);
+		*/
 	}
 
+	
 	public void findLatLongCol(AbstractDataTable dataTable)
 	{
 		int no_of_cols = dataTable.getNumberOfColumns();
@@ -224,38 +273,49 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		latlngPnt2counter.clear();	//clear up
 		rowIndex2Marker.clear();
 		map.clearOverlays();
-		//map.setSize(mapWidth, mapHeight);	//2009-4-17 this would avoid map partial blank.
+		mapCanvas.clearMarkerList();
+		map.addOverlay(mapCanvas);
 		
 		double latitude;
 		double longitude;
 		for (int i=0; i<dataTable.getNumberOfRows(); i++)
 		{
-			latitude = dataTable.getValueDouble(i, latitude_idx);
-			longitude = dataTable.getValueDouble(i, longitude_idx);
+			latitude = (double)dataTable.getValueDouble(i, latitude_idx);
+			longitude = (double)dataTable.getValueDouble(i, longitude_idx);
+			//latitude = Random.nextInt(70);	//(double)dataTable.getValueDouble(i, latitude_idx);
+			//longitude = Random.nextInt(120); //(double)dataTable.getValueDouble(i, longitude_idx);
 			LatLng point = LatLng.newInstance(latitude, longitude);
 			
 			final String markerLabel = dataTable.getValueString(i, nativename_idx)+" ID: " + dataTable.getValueInt(i, ecotypeid_idx);
 			final MarkerOptions markerOption = MarkerOptions.newInstance();
 			markerOption.setTitle(markerLabel);	// title shows up as tooltip
-			
+			/*
 			//2011-4-30 squash the shadow
 			final Icon icon = Icon.getDefaultIcon();
 			icon.setShadowSize(Size.newInstance(0, 0));
 			markerOption.setIcon(icon);
 			final Marker marker = new Marker(newNonOverlappingPnt(point), markerOption);
-			
+			*/
+			//final MapOverlayByCanvas marker = new MapOverlayByCanvas(newNonOverlappingPnt(point), 50);
+			//final MapCustomShapeOverlay.RectangleOverlay marker = new MapCustomShapeOverlay.RectangleOverlay(newNonOverlappingPnt(point), 
+			//		0.5, markerLabel, i, 5, "rgba(255, 0, 0, 0.5)");
+			//final MapProtovisDotOverlay marker = new MapProtovisDotOverlay(newNonOverlappingPnt(point), 0.5, markerLabel, i, 0.0, 1.0);
+			//final MapMarkerTextOverlay marker = new MapMarkerTextOverlay(newNonOverlappingPnt(point), "ABC");
+			final MapMarkerOverlayByCanvas marker = new MapMarkerOverlayByCanvas(mapCanvas, newNonOverlappingPnt(point), markerLabel, i, 10, "rgba(255, 0, 0, 0.5)");
 			if (ecotype_id2phenotype_value== null)
 			{
 				
 			}
 			final int rowIndex = i;
 			rowIndex2Marker.put(rowIndex, marker);
-
 			map.addOverlay(marker);
+			mapCanvas.addOneMarker(marker);
+			
+			/*
 			marker.addMarkerClickHandler(new MarkerClickHandler() {
 				public void onClick(MarkerClickEvent event) {
 					InfoWindow info = map.getInfoWindow();
-					info.open(marker, new InfoWindowContent(markerLabel));
+					info.open(marker.getLatLng(), new InfoWindowContent(markerLabel));
 					selectedRow = rowIndex;
 					//Selection.triggerSelection(MapWithPhenotype.this, getSelections());	//2009-4-9  doesn't work
 					if (selectHandler!=null)	//2009-4-9 check if selectHandler is initialized.
@@ -266,14 +326,17 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 					//MapWithPhenotype.this.fireSelectionEvent();	//2009-4-9 fireSelectionEvent() below doesn't work 
 				}
 			});
-			/*
+			
+			
+			
 			marker.addMarkerMouseOverHandler(new MarkerMouseOverHandler(){
 				public void onMouseOver(MarkerMouseOverEvent event) {
 					InfoWindow info = map.getInfoWindow();
-					info.open(marker, new InfoWindowContent(markerLabel));
+					info.open(marker.getLatLng(), new InfoWindowContent(markerLabel));
 				}
 			});
-			 */
+			*/
+			
 		}
 
 	}
@@ -287,7 +350,7 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		public void onResponseReceived(Request request, Response response) {
 			String responseText = response.getText();
 			try {
-				JSONValue jsonValue = JSONParser.parse(responseText);
+				JSONValue jsonValue = JSONParser.parseStrict(responseText);
 				JSONObject jsonObject = jsonValue.isObject();
 				double min_value = jsonObject.get("min_value").isNumber().doubleValue();
 				double max_value = jsonObject.get("max_value").isNumber().doubleValue();
@@ -334,7 +397,7 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		public void onResponseReceived(Request request, Response response) {
 			String responseText = response.getText();
 			try {
-				JSONArray phenotypeMethodArray = JSONParser.parse(responseText).isArray();
+				JSONArray phenotypeMethodArray = JSONParser.parseStrict(responseText).isArray();
 				for (int i = 0; i < phenotypeMethodArray.size(); i++) {
 					JSONArray phenotypeTuple = phenotypeMethodArray.get(i).isArray();
 					String phenotype_id = phenotypeTuple.get(0).isString().stringValue();
@@ -376,10 +439,10 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 			}
 			if (rowIndex!=null)
 			{
-				Marker marker = rowIndex2Marker.get(rowIndex);
-				map.setCenter(marker.getLatLng());
+				Overlay marker = rowIndex2Marker.get(rowIndex);
+				//map.setCenter(marker.getLatLng());
 				InfoWindow info = map.getInfoWindow();
-				info.open(marker, new InfoWindowContent(marker.getTitle()));
+				//info.open(marker, new InfoWindowContent(marker.getTitle()));
 			}
 		}
 	}
@@ -399,7 +462,7 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 	
 	private LatLng newNonOverlappingPnt(LatLng point)
 	{
-		Pair key = Pair.from(point.getLatitude(), point.getLongitude());
+		Pair<Double, Double> key = Pair.from(point.getLatitude(), point.getLongitude());
 		if (!latlngPnt2counter.containsKey(key))
 		{
 			
@@ -439,6 +502,14 @@ public class MapWithPhenotype extends AbstractVisualization<MapWithPhenotype.Cus
 		width = Window.getClientWidth()-50;
 		height = Window.getClientHeight() - 250;
 		map.setSize(width+"px", height+"px");
+		mapCanvas.reSizeWidget();
+		mapCanvas.resetWidgetPosition();
+		/*
+		mapCanvas.canvas.setWidth(width+"px");
+		mapCanvas.canvas.setHeight(height + "px");
+		mapCanvas.canvas.setCoordinateSpaceWidth(width);
+		mapCanvas.canvas.setCoordinateSpaceHeight(height);
+		*/
 		//map.setSize(mapWidth, mapHeight);
 	}
 }
