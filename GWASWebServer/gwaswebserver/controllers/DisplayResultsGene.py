@@ -814,7 +814,7 @@ class DisplayresultsgeneController(BaseController):
 		
 		from variation.src.GeneListRankTest import GeneListRankTest
 		if list_type_id>0:	#2009-2-22
-			candidate_gene_set = GeneListRankTest.dealWithCandidateGeneList(list_type_id, return_set=True)
+			candidate_gene_set = model.db.dealWithCandidateGeneList(list_type_id, return_set=True) 
 		else:
 			candidate_gene_set = set()
 		
