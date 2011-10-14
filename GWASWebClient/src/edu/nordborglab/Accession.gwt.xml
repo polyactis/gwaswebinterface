@@ -7,7 +7,7 @@
 	<inherits name="com.google.gwt.i18n.I18N" />
 	<inherits name="com.google.gwt.visualization.Visualization" />
 	<inherits name="com.google.gwt.maps.GoogleMaps" />
-	<inherits name="org.danvk.dygraphs.Dygraph" />
+	<!-- <inherits name="org.danvk.dygraphs.Dygraph" /> -->
 	<!-- <inherits name='com.mallardsoft.tuple'/> -->
 	<!-- <source path="com/mallardsoft/"/> -->
 	<!-- <super-source path="tuple"/> -->
@@ -39,6 +39,7 @@
 	<replace-with class="com.google.gwt.canvas.client.Canvas.CanvasElementSupportDetectedMaybe">
 		<when-type-is class="com.google.gwt.canvas.client.Canvas.CanvasElementSupportDetector" />
 	</replace-with>
+	<inherits name="at.gmi.nordborglab.widgets.gwasgeneviewer.GWASGeneViewer"/>
 
 
 

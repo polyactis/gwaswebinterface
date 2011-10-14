@@ -95,6 +95,15 @@ public interface AccessionConstants extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("GBrowse")
   @Key("GBrowseHelpID")
   String GBrowseHelpID();
+  
+  /**
+   * Translated "GWASGeneViewer".
+   * 
+   * @return translated "GWASGeneViewer"
+   */
+  @DefaultStringValue("GWASGeneViewer")
+  @Key("GWASGeneViewerHelpId")
+  String GWASGeneViewerHelpId();
 
   /**
    * Translated "GWASOneResult".

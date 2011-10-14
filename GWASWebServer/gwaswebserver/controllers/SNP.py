@@ -44,6 +44,8 @@ class SnpController(BaseController):
 		
 		start_pos = c.position-40000
 		stop_pos = c.position+40000
+		c.start_pos = start_pos
+		c.stop_pos = stop_pos
 		track_id = '%s_%s_%s'%(c.call_method_id, c.phenotype_method_id, c.analysis_method_id)
 		c.gbrowseLink = config['app_conf']['GBrowseURL']%(start_pos, stop_pos, c.chromosome)+track_id+"-"+track_id+"_SNP"
 		
@@ -113,8 +115,8 @@ class SnpController(BaseController):
 				snp_annotation_text += ':gene %s'%snp_annotation.gene_id
 				gene = Gene.get(snp_annotation.gene_id)
 				#gene_touched = '%s %s'%(gene.gene_id, gene.gene_symbol)
-				gene_touched = '<a href='+config['app_conf']['NCBIGeneDBURL']%gene.gene_id+'  target="_blank">%s %s</a>'%\
-					(gene.gene_id, gene.gene_symbol)
+				gene_touched = '<a href='+config['app_conf']['NCBIGeneDBURL']%gene.ncbi_gene_id+'  target="_blank">%s %s</a>'%\
+					(gene.ncbi_gene_id, gene.gene_symbol)
 			if snp_annotation.comment:
 				snp_annotation_text += ':%s'%snp_annotation.comment
 			if len(snp_annotation_text_ls)>0:
@@ -234,6 +236,9 @@ class SnpController(BaseController):
 		description = dict(column_name_type_ls)
 		rows = model.db.metadata.bind.execute("select * from view_call where call_method_id=%s"%(c.call_method_id))
 		return_ls = []
+		snpdata_key = key = '%s_%s'%(c.chromosome, c.position)
+		if snpData.isSNPId() == True:
+			snpdata_key = str(model.db.chr_pos2snp_id.get((c.chromosome,c.position)))
 		for row in rows:
 			pcs = call_info_id2pcs.get(row.call_info_id)
 			if pcs:
@@ -253,7 +258,7 @@ class SnpController(BaseController):
 			label = '%s ID:%s Phenotype:%s.'%(row.nativename, row.ecotype_id, phenotype_value)
 			
 			snpdata_row_index = snpData.row_id2row_index.get(str(row.ecotype_id))
-			snpdata_col_index = snpData.col_id2col_index.get('%s_%s'%(c.chromosome, c.position))
+			snpdata_col_index = snpData.col_id2col_index.get(snpdata_key)
 			if snpdata_row_index is None or snpdata_col_index is None:
 				allele = -2
 			else:

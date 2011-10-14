@@ -93,6 +93,7 @@ class PhenotypeController(BaseController):
 			if phenotype_value != 'NA':
 				phenotype_value_ls.append(phenotype_value)
 		import matplotlib
+		matplotlib.__version__
 		count_ls, bins, patches = matplotlib.pyplot.hist(phenotype_value_ls, 20)
 		
 		column_name_type_ls = [("x_axis", ("string","Phenotype Value")), \
