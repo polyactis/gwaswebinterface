@@ -94,6 +94,8 @@ class AccessionController(BaseController):
 	@classmethod
 	def findAccessions(cls, condition=None, extra_tables=None):
 		"""
+		2011-10-14
+			rename tg_ecotypeid to accession_id
 		2009-4-19
 			add argument 'extra_tables'
 		2009-4-14
@@ -124,7 +126,7 @@ class AccessionController(BaseController):
 							'250k': model.ecotype_id_set_250k}
 		
 		#3rd finally construct the full data and turn it into json
-		column_name_type_ls = [("ecotypeid", ("number", "Ecotype ID")), ("tg_ecotypeid", ("number", "Unique Ecotype ID")), \
+		column_name_type_ls = [("ecotypeid", ("number", "Ecotype ID")), ("accession_id", ("number", "Unique Ecotype ID")), \
 							("name", ("string","Name")), \
 							("nativename", ("string","Native Name")), ("alias", ("string","Alias")), \
 							("stockparent",("string", "Stock Parent")), ("haplo_group_id",("string", "149SNP Haplo-Group")), \
@@ -154,6 +156,7 @@ class AccessionController(BaseController):
 				else:
 					default_value = None
 				
+				row.accession_id = row.tg_ecotypeid	# 2011-5-13 tg_ecotypeid is renamed to accession_id
 				if column_name == 'collector':
 					column_value = '%s %s'%(row.firstname, row.surname)
 				elif column_name == '2010' or column_name=='384' or column_name=='perlegen' or column_name=='250k':
