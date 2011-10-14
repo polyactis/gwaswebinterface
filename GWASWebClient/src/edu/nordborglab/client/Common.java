@@ -1,5 +1,7 @@
 package edu.nordborglab.client;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -40,7 +42,7 @@ public class Common {
 	
 	/*
 	 * 2009-4-25 ``double jsonify`` means the data structure from the server gets jsonified twice on the server end. 
-	 * JSONParser.parse() would return it with double quote (") on both ends, need to remove.
+	 * JSONParser.parseStrict() would return it with double quote (") on both ends, need to remove.
 	 */
 	public static native DataTable doubleJsonify2DataTable(String json) /*-{
 	dataTable = new $wnd.google.visualization.DataTable(eval("("+json.substring(1, json.length-1)+")"), 0.5); 
@@ -68,7 +70,7 @@ public class Common {
 			String responseText = response.getText();
 			this.selectBox.clear();
 			try {
-				JSONObject options = JSONParser.parse(responseText).isObject();
+				JSONObject options = JSONParser.parseStrict(responseText).isObject();
 				JSONArray optionArray = options.get("options").isArray();
 				for (int i = 0; i < optionArray.size(); i++) {
 					JSONObject idValueDict= optionArray.get(i).isObject();
@@ -119,6 +121,19 @@ public class Common {
 			jsonErrorDialog.displaySendError(ex.toString());
 		}
 	}
+	
+	/**
+	 * 2011-5-14 API to fill a list list box with a list of strings
+	 * @param 
+	 * 
+	 */
+	public static void fillListBox(String[] stringList, ListBox listBox)
+	{
+		for (int i = 0; i < stringList.length; i++) {
+			listBox.addItem(stringList[i]);
+		}
+	}
+	
 	
 	/**
 	 * 2009-6-30 not sure why i wrote the function below or how to use it
@@ -311,7 +326,7 @@ public class Common {
 			String responseText = response.getText();
 			try {
 
-				//JSONValue jsonValue = JSONParser.parse(responseText);
+				//JSONValue jsonValue = JSONParser.parseStrict(responseText);
 				//displayJSONObject(jsonValue);
 				dataTable = Common.asDataTable(responseText);	//DataTable.create();//new google.visualization.DataTable(eval("("+response+")"), 0.5)
 				Table.Options options = Table.Options.create();
@@ -551,5 +566,40 @@ public class Common {
 	public static String getSelectedItemTextInListBox(ListBox selectBox)
 	{
 		return selectBox.getItemText(selectBox.getSelectedIndex());
+	}
+	
+	/*
+	 * 2011-5-16
+	 *
+	 */
+	public static double getSumOfArrayListWithinMinMax(ArrayList<Double> valueList, Double minValue, Double maxValue){
+		Double totalSum = 0.0;
+		Integer totalCount = 0;
+		for (int i=0; i<valueList.size(); i++){
+			Double value =  valueList.get(i);
+			if (value>=minValue && value <=maxValue){
+				totalSum = totalSum + value;
+				totalCount ++;
+			}
+		}
+		return totalSum;
+	}
+
+	/*
+	 * 2011-5-16
+	 *
+	 */
+	public static double getAvgOfArrayListWithinMinMax(ArrayList<Double> valueList, Double minValue, Double maxValue){
+		Double totalSum = 0.0;
+		Integer totalCount = 0;
+		for (int i=0; i<valueList.size(); i++){
+			Double value =  valueList.get(i);
+			if (value>=minValue && value <=maxValue){
+				totalSum = totalSum + value;
+				totalCount ++;
+			}
+		}
+		Double avgValue = totalSum/totalCount;
+		return avgValue;
 	}
 }

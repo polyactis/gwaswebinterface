@@ -56,6 +56,7 @@ public class AccessionByCountry extends Sink implements ClickHandler{
 	//private String dataUrl = "http://spreadsheets.google.com/tq?key=prll1aQH05yQqp_DKPP9TNg&pub=1";
 	//private Query query = Query.create(dataUrl);
 	private DisplayJSONObject jsonErrorDialog;
+	private MapTableTree.PassingData passingData;
 	private MapTableTree contentTree;
 	
 
@@ -94,7 +95,7 @@ public class AccessionByCountry extends Sink implements ClickHandler{
 	 * 
 	 * @param constants the constants
 	 */
-	public AccessionByCountry(AccessionConstants constants, DisplayJSONObject jsonErrorDialog) {
+	public AccessionByCountry(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, MapTableTree.PassingData passingData) {
 		//super(constants);
 		this.constants = constants;
 		findAccessionsByCountryURL = get_findAccessionsByCountryURL();
@@ -123,7 +124,7 @@ public class AccessionByCountry extends Sink implements ClickHandler{
 		panel.add(suggestPanel);
 		//panel.add(textBox);
 		
-		contentTree = new MapTableTree(constants, jsonErrorDialog);
+		contentTree = new MapTableTree(constants, jsonErrorDialog, passingData);
 		panel.add(contentTree);
 		
 		// All composites must call initWidget() in their constructors.

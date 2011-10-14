@@ -2,6 +2,7 @@ package edu.nordborglab.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArray;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -32,6 +33,8 @@ public class Accession implements EntryPoint, HistoryListener{
 	
 	public DisplayJSONObject jsonErrorDialog;
 	public AccessionConstants constants;
+	private MapTableTree.PassingData passingData;
+	
 	public class ToySink extends Sink
 	{
 		private String name;
@@ -54,6 +57,8 @@ public class Accession implements EntryPoint, HistoryListener{
 		
 		jsonErrorDialog = new DisplayJSONObject("Error Dialog");
 		constants = (AccessionConstants) GWT.create(AccessionConstants.class);
+		passingData = new MapTableTree.PassingData(accessionAttributeNameURL(), accessionAttributeDataURL());
+		
 		/*
 		AbstractVisualization.registerVisualization("MapWithPhenotype",
 				new VisualizationFactory() {
@@ -65,10 +70,10 @@ public class Accession implements EntryPoint, HistoryListener{
 		*/
 		
 		tp = new SinkTabPanel(jsonErrorDialog);
-		tp.addSink(new Accession250k(constants, jsonErrorDialog));
-		tp.addSink(new AccessionByName(constants, jsonErrorDialog));
-		tp.addSink(new AccessionByID(constants, jsonErrorDialog));
-		tp.addSink(new AccessionByCountry(constants, jsonErrorDialog));
+		tp.addSink(new Accession250k(constants, jsonErrorDialog, passingData));
+		tp.addSink(new AccessionByName(constants, jsonErrorDialog, passingData));
+		tp.addSink(new AccessionByID(constants, jsonErrorDialog, passingData));
+		tp.addSink(new AccessionByCountry(constants, jsonErrorDialog, passingData));
 		//tp.addSink(new ToySink("By Genetic Distance", "Under construction"));
 		//tp.addSink(new ToySink("By Geographic Distance", "Under construction"));
 		// tp.addSink(new ToySink("By Country", "Under construction"));
@@ -143,4 +148,7 @@ public class Accession implements EntryPoint, HistoryListener{
 		int i = tp.find("By Name");
 		show(i, false);
 	}
+	
+	public native String accessionAttributeNameURL() /*-{ return $wnd.accessionAttributeNameURL; }-*/;
+	public native String accessionAttributeDataURL() /*-{ return $wnd.accessionAttributeDataURL; }-*/;
 }

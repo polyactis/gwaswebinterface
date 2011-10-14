@@ -1,5 +1,4 @@
 package edu.nordborglab.client;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -38,6 +37,8 @@ public class Accession250k extends Sink{
 	private VerticalPanel vpanel;
 	
 	private DisplayJSONObject jsonErrorDialog;
+	private MapTableTree.PassingData passingData;
+	
 	private MapTableTree contentTree;	
 	private String find250kAccessionsURL;
 	/**
@@ -52,7 +53,7 @@ public class Accession250k extends Sink{
 	 * 
 	 * @param constants the constants
 	 */
-	public Accession250k(AccessionConstants constants, DisplayJSONObject jsonErrorDialog) {
+	public Accession250k(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, MapTableTree.PassingData passingData) {
 		//super(constants);
 		this.constants = constants;
 		this.jsonErrorDialog = jsonErrorDialog;
@@ -61,7 +62,7 @@ public class Accession250k extends Sink{
 		
 		find250kAccessionsURL = this.getFetchURL();
 		
-		contentTree = new MapTableTree(constants, jsonErrorDialog);
+		contentTree = new MapTableTree(constants, jsonErrorDialog, passingData);
 		vpanel.add(contentTree);
 		
 		// All composites must call initWidget() in their constructors.

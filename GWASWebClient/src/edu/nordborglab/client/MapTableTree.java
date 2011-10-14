@@ -1,7 +1,6 @@
 package edu.nordborglab.client;
 
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Tree;
@@ -26,12 +25,28 @@ import com.google.gwt.core.client.JsArray;
 
 
 public class MapTableTree extends VerticalPanel{
+	public static class PassingData{
+		public String accessionAttributeNameURL;
+		public String accessionAttributeDataURL;
+		
+		public PassingData(){
+			
+		}
+		
+		public PassingData(String accessionAttributeNameURL, String accessionAttributeDataURL){
+			this.accessionAttributeNameURL = accessionAttributeNameURL;
+			this.accessionAttributeDataURL = accessionAttributeDataURL;
+			
+		}
+	}
+	
 	private MapWithPhenotype mapWidget;
 
 	private HTML accessionReport = new HTML();
 
 	private AccessionConstants constants;
 	private DisplayJSONObject jsonErrorDialog;
+	private PassingData passingData;
 
 	private WrapVisualizationTable accessionTable;
 	
@@ -65,14 +80,15 @@ public class MapTableTree extends VerticalPanel{
 		}
 	}
 
-	public MapTableTree(AccessionConstants constants, DisplayJSONObject jsonErrorDialog)
+	public MapTableTree(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, PassingData passingData)
 	{
 		this.constants = constants;
 		this.jsonErrorDialog = jsonErrorDialog;
+		this.passingData = passingData;
 		
 		accessionTable = new WrapVisualizationTable();
 		
-		mapWidget = new MapWithPhenotype(constants, jsonErrorDialog);
+		mapWidget = new MapWithPhenotype(constants, jsonErrorDialog, passingData);
 		mapWidget.addSelectHandler(new TableSelectionHandler(mapWidget, accessionTable));
 		mapPanel = new DisclosurePanel("Map");
 		mapPanel.setAnimationEnabled(true);
@@ -84,7 +100,6 @@ public class MapTableTree extends VerticalPanel{
 		//treeItem.addItem(mapWidget);
 		//treeItem.setStyleName("JSON-JSONResponseObject");
 		//treeItem.setState(true);
-
 		
 		
 		accessionTable.addSelectHandler(new TableSelectionHandler(accessionTable, mapWidget));

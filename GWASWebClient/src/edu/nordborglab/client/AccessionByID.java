@@ -1,5 +1,4 @@
 package edu.nordborglab.client;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -10,6 +9,8 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -34,7 +35,7 @@ import com.google.gwt.visualization.client.Query.Callback;
 */
 
 
-public class AccessionByID extends Sink implements ClickListener{
+public class AccessionByID extends Sink implements ClickHandler{
 
 	private TextBox idBox = new TextBox();
 	private Button submitButton = new Button();
@@ -42,7 +43,8 @@ public class AccessionByID extends Sink implements ClickListener{
 	private VerticalPanel vpanel;
 	
 	private DisplayJSONObject jsonErrorDialog;
-	public MapTableTree contentTree;	
+	private MapTableTree.PassingData passingData;
+	public MapTableTree contentTree;
 	
 	/**
 	 * An instance of the constants.
@@ -78,7 +80,7 @@ public class AccessionByID extends Sink implements ClickListener{
 	 * 
 	 * @param constants the constants
 	 */
-	public AccessionByID(AccessionConstants constants, DisplayJSONObject jsonErrorDialog) {
+	public AccessionByID(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, MapTableTree.PassingData passingData) {
 		//super(constants);
 		this.constants = constants;
 		this.jsonErrorDialog = jsonErrorDialog;
@@ -88,7 +90,7 @@ public class AccessionByID extends Sink implements ClickListener{
 		//Label lbl = new Label(constants.cwAccessionByNameLabel());
 		//suggestBox.addChangeListener(new SuggestBoxChangeListener());
 		submitButton.setText(SUGGEST_BUTTON_DEFAULT_TEXT);
-		submitButton.addClickListener(this);
+		submitButton.addClickHandler(this);
 
 		submitPanel.add(new HTML(constants.cwAccessionByIDLabel()));
 		idBox.setTitle(constants.cwAccessionByIDDescription());
@@ -100,7 +102,7 @@ public class AccessionByID extends Sink implements ClickListener{
 		vpanel.add(submitPanel);
 		//panel.add(textBox);
 		
-		contentTree = new MapTableTree(constants, jsonErrorDialog);
+		contentTree = new MapTableTree(constants, jsonErrorDialog, passingData);
 		vpanel.add(contentTree);
 		
 		
@@ -111,10 +113,11 @@ public class AccessionByID extends Sink implements ClickListener{
 		setStyleName("AccessionByID");
 	}
 
-	public void onClick(Widget sender) {
+	
+	@Override
+	public void onClick(ClickEvent event) {
 		doFetchURL();
 	}
-	
 	
 	//@Override
 	public String getDescription() {
@@ -182,5 +185,7 @@ public class AccessionByID extends Sink implements ClickListener{
 	{
 		contentTree.resetSize();
 	}
+
+
 	
 }
