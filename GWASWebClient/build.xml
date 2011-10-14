@@ -85,7 +85,8 @@
 			<jvmarg value="${XstartOnFirstThreadFlag}" />
 			<jvmarg value="${d32Flag}" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
-			<arg value="edu.nordborglab.CNV" />
+			<arg value="edu.nordborglab.Accession" />
+			<arg value="-draftCompile" />
 		</java>
 	</target>
 
@@ -100,11 +101,11 @@
 			<jvmarg value="${d32Flag}" />
 			<arg value="-noserver" />
 			<arg value="-startupUrl" />
-			<arg value="http://banyan.usc.edu:5000/CNV/index" />
+			<arg value="http://localhost:50000/Accession/index" />
 			<!-- Additional arguments like -style PRETTY or -logLevel DEBUG -->
 			<arg value="-logLevel" />
 			<arg value="DEBUG" />
-			<arg value="edu.nordborglab.CNV" />
+			<arg value="edu.nordborglab.Accession" />
 		</java>
 	</target>
 
