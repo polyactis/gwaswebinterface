@@ -31,7 +31,14 @@
 
 	<!-- Specify the app entry point class.                         -->
 	<entry-point class='edu.nordborglab.client.Accession' />
-
+	
+	<!-- Hack to force IE9 use use the "maybe" permutation of Canvas-->
+	<!-- This causes all browsers to download the Canvas code by    -->
+	<!-- preventing the default Canvas.gwt.xml from compiling out   -->
+	<!-- non-canvas code for non-canvas browsers                    -->
+	<replace-with class="com.google.gwt.canvas.client.Canvas.CanvasElementSupportDetectedMaybe">
+		<when-type-is class="com.google.gwt.canvas.client.Canvas.CanvasElementSupportDetector" />
+	</replace-with>
 
 
 
