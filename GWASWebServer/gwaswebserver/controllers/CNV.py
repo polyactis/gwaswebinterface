@@ -537,6 +537,8 @@ class CnvController(BaseController):
 	@jsonify
 	def getGWASDataJson(self, no_of_top_loci=10000, no_of_overview_points=1500,):
 		"""
+		2011-5-4
+			bugfix: model.db.chr_pos2snp_id => model.db.snp_id2chr_pos
 		2011-3-21
 			finished. can handle ResultsMethod that have either call_method_id or cnv_method_id.
 		2010-10-26
@@ -561,7 +563,7 @@ class CnvController(BaseController):
 					stop=stop)
 		
 		if rm.call_method_id:
-			pd.db_id2chr_pos = model.db.chr_pos2snp_id
+			pd.db_id2chr_pos = model.db.snp_id2chr_pos	#2011-5-4
 		elif rm.cnv_method_id:
 			if model.db._cnv_method_id!=rm.cnv_method_id:
 				model.db.cnv_id2chr_pos = rm.cnv_method_id
