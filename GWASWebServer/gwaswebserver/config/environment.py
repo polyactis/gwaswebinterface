@@ -92,7 +92,7 @@ def load_environment(global_conf, app_conf):
 	model.db.setup(create_tables=False)
 
 	model.genome_db = model.GenomeDB.GenomeDatabase(drivername=drivername, username=db_user, password=db_passwd, \
-				hostname=hostname, database='genome', schema=schema, pool_recycle=pool_recycle)
+				hostname=hostname, database='genome_tair10', schema=schema, pool_recycle=pool_recycle)
 
 	#from variation.src import dbsnp
 	#snp_db = dbsnp.DBSNP(drivername=drivername, username=db_user, password=db_passwd, \
@@ -123,7 +123,6 @@ def load_environment(global_conf, app_conf):
 		gene_annotation = DrawSNPRegion_ins.dealWithGeneAnnotation(gene_annotation_picklef, cls_with_db_args=DrawSNPRegion_ins)
 		return gene_annotation
 	model.gene_annotation = dealWithGeneAnnotation()
-	
 	
 	#2008-11-05 a dictionary to link two type-tables in order to cross-link pages of DisplayTopSNPTestRM and ScoreRankHistogram/DisplayResultsGene
 	sys.stderr.write("Getting a map between CandidateGeneTopSNPTestRMType id and ScoreRankHistogramType id ... ")

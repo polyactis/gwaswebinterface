@@ -344,7 +344,8 @@ class HelpothercontrollersController(BaseController):
 		if call_method_id not in model.call_method_id2dataset:
 			#datasetPath = os.path.join(SNPDatasetPath, 'call_method_%s.tsv'%call_method_id)
 			cm = model.Stock_250kDB.CallMethod.get(call_method_id)
-			snpData = SNPData(input_fname=cm.filename, turn_into_array=1, ignore_2nd_column=1)	#use 1st column (ecotype id) as main ID
+			snpData = SNPData.loadSNPDataObj(input_fname=cm.filename, turn_into_array=1, ignore_2nd_column=1)
+			#snpData = SNPData(input_fname=cm.filename, turn_into_array=1, ignore_2nd_column=1)	#use 1st column (ecotype id) as main ID
 			model.call_method_id2dataset[call_method_id] = snpData
 		return model.call_method_id2dataset[call_method_id]
 	
