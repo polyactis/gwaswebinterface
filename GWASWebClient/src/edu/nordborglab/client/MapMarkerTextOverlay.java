@@ -12,16 +12,26 @@
 package edu.nordborglab.client;
 
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.MapPane;
 import com.google.gwt.maps.client.MapPaneType;
 import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.event.MarkerClickHandler;
+import com.google.gwt.maps.client.event.MarkerMouseOverHandler;
+import com.google.gwt.maps.client.event.MarkerClickHandler.MarkerClickEvent;
+import com.google.gwt.maps.client.event.MarkerMouseOverHandler.MarkerMouseOverEvent;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.Point;
+import com.google.gwt.maps.client.impl.HandlerCollection;
+import com.google.gwt.maps.client.impl.MapEvent;
+import com.google.gwt.maps.client.impl.EventImpl.VoidCallback;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-public class MapMarkerTextOverlay extends Overlay {
+public class MapMarkerTextOverlay extends Overlay{
 
 	private final LatLng latLng;
 
@@ -35,6 +45,11 @@ public class MapMarkerTextOverlay extends Overlay {
 
 	private Point offset;
 
+	// Keep track of JSO's registered for each instance of addXXXListener()
+	private HandlerCollection<MarkerClickHandler> markerClickHandlers;
+	private HandlerCollection<MarkerMouseOverHandler> markerMouseOverHandlers;
+	
+	
 	/**
 	 * Main constructor
 	 * 
@@ -115,5 +130,8 @@ public class MapMarkerTextOverlay extends Overlay {
 	public void setOffset(Point offset) {
 		this.offset = offset;
 	}
+	
+	
+
 
 }

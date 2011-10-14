@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.HTML;
 
 import com.google.gwt.user.client.ui.SuggestBox;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -43,7 +45,7 @@ import com.google.gwt.visualization.client.Query.Callback;
 */
 
 
-public class AccessionByName extends Sink implements ClickListener{
+public class AccessionByName extends Sink implements ClickHandler{
 
 	private CustomSuggestOracle oracle;
 	//String[] words = constants.cwSuggestBoxWords();
@@ -61,6 +63,8 @@ public class AccessionByName extends Sink implements ClickListener{
 	//private String dataUrl = "http://spreadsheets.google.com/tq?key=prll1aQH05yQqp_DKPP9TNg&pub=1";
 	//private Query query = Query.create(dataUrl);
 	private DisplayJSONObject jsonErrorDialog;
+	private MapTableTree.PassingData passingData;
+	
 	private MapTableTree contentTree;
 	
 
@@ -99,13 +103,14 @@ public class AccessionByName extends Sink implements ClickListener{
 	 * 
 	 * @param constants the constants
 	 */
-	public AccessionByName(AccessionConstants constants, DisplayJSONObject jsonErrorDialog) {
+	public AccessionByName(AccessionConstants constants, DisplayJSONObject jsonErrorDialog, MapTableTree.PassingData passingData) {
 		//super(constants);
 		this.constants = constants;
 		AccessionByNameURL = get_AccessionByNameURL();
 		oracle = new CustomSuggestOracle(get_AccessionNameSuggestOracleURL() + "&namelike=");
 		
 		this.jsonErrorDialog = jsonErrorDialog;
+		this.passingData = passingData;
 		
 		panel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.AccessionByNameHelpID());
 		
@@ -117,7 +122,7 @@ public class AccessionByName extends Sink implements ClickListener{
 		
 		suggestButton = new Button();
 		suggestButton.setText(SUGGEST_BUTTON_DEFAULT_TEXT);
-		suggestButton.addClickListener(this);
+		suggestButton.addClickHandler(this);
 		
 		suggestPanel = new HorizontalPanel();
 		suggestPanel.add(new HTML(constants.cwAccessionByNameLabel()));
@@ -128,7 +133,7 @@ public class AccessionByName extends Sink implements ClickListener{
 		panel.add(suggestPanel);
 		//panel.add(textBox);
 		
-		contentTree = new MapTableTree(constants, jsonErrorDialog);
+		contentTree = new MapTableTree(constants, jsonErrorDialog, passingData);
 		panel.add(contentTree);
 		
 		// All composites must call initWidget() in their constructors.
@@ -140,10 +145,12 @@ public class AccessionByName extends Sink implements ClickListener{
 	public final native String get_AccessionNameSuggestOracleURL() /*-{ return $wnd.AccessionNameSuggestOracleURL;}-*/;
 	public final native String get_AccessionByNameURL() /*-{ return $wnd.AccessionByNameURL;}-*/;
 	
-	
-	public void onClick(Widget sender) {
+	@Override
+	public void onClick(ClickEvent event) {
 		doFetchURL();
+		
 	}
+	
 	
 	private class SuggestBoxSuggestionHandler implements SuggestionHandler {
 		public void onSuggestionSelected(SuggestionEvent event){
@@ -217,4 +224,5 @@ public class AccessionByName extends Sink implements ClickListener{
 	{
 		contentTree.resetSize();
 	}
+
 }

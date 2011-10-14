@@ -2,7 +2,7 @@ package edu.nordborglab.client;
 
 /**
  * Interface to represent the constants contained in resource bundle:
- * 	'/usr/local/home_ubuntu/crocea/script/GWASWebInterface/GWASWebClient/src/edu/nordborglab/client/AccessionConstants.properties'.
+ * 	'/home/yh/script/GWASWebInterface/GWASWebClient/src/edu/nordborglab/client/AccessionConstants.properties'.
  */
 public interface AccessionConstants extends com.google.gwt.i18n.client.Constants {
   
@@ -178,6 +178,24 @@ public interface AccessionConstants extends com.google.gwt.i18n.client.Constants
   String LoadingText();
 
   /**
+   * Translated "singleValueCategory".
+   * 
+   * @return translated "singleValueCategory"
+   */
+  @DefaultStringValue("singleValueCategory")
+  @Key("MapWithPhenotypeBinOption1")
+  String MapWithPhenotypeBinOption1();
+
+  /**
+   * Translated "windowCategory".
+   * 
+   * @return translated "windowCategory"
+   */
+  @DefaultStringValue("windowCategory")
+  @Key("MapWithPhenotypeBinOption2")
+  String MapWithPhenotypeBinOption2();
+
+  /**
    * Translated "display all".
    * 
    * @return translated "display all"
@@ -221,6 +239,24 @@ public interface AccessionConstants extends com.google.gwt.i18n.client.Constants
   @DefaultStringValue("/Phenotype/getPhenotypeMethodLs")
   @Key("MapWithPhenotypeGetPhenotypeMethodLsURL")
   String MapWithPhenotypeGetPhenotypeMethodLsURL();
+
+  /**
+   * Translated "Each category one pie".
+   * 
+   * @return translated "Each category one pie"
+   */
+  @DefaultStringValue("Each category one pie")
+  @Key("MapWithPhenotypePlotOption1")
+  String MapWithPhenotypePlotOption1();
+
+  /**
+   * Translated "Median of all values".
+   * 
+   * @return translated "Median of all values"
+   */
+  @DefaultStringValue("Median of all values")
+  @Key("MapWithPhenotypePlotOption2")
+  String MapWithPhenotypePlotOption2();
 
   /**
    * Translated "MotionChartAppMCPanel".
@@ -340,11 +376,11 @@ public interface AccessionConstants extends com.google.gwt.i18n.client.Constants
   String cwAccession250kLabel();
 
   /**
-   * Translated "250k Accessions ".
+   * Translated "All Accessions ".
    * 
-   * @return translated "250k Accessions "
+   * @return translated "All Accessions "
    */
-  @DefaultStringValue("250k Accessions ")
+  @DefaultStringValue("All Accessions ")
   @Key("cwAccession250kName")
   String cwAccession250kName();
 

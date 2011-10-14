@@ -27,7 +27,9 @@ public class HaploGroup implements EntryPoint {
 
 	private DisplayJSONObject jsonErrorDialog;
 	private AccessionConstants constants;
+	private MapTableTree.PassingData passingData;
 	private MapTableTree contentTree;
+
 	
 	private static final String SUGGEST_BUTTON_DEFAULT_TEXT = "Search";
 	private static final String SUGGEST_BUTTON_WAITING_TEXT = "Waiting...";
@@ -38,12 +40,14 @@ public class HaploGroup implements EntryPoint {
 	public void onModuleLoad() {
 		jsonErrorDialog = new DisplayJSONObject("Error Dialog");
 		constants = (AccessionConstants) GWT.create(AccessionConstants.class);
+		passingData = new MapTableTree.PassingData(accessionAttributeNameURL(), accessionAttributeDataURL());
+
 		
 		VerticalPanel vPanel = new CustomVerticalPanel(constants, jsonErrorDialog, constants.HaploGroupHelpID());
 		vPanel.setWidth("100%");
 		//vPanel.setHorizontalAlignment(VerticalPanel.ALIGN_CENTER);
 		
-		contentTree = new MapTableTree(constants, jsonErrorDialog);
+		contentTree = new MapTableTree(constants, jsonErrorDialog, passingData);
 		//contentTree.populateData(getDataTable());
 		vPanel.add(contentTree);
 		
@@ -104,4 +108,7 @@ public class HaploGroup implements EntryPoint {
 		}
 		
 	}
+	
+	public native String accessionAttributeNameURL() /*-{ return $wnd.accessionAttributeNameURL; }-*/;
+	public native String accessionAttributeDataURL() /*-{ return $wnd.accessionAttributeDataURL; }-*/;
 }
