@@ -56,7 +56,7 @@ def load_environment(global_conf, app_conf):
 	dbname = config['app_conf']['dbname']
 	schema = config['app_conf']['schema']
 	db_user = config['app_conf']['db_user']
-	db_passwd = config['app_conf']['db_passwd']
+	db_passwd = config['app_conf'].get('db_passwd', None)
 	pool_recycle = int(config['app_conf']['pool_recycle'])
 	sql_echo = False
 	if ('sql_echo' in config['app_conf'] and config['app_conf']['sql_echo'] == 'True'):
@@ -84,42 +84,49 @@ def load_environment(global_conf, app_conf):
 	my_logger.addHandler(handler)
 	my_logger.setLevel(logging.DEBUG)
 	"""
-	
+	sys.stderr.write("Establishing db_250k connection ...")
 	model.db = model.Stock_250kDB.Stock_250kDB(drivername=drivername, username=db_user, password=db_passwd, \
 						hostname=hostname, database=dbname, schema=schema, pool_recycle=pool_recycle, \
 						sql_echo=sql_echo, echo_pool= echo_pool)
 	
 	model.db.setup(create_tables=False)
+	sys.stderr.write("\n")
 
+	sys.stderr.write("Establishing genome_db connection ...")
 	model.genome_db = model.GenomeDB.GenomeDatabase(drivername=drivername, username=db_user, password=db_passwd, \
-				hostname=hostname, database='genome_tair10', schema=schema, pool_recycle=pool_recycle)
+				hostname=hostname, database='genome', schema=schema, pool_recycle=pool_recycle)
 
+	model.genome_db.setup(create_tables=False)
+	sys.stderr.write("\n")
 	#from variation.src import dbsnp
 	#snp_db = dbsnp.DBSNP(drivername=drivername, username=db_user, password=db_passwd, \
 	#				hostname=hostname, database='dbsnp', schema=schema, pool_recycle=pool_recycle)
 
+	#snp_db.setup(create_tables=False)
 	#from variation.src import StockDB
+	sys.stderr.write("Establishing stock_db connection ...")
 	model.stock_db = model.StockDB.StockDB(drivername=drivername, username=db_user, password=db_passwd, \
 				hostname=hostname, database='stock', schema=schema, pool_recycle=pool_recycle)
 
+	model.stock_db.setup(create_tables=False)
+	sys.stderr.write("\n")
+	sys.stderr.write("Establishing at_db connection ...")
 	model.at_db = model.AtDB.AtDB(drivername=drivername, username=db_user, password=db_passwd, \
 				hostname=hostname, database='at', schema=schema, pool_recycle=pool_recycle)
+	model.at_db.setup(create_tables=False)
+	sys.stderr.write("\n")
 	"""
 	for entity in entities:
 		if entity.__module__==db.__module__:	#entity in the same module
 			entity.metadata = metadata
 			#using_table_options_handler(entity, schema=self.schema)
 	"""
-	model.genome_db.setup(create_tables=False)
-	#snp_db.setup(create_tables=False)
-	model.stock_db.setup(create_tables=False)
-	model.at_db.setup(create_tables=False)
 	config['pylons.strict_tmpl_context'] = False
 	from variation.src.DrawSNPRegion import DrawSNPRegion
 	def dealWithGeneAnnotation():
 		gene_annotation_picklef = '/Network/Data/250k/tmp-yh/at_gene_model_pickelf'
 		DrawSNPRegion_ins = DrawSNPRegion(db_user=db_user, db_passwd=db_passwd, hostname=hostname, database=dbname,\
-									input_fname='/tmp/dumb', output_dir='/tmp', debug=0)
+									input_fname='/tmp/dumb', output_dir='/tmp', debug=0, snpInfoPickleFname='/dev/null', list_type_id_list='129')
 		gene_annotation = DrawSNPRegion_ins.dealWithGeneAnnotation(gene_annotation_picklef, cls_with_db_args=DrawSNPRegion_ins)
 		return gene_annotation
 	model.gene_annotation = dealWithGeneAnnotation()

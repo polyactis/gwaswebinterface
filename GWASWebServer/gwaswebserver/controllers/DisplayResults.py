@@ -274,7 +274,7 @@ class DisplayresultsController(BaseController):
 		2009-1-30
 		"""
 		call_method_id = request.params.getone('call_method_id')
-		cnv_method_id = request.params.getone('cnv_method_id')
+		cnv_method_id = request.params.get('cnv_method_id', None)	#2012.7.11
 		result = {
 				'options': [
 						dict(id=value, value=id) for id, value in self.getPhenotypeMethodLs(call_method_id, cnv_method_id=cnv_method_id)
@@ -640,6 +640,7 @@ class DisplayresultsController(BaseController):
 	@jsonify
 	def getGWASGivenPhenotypeIDJson(self, id=None):
 		"""
+		2012.7.11 bugfix
 		2010-3-16
 			given a phenotype_method_id, get call_method_id(s) and analysis_method_id(s) of all available GWASs
 			
@@ -659,13 +660,15 @@ class DisplayresultsController(BaseController):
 						call_method_id2analysis_method_id_ls[call_method_id] = []
 						no_of_phenotyped_and_genotyped = hc.getNoOfAccessionsGivenPhenotypeAndCallMethodID(phenotype_method_id, row.call_method_id)
 						call_method_id2label[call_method_id] = '%s genotyped in call %s-%s'%\
-									(no_of_phenotyped_and_genotyped, row.call_method_id, row.call_method.short_name)
+									(no_of_phenotyped_and_genotyped, row.call_method_id, getattr(row.call_method, 'short_name', None))
 									
 					if analysis_method_id not in call_method_id2analysis_method_id_ls[call_method_id]: 
 						call_method_id2analysis_method_id_ls[call_method_id].append(analysis_method_id)
 					if analysis_method_id not in analysis_method_id2label:
 						analysis_method_id2label[analysis_method_id] = {}
-					analysis_method_id2label[analysis_method_id][str(row.transformation_method_id)] = '%s %s'%(row.analysis_method_id, row.analysis_method.short_name if row.transformation_method_id == 1 else row.analysis_method.short_name + ' (%s)' % row.transformation_method.name)
+					analysis_method_id2label[analysis_method_id][str(row.transformation_method_id)] = '%s %s'%\
+	(row.analysis_method_id, \
+	row.analysis_method.short_name if row.transformation_method_id == 1 else row.analysis_method.short_name + ' (%s)' % getattr(row.transformation_method, 'name', None))
 
 		dc_to_return = {'call_method_id2analysis_method_id_ls': call_method_id2analysis_method_id_ls,\
 					'call_method_id2label': call_method_id2label,\
