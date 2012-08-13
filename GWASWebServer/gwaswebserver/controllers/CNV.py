@@ -14,7 +14,6 @@ from DisplayResults import DisplayresultsController
 
 log = logging.getLogger(__name__)
 
-
 class CnvController(BaseController):
 
 	def index(self):
