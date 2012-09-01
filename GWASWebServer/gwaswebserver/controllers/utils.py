@@ -66,7 +66,7 @@ class UtilsController(BaseController):
 					elif column_type == 'number':
 						column_value = float(row[i])
 					elif column_type == 'date':
-						column_value = datetime.datetime.strptime(row[i], "%y-%m-%d")
+						column_value = datetime.datetime.strptime(row[i], "%Y-%m-%d")
 					else:
 						column_value = row[i]
 					entry[column_name] = column_value
