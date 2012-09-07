@@ -1,7 +1,7 @@
 package edu.nordborglab.client;
 
-import org.mortbay.util.StringUtil;
-import org.mortbay.util.ajax.JSON;
+//import org.mortbay.util.StringUtil;
+//import org.mortbay.util.ajax.JSON;
 
 import com.google.gwt.ajaxloader.client.ArrayHelper;
 import com.google.gwt.core.client.GWT;
