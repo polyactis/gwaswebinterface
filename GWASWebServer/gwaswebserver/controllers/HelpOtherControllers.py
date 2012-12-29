@@ -9,10 +9,10 @@ from gwaswebserver import model
 import os,sys
 sys.path.insert(0, os.path.join(os.path.expanduser('~/script')))
 
-from variation.src.DrawSNPRegion import DrawSNPRegion
-from variation.src.GeneListRankTest import GeneListRankTest
-from variation.src.Kruskal_Wallis import Kruskal_Wallis
 from pymodule import PassingData, SNPData
+from variation.src.plot.DrawSNPRegion import DrawSNPRegion
+from variation.src.enrichment.GeneListRankTest import GeneListRankTest
+from variation.src.association.Kruskal_Wallis import Kruskal_Wallis
 from sets import Set
 import simplejson
 

@@ -9,7 +9,7 @@ from gwaswebserver.lib.base import BaseController, render, config, h, model
 log = logging.getLogger(__name__)
 
 from pymodule import PassingData
-from variation.src.GeneListRankTest import GeneListRankTest
+from variation.src.enrichment.GeneListRankTest import GeneListRankTest
 from formencode import htmlfill
 from pylons.decorators import jsonify	#2008-12-30
 #from gwaswebserver.lib.base import *

@@ -11,6 +11,9 @@ from pymodule import SNP
 from HelpOtherControllers import HelpothercontrollersController as hc
 from variation.src.common import getEcotypeInfo
 from DisplayResults import DisplayresultsController
+from variation.src.plot.DrawSNPRegion import DrawSNPRegion
+from pymodule import CNVCompare, CNVSegmentBinarySearchTreeKey
+from pymodule import RBDict
 
 log = logging.getLogger(__name__)
 
@@ -186,8 +189,6 @@ class CnvController(BaseController):
 		start = float(start)	#int('103.4324') will throw ValueError: invalid literal for int() with base 10: 
 		stop = float(stop)
 		gene_id2model = model.gene_annotation.gene_id2model
-		from pymodule.CNV import CNVCompare, CNVSegmentBinarySearchTreeKey
-		from pymodule.RBTree import RBDict
 		sys.stderr.write("Getting gene model data from chromosome %s, start %s, stop %s ... \n"%\
 						(chromosome, start, stop))
 		if not hasattr(model.gene_annotation, 'geneSpanRBDict'):
@@ -234,7 +235,6 @@ class CnvController(BaseController):
 			else:
 				gene_commentaries = gene_model.gene_commentaries
 			for gene_commentary in gene_commentaries:	#multiple commentary
-				from variation.src.DrawSNPRegion import DrawSNPRegion
 				gene_desc_names = ['gene_symbol', 'type_of_gene', 'description', 'protein_label', 'protein_comment', 'protein_text', ]
 				gene_desc_ls = DrawSNPRegion.returnGeneDescLs(gene_desc_names, gene_model, \
 														gene_commentary=gene_commentary, cutoff_length=200, replaceNoneElemWithEmptyStr=1)
