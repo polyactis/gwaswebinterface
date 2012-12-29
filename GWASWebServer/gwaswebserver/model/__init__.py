@@ -1,10 +1,7 @@
 import os,sys
 sys.path.insert(0, os.path.join(os.path.expanduser('~/script')))
-#import sqlalchemy
 from variation.src import Stock_250kDB, AtDB, StockDB
 from pymodule import GenomeDB
-#from variation.src.Stock_250kDB import GeneListType
-#from variation.src.Stock_250kDB import *
 
 
 db = None

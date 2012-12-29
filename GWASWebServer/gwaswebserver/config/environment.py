@@ -122,9 +122,10 @@ def load_environment(global_conf, app_conf):
 			#using_table_options_handler(entity, schema=self.schema)
 	"""
 	config['pylons.strict_tmpl_context'] = False
-	from variation.src.DrawSNPRegion import DrawSNPRegion
+	from variation.src.plot.DrawSNPRegion import DrawSNPRegion
 	def dealWithGeneAnnotation():
-		gene_annotation_picklef = '/Network/Data/250k/tmp-yh/at_gene_model_pickelf'
+		gene_annotation_picklef = '/Network/Data/250k/tmp-yh/at_gene_model_picklef'
+		from pymodule import RBTree, RBDict, RBTreeIter, RBList, RBNode
 		DrawSNPRegion_ins = DrawSNPRegion(db_user=db_user, db_passwd=db_passwd, hostname=hostname, database=dbname,\
 									input_fname='/tmp/dumb', output_dir='/tmp', debug=0, snpInfoPickleFname='/dev/null', list_type_id_list='129')
 		gene_annotation = DrawSNPRegion_ins.dealWithGeneAnnotation(gene_annotation_picklef, cls_with_db_args=DrawSNPRegion_ins)
